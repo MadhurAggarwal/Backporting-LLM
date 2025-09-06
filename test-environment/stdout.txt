@@ -1,0 +1,600 @@
+For Package libsoup
+
+Fetching Backporting Data
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-4948, applying 19 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32050.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32051.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46420.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46421.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32053.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-4476.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32907.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  104
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-4476, applying 17 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32050.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32051.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46420.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46421.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32053.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  34
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-2784, applying 10 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  234
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32050, applying 12 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  26
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32051, applying 13 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32050.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  80
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32052, applying 11 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  27
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-46420, applying 14 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32050.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32051.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  57
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-46421, applying 15 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32050.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32051.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46420.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  135
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32914, applying 9 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  123
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32908, applying 8 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  84
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32053, applying 16 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32052.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32050.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32051.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46420.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-46421.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  37
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32913, applying 3 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  41
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32906, applying 4 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  92
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32909, applying 5 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  34
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32910, applying 6 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Len:  268
+
+Generating Prompt for CVE-2025-32052
+Length of Prompt = 3429 (should be <= Context Length of the Model)
+
+Generating LLM Output
+
+Clean Model Output
+
+Testing Output Generated From LLM
+Running 'git reset --hard' on '/home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/'
+✅ Successfully reset repo at /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+For CVE-2025-32052, applying 11 Patches before fetching file codes
+Applying Patch CVE-2024-52530.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52531.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2024-52532.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32913.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32906.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32909.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32910.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32912.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32908.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-32914.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Applying Patch CVE-2025-2784.patch
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+✅ Patch applied successfully
+Testing Patch for CVE-2025-32052
+Applying patch to /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+❌ Failed to apply patch /home/sumsharma/madhur/backporting-llm/training_llm/test-environment/test.patch in /home/sumsharma/madhur/package_tarballs/libsoup/3.4.4/libsoup-3.4.4/
+Exit Code: 1
+Stdout: None
+Stderr: None
