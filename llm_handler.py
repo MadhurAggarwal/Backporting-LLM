@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from peft import PeftModel, PeftConfig, LoraConfig, get_peft_model
 import torch
 from trl import SFTTrainer
+import gc
 
 class TrainLLM:
     def __init__(self):
@@ -95,20 +96,127 @@ class TrainLLM:
 
 class RunLLM:
     def __init__(self, create_finetuned_pipeline=False):
-        self.base_pipeline = self.base_llm_pipeline()
+        gc.collect()
+        torch.cuda.empty_cache()
+
         if create_finetuned_pipeline:
             self.finetuned_pipeline = self.finetuned_llm_pipeline()
+        else:
+            self.base_pipeline = self.base_llm_pipeline()
 
     def check_cuda(self):
         print("Is CUDA Available: ", torch.cuda.is_available())
         print("CUDA Device Name:  ", torch.cuda.get_device_name(0))
         print()
 
-    def base_llm_pipeline(self):
-        tokenizer = AutoTokenizer.from_pretrained(LLM_PATH)
-        model = AutoModelForCausalLM.from_pretrained(LLM_PATH, torch_dtype=torch.float16, device_map="auto")
+    # def base_llm_pipeline(self):
+    #     tokenizer = AutoTokenizer.from_pretrained(LLM_PATH)
+    #     model = AutoModelForCausalLM.from_pretrained(LLM_PATH, torch_dtype=torch.float16, device_map="auto")
 
-        return pipeline("text-generation", model=model, tokenizer=tokenizer, device_map="auto")
+    #     return pipeline("text-generation", model=model, tokenizer=tokenizer, device_map="auto")
+
+    # def base_llm_pipeline(self):
+    #     self.base_tokenizer = AutoTokenizer.from_pretrained(LLM_PATH, use_fast=False)
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         LLM_PATH,
+    #         torch_dtype=torch.bfloat16,
+    #         device_map="auto",
+    #         trust_remote_code=True
+    #     )
+    #     model.eval()
+
+    #     return pipeline(
+    #         "text-generation",
+    #         model=model,
+    #         tokenizer=self.base_tokenizer,
+    #         device_map="auto",
+    #     )
+
+    def base_llm_pipeline(self):
+        self.base_tokenizer = AutoTokenizer.from_pretrained(LLM_PATH, use_fast=False)
+        self.base_model = AutoModelForCausalLM.from_pretrained(
+            LLM_PATH,
+            torch_dtype=torch.bfloat16,
+            device_map="auto",
+            trust_remote_code=True
+        )
+        self.base_model.eval()
+        return self.base_model
+
+    # def generate_base_output(self, prompt, max_new_tokens=200):
+    #     output = self.base_pipeline(prompt, max_new_tokens=max_new_tokens, do_sample=True, return_full_text=False)[0]['generated_text']
+    #     return output
+
+    def generate_base_output(self, prompt, max_new_tokens=512):
+        print('Calling Base LLM To Generate Output...')
+
+        inputs = self.base_tokenizer(prompt, return_tensors="pt").to(self.base_model.device)
+
+        outputs = self.base_model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+            temperature=0.0,
+            top_p=1.0,
+            top_k=0,
+            repetition_penalty=1.05,
+            pad_token_id=self.base_tokenizer.eos_token_id,
+            eos_token_id=self.base_tokenizer.eos_token_id,
+        )
+
+        gen_tokens = outputs[0][inputs["input_ids"].shape[1]:]
+
+        decoded = self.base_tokenizer.decode(
+            gen_tokens,
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=False,
+        )
+
+        return decoded
+
+
+        # print('Calling Base LLM To Generate Output...')
+        # outputs = self.base_pipeline(
+        #     prompt,
+        #     max_new_tokens=max_new_tokens,
+        #     # do_sample=True,
+        #     # temperature=0.3,         # low randomness, good for deterministic patching
+        #     # top_p=0.9,               # nucleus sampling
+        #     # top_k=40,                # reduce unlikely tokens
+        #     # repetition_penalty=1.05, # avoid duplicated lines
+        #     do_sample=False,
+        #     temperature=0.0,
+        #     top_p=1.0,
+        #     top_k=0,
+        #     repetition_penalty=1.05,
+        #     num_return_sequences=1,
+
+        #     eos_token_id=self.base_pipeline.tokenizer.eos_token_id,
+        #     pad_token_id=self.base_pipeline.tokenizer.eos_token_id,
+        #     return_full_text=False,
+        # )
+
+        # tokens = outputs[0]["generated_token_ids"] if "generated_token_ids" in outputs[0] else None
+        # print('Got Tokens.')
+        # if tokens is not None:
+        #     print('Tokens is Not NONE returning decoded tokens as output text.')
+        #     return self.base_pipeline.tokenizer.decode(
+        #         tokens,
+        #         skip_special_tokens=True,
+        #         clean_up_tokenization_spaces=False,
+        #     )
+        # else:
+        #     print('TOKENS IS NONE, RETURNING GENERATED TEXT INSTEAD')
+        #     return outputs[0]['generated_text']
+
+    def generate_base_output_with_separate_prompts(self, system_prompt, user_prompt, max_new_tokens=512):
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+        prompt = self.base_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+        return self.generate_base_output(prompt, max_new_tokens=max_new_tokens)
 
     def finetuned_llm_pipeline(self):
         bnb_config = BitsAndBytesConfig(
@@ -124,21 +232,200 @@ class RunLLM:
         model = AutoModelForCausalLM.from_pretrained(
             LLM_PATH,
             quantization_config=bnb_config,
-            torch_dtype=torch.float16
+            device_map="auto",
+            # low_cpu_mem_usage=True
         )
 
-        model = PeftModel.from_pretrained(model, FINETUNED_LLM_WEIGHTS)
-        return pipeline("text-generation", model=model, tokenizer=tokenizer, device_map="auto")
+        model = PeftModel.from_pretrained(
+            model,
+            FINETUNED_LLM_WEIGHTS,
+            device_map="auto"
+        )
 
-    def generate_base_output(self, prompt, max_new_tokens=200):
-        output = self.base_pipeline(prompt, max_new_tokens=max_new_tokens, do_sample=True, return_full_text=False)[0]['generated_text']
-        return output
+        # weight diff analysis
+
+        return pipeline(
+            "text-generation",
+            model=model,
+            tokenizer=tokenizer,
+            device_map="auto",
+            batch_size=1
+        )
+
 
     def generate_finetuned_output(self, prompt, max_new_tokens=200):
         if self.finetuned_pipeline:
-            output = self.finetuned_pipeline(prompt, max_new_tokens=max_new_tokens, do_sample=True, return_full_text=False)[0]['generated_text']
+            print('Calling Finetuned LLM To Generate Output...')
+            output = self.finetuned_pipeline(
+                prompt, 
+                max_new_tokens=max_new_tokens, 
+                do_sample=False,
+                temperature=0.0,
+                top_p=1.0,
+                top_k=0,
+                repetition_penalty=1.05,
+                num_return_sequences=1,
+                return_full_text=False
+                )[0]['generated_text']
             return output
         return None
+
+def testPrompt():
+    llm = RunLLM(create_finetuned_pipeline=False)
+    llm.check_cuda()
+    
+#     system_prompt = """
+#     You are a patch Analyzer. Given a patch in the standard diff format, analyze the patch for the given task.
+# """
+
+    system_prompt = """
+
+    You are a patch fixer. You will be given an upstream patch that may have incorrect indentation.
+    Given a reference code file with the correct indentation,
+    find the lines of the patch and fix them to match the indentation (tabs and spaces) as per the reference code file.
+"""
+
+    user_prompt = """
+    The Patch in standard Git Format is:
+    <patch>
+    From f182429e5b1fc034050510da20c93256c4fa9652 Mon Sep 17 00:00:00 2001
+    From: Patrick Griffis <pgriffis@igalia.com>
+    Date: Sat, 16 Nov 2024 12:07:30 -0600
+    Subject: [PATCH] Fix heap buffer overflow in soup_content_sniffer_sniff
+
+    Co-Author: Ar Jun <pkillarjun@protonmail.com>
+    ---
+    libsoup/content-sniffer/soup-content-sniffer.c | 2 +-
+    1 file changed, 1 insertion(+), 1 deletion(-)
+
+    diff --git a/libsoup/content-sniffer/soup-content-sniffer.c b/libsoup/content-sniffer/soup-content-sniffer.c
+    index de0985eac..b62e48889 100644
+    --- a/libsoup/content-sniffer/soup-content-sniffer.c
+    +++ b/libsoup/content-sniffer/soup-content-sniffer.c
+    @@ -524,7 +524,7 @@ sniff_unknown (SoupContentSniffer *sniffer, GBytes *buffer,
+            guint index_pattern = 0;
+            gboolean skip_row = FALSE;
+
+    -		while ((index_stream < resource_length) &&
+    +		while ((index_stream < resource_length - 1) &&
+                (index_pattern <= type_row->pattern_length)) {
+                if (type_row->pattern[index_pattern] == ' ') {
+    -- 
+    GitLab
+    <end>
+"""
+
+#     user_prompt += """
+#     Task:
+#     Step 1:
+#     The hunk content contains some unchanged lines at first, then changed lines (removed and added lines) and finally some unchanged lines again.   
+#     Find out the content of First Mentioned Unchanged Line in the Patch.
+#     Then Find the content First Changed Line in the Patch (First Removed Line / Newly Added Line)
+    
+#     Output for step one:
+#     First Mentioned Unchanged Line: <line content>
+#     First Changed Line: <line content>
+# """
+
+#     user_prompt += """
+#     Task:
+
+#     As per this patch,
+#     First Mentioned Unchanged Line: `        guint index_pattern = 0;`
+#     First Changed Line: `-          while ((index_stream < resource_length) &&`
+    
+#     Now, look at the following code:
+#     "libsoup/content-sniffer/soup-content-sniffer.c": [
+#             "524: \t\tif (!sniff_scriptable && type_row->scriptable)\n",
+#             "525: \t\t\tcontinue;\n",
+#             "526: \n",
+#             "527: \t\tif (type_row->has_ws) {\n",
+#             "528: \t\t\tguint index_stream = 0;\n",
+#             "529: \t\t\tguint index_pattern = 0;\n",
+#             "530: \t\t\tgboolean skip_row = FALSE;\n",
+#             "531: \n",
+#             "532: \t\t\twhile ((index_stream < resource_length) &&\n",
+#             "533: \t\t\t       (index_pattern <= type_row->pattern_length)) {\n",
+#             "534: \t\t\t\t/* Skip insignificant white space (\"WS\" in the spec) */\n",
+#             "535: \t\t\t\tif (type_row->pattern[index_pattern] == ' ') {\n",
+#             "536: \t\t\t\t\tif (resource[index_stream] == '\\x09' ||\n",
+#             "537: \t\t\t\t\t    resource[index_stream] == '\\x0a' ||\n",
+#             "538: \t\t\t\t\t    resource[index_stream] == '\\x0c' ||\n",
+#             "539: \t\t\t\t\t    resource[index_stream] == '\\x0d' ||\n",
+#             "540: \t\t\t\t\t    resource[index_stream] == '\\x20')\n",
+#             "541: \t\t\t\t\t\tindex_stream++;\n",
+#             "542: \t\t\t\t\telse\n",
+#             "543: \t\t\t\t\t\tindex_pattern++;\n",
+#             "544: \t\t\t\t} else {\n",
+#             "545: \t\t\t\t\tif ((type_row->mask[index_pattern] & resource[index_stream]) != type_row->pattern[index_pattern]) {\n",
+#             "546: \t\t\t\t\t\tskip_row = TRUE;\n",
+#             "547: \t\t\t\t\t\tbreak;\n",
+#             "548: \t\t\t\t\t}\n"
+#         ]
+
+#     Find line numbers of the First Mentioned Unchanged Line and the First Changed Line in this code file.
+
+#     Output For this step:
+#     First Mentioned Unchanged Line Number: <line number>
+#     First Changed Line Number: <line number>
+# """
+
+    # user_prompt += """
+    
+    # Now, You need to fix the given patch.
+
+    # The line number in the patch hunk, it should be the line number of the first unchanged line in the downstream code.
+    # Output only the fixed patch in Standard Git Diff Format.
+    # """
+
+    user_prompt += """
+
+    Now, look at the following code file with line number and line content:
+    "libsoup/content-sniffer/soup-content-sniffer.c": [
+            "524: \t\tif (!sniff_scriptable && type_row->scriptable)\n",
+            "525: \t\t\tcontinue;\n",
+            "526: \n",
+            "527: \t\tif (type_row->has_ws) {\n",
+            "528: \t\t\tguint index_stream = 0;\n",
+            "529: \t\t\tguint index_pattern = 0;\n",
+            "530: \t\t\tgboolean skip_row = FALSE;\n",
+            "531: \n",
+            "532: \t\t\twhile ((index_stream < resource_length) &&\n",
+            "533: \t\t\t       (index_pattern <= type_row->pattern_length)) {\n",
+            "534: \t\t\t\t/* Skip insignificant white space (\"WS\" in the spec) */\n",
+            "535: \t\t\t\tif (type_row->pattern[index_pattern] == ' ') {\n",
+            "536: \t\t\t\t\tif (resource[index_stream] == '\\x09' ||\n",
+            "537: \t\t\t\t\t    resource[index_stream] == '\\x0a' ||\n",
+            "538: \t\t\t\t\t    resource[index_stream] == '\\x0c' ||\n",
+            "539: \t\t\t\t\t    resource[index_stream] == '\\x0d' ||\n",
+            "540: \t\t\t\t\t    resource[index_stream] == '\\x20')\n",
+            "541: \t\t\t\t\t\tindex_stream++;\n",
+            "542: \t\t\t\t\telse\n",
+            "543: \t\t\t\t\t\tindex_pattern++;\n",
+            "544: \t\t\t\t} else {\n",
+            "545: \t\t\t\t\tif ((type_row->mask[index_pattern] & resource[index_stream]) != type_row->pattern[index_pattern]) {\n",
+            "546: \t\t\t\t\t\tskip_row = TRUE;\n",
+            "547: \t\t\t\t\t\tbreak;\n",
+            "548: \t\t\t\t\t}\n"
+        ]
+
+    The patch hunk contains whitespaces instead of tabs in some lines.
+    The patch should match EXACTLY the indentation (tabs and spaces) as per the reference code file.
+    Fix so that correct number of tab characters, space characters are present in the patch.
+    Output only the fixed patch in standard git diff format.
+
+    # TODO: Try this with patch given as repr(patch)
+"""
+
+    output = llm.generate_base_output_with_separate_prompts(system_prompt, user_prompt, max_new_tokens=512)
+
+    print("Generated Patch Output:\n")
+    print(output)
+
+    print()
+    print()
+
+    print(repr(output))
 
 def main():
     llm = RunLLM(create_finetuned_pipeline=False)
@@ -313,15 +600,26 @@ def main():
     # Hunk should have all lines as per the FILE_CODE, including new lines, empty lines, etc.
     # """
 
+    system_prompt = """
 
-    prompt = """
+You are an upstream patch fixer. Given an upstream patch, and a code file with diverged downstream code, 
+you need to fix the upstream patch so it applies cleanly to the downstream code.
 
+Output only the generated patch in standard git diff format, without any extra description or formatting.
 
-You are a software engineer. You are given an upstream patch
-which fixes an issue. The patch is in standard git diff format.
+Rules you must follow:
+- Always adjust hunk headers (@@ -X,Y +A,B @@) so that line numbers exactly match the downstream code context provided. 
+- If the upstream patch modifies lines starting at 524, but in downstream those lines appear at 533, 
+  update the hunk header to start at 533 (or the correct line number as per <SOURCE>).
+- Ensure indentation, tabs, and spaces match exactly the downstream code.
+- Do not invent or remove unrelated changes.
 
-The patch content starts in the next line after label <PATCH> and ends
+"""
+
+    user_prompt = """
+Upstream patch content starts in the next line after label <PATCH> and ends
 at label <END>
+
 <PATCH>
 From f182429e5b1fc034050510da20c93256c4fa9652 Mon Sep 17 00:00:00 2001
 From: Patrick Griffis <pgriffis@igalia.com>
@@ -349,11 +647,19 @@ index de0985eac..b62e48889 100644
 -- 
 <END>
 
-In downstream sources, the function modified by this patch is different in terms of line
-numbers. Your task is to apply this patch in the downstream sources and generate a git standard
-diff patch for the same. The relevant file is given below starting with label
-<SOURCE> and ending with label <SOURCE_END>. For the patch, use the line numbers as mentioned
-in content starting with label <SOURCE>.
+The downstream code has diverged from the upstream. 
+Look at the upstream patch above, the lines added and removed, and adjust the upstream patch as per downstream code.
+
+Important:
+- Match the downstream context exactly.
+- Recalculate hunk headers so starting line numbers are correct with respect to <SOURCE>.
+- Ensure line numbers, tabs, and spaces match exactly as per the downstream code.
+- Make sure that hunk line number begins at first matched line (without changes) rather than the first changed line.
+
+Only return the final patch in the standard git diff format.
+
+The downstream version of the code file is given in the next section starting with label <SOURCE> and ending with label <SOURCE_END>, and line number is mentioned along with every line.
+
 <SOURCE>
      1	/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*- */
      2	/*
@@ -1277,17 +1583,16 @@ in content starting with label <SOURCE>.
    920		return g_object_new (SOUP_TYPE_CONTENT_SNIFFER, NULL);
    921	}
 <SOURCE_END>
-
-
 """
 
-    base_output = llm.generate_base_output(prompt, max_new_tokens=1000)
+    base_output = llm.generate_base_output_with_separate_prompts(system_prompt, user_prompt, max_new_tokens=1000)
 
     print("\n\nBase Output:")
     print(base_output)
 
 if __name__ == "__main__":
-    main()
+    # main()
+    testPrompt()
 
 
     # def finetune_llm(self, train_dataset, test_dataset=None):

@@ -44,58 +44,14 @@ def createPrompts():
         with open(PREPARED_PROMPTS, "w", encoding="utf-8") as f:
             json.dump(prepared_prompts, f, ensure_ascii=False, indent=4)
 
-def runFinetunedModel():
-    index = 12
-    print(f"For Package {PACKAGE_NAME}")
-
-    print("\nFetching Backporting Data")
-    backportObj = BackportingHandler()
-    inputList, outputList = backportObj.getData()
-    cve_number, cve_description, upstream_patch, file_codes = inputList[index]
-
-    print("\nGenerating Prompt")
-    p = PromptHandler()
-    prompt = p.getBackportingInputPrompt(cve_number, cve_description, upstream_patch, file_codes)
-
-    print(f"Length of Prompt = {len(prompt)} (should be <= Context Length of the Model)")
-
-    print("\nGenerating LLM Output")
-    llm = RunLLM(create_finetuned_pipeline=True)
-    finetuned_model_output = llm.generate_finetuned_output(prompt=prompt, max_new_tokens=2500)
-
-    print("\nClean Model Output")
-    cleanObj = CleanData()
-    cleaned_output = cleanObj.extractOutputFromGeneratedPatch(finetuned_model_output)
-
-    print("\nTesting Output Generated From LLM")
-    isSuccessful, error = backportObj.testPatch(cve_number, cleaned_output)
-
-    result = {
-        'expected_output': outputList[index],
-        'finetuned_model_output': finetuned_model_output,
-        'cleaned_output': cleaned_output
-    }
-
-    if not isSuccessful:
-        result['finetuned_error'] = {
-            "type": type(error).__name__,
-            "message": str(error),
-        }
-
-    with open(OUTPUT_RESULT_PATH, "r", encoding="utf-8") as f:
-        existing_data = json.load(f)
-    existing_data['finetuned'] = result
-
-    with open(OUTPUT_RESULT_PATH, "w", encoding="utf-8") as f:
-        json.dump(existing_data, f, ensure_ascii=False, indent=4)
-
-# def runBaseAndFinetunedModel():
+# def runFinetunedModel():
+#     index = 12
 #     print(f"For Package {PACKAGE_NAME}")
 
 #     print("\nFetching Backporting Data")
 #     backportObj = BackportingHandler()
 #     inputList, outputList = backportObj.getData()
-#     cve_number, cve_description, upstream_patch, file_codes = inputList[0]
+#     cve_number, cve_description, upstream_patch, file_codes = inputList[index]
 
 #     print("\nGenerating Prompt")
 #     p = PromptHandler()
@@ -105,35 +61,33 @@ def runFinetunedModel():
 
 #     print("\nGenerating LLM Output")
 #     llm = RunLLM(create_finetuned_pipeline=True)
-#     base_model_output = llm.generate_base_output(prompt=prompt, max_new_tokens=1000)
-#     fine_tuned_output = llm.generate_finetuned_output(prompt=prompt, max_new_tokens=1000)
+#     finetuned_model_output = llm.generate_finetuned_output(prompt=prompt, max_new_tokens=2500)
 
-#     print("\nTesting Output Generated From Base LLM")
-#     isBaseSuccessful, baseError = backportObj.testPatch(cve_number, base_model_output)
+#     print("\nClean Model Output")
+#     cleanObj = CleanData()
+#     cleaned_output = cleanObj.extractOutputFromGeneratedPatch(finetuned_model_output)
 
-#     print("\nTesting Output Generated From Fine-tuned LLM")
-#     isFineTunedSuccessful, fineTunedError = backportObj.testPatch(cve_number, fine_tuned_output)
+#     print("\nTesting Output Generated From LLM")
+#     isSuccessful, error = backportObj.testPatch(cve_number, cleaned_output)
 
 #     result = {
-#         'expected_output': outputList[0],
-#         'base_model_output': base_model_output,
-#         'fine_tuned_output': fine_tuned_output
+#         'expected_output': outputList[index],
+#         'finetuned_model_output': finetuned_model_output,
+#         'cleaned_output': cleaned_output
 #     }
 
-#     if not isBaseSuccessful:
-#         result['base_error'] = {
-#             "type": type(baseError).__name__,
-#             "message": str(baseError),
+#     if not isSuccessful:
+#         result['finetuned_error'] = {
+#             "type": type(error).__name__,
+#             "message": str(error),
 #         }
 
-#     if not isFineTunedSuccessful:
-#         result['finetuned_error'] = {
-#             "type": type(fineTunedError).__name__,
-#             "message": str(fineTunedError),
-#         }
+#     with open(OUTPUT_RESULT_PATH, "r", encoding="utf-8") as f:
+#         existing_data = json.load(f)
+#     existing_data['finetuned'] = result
 
 #     with open(OUTPUT_RESULT_PATH, "w", encoding="utf-8") as f:
-#         json.dump(result, f, ensure_ascii=False, indent=4)
+#         json.dump(existing_data, f, ensure_ascii=False, indent=4)
 
 def finetuneLLM():
     backportObj = BackportingHandler()
@@ -243,7 +197,8 @@ def runBaseModel():
                 p = PromptHandler()
                 prompt = p.getBackportingInputPrompt(cve_number, cve_description, upstream_patch, file_codes)
 
-                logger.log_input_prompt(p.getBackportingInputPrompt("", "", "", ""), prompt)
+                logger.log_input_prompt("EMPTY_PROMPT_STATEMENT", p.getBackportingInputPrompt("", "", "", ""))
+                logger.log_input_prompt("INPUT_PROMPT", prompt)
                 print(f"Length of Prompt = {len(prompt)} (should be <= Context Length of the Model)")
 
                 print("\nGenerating LLM Output")
@@ -251,24 +206,48 @@ def runBaseModel():
                 base_model_output = llm.generate_base_output(prompt=prompt, max_new_tokens=2500)
                 manual_test_file = logger.log_base_model_output(base_model_output)
 
-                print("\nClean Model Output")
-                cleanObj = CleanData()
-                cleaned_output = cleanObj.extractOutputFromGeneratedPatch(base_model_output, prompt)
-                logger.log_cleaned_base_model_output(cleaned_output)
+                # print("\nClean Model Output")
+                # cleanObj = CleanData()
+                # cleaned_output = cleanObj.extractOutputFromGeneratedPatch(base_model_output, prompt)
+                # logger.log_cleaned_base_model_output(cleaned_output)
 
                 print("\nTesting Output Generated From LLM")
-                isSuccessful, error = backportObj.testPatch(cve_number, cleaned_output)
+                isSuccessful, error = backportObj.testPatch(cve_number, base_model_output)
 
                 logger.log_base_patch_test_result(isSuccessful, type(error).__name__ if error else "NO_ERROR", str(error) if error else "NO_ERROR")
 
                 if isSuccessful:
                     print("✅ Base Model Generated Patch Successful for:", cve_number)
                 else:
+                    # check for line number mismatch 
                     print("❌ Base Model Generated Patch Failed for:", cve_number)
                     print(f"Error Type: {type(error).__name__}")
                     print(f"Error Message: {str(error)}")
                     print(f"Logs In: {stdout_file}")
                     print(f"Manual Test File For Base Model: {manual_test_file}")
+
+                    print("\n\nChecking For Line Number Mismatch in Base Model Output:")
+                    prompt = p.getCheckLineNumberPrompt(base_model_output, file_codes)
+                    logger.log_input_prompt("CHECK_LINE_NUMBER_PROMPT", prompt)
+
+                    base_model_output_line_check = llm.generate_base_output(prompt=prompt, max_new_tokens=2500)
+                    manual_test_file = logger.log_base_model_output(base_model_output_line_check, check_for="line_number_check")
+
+                    print("\nTesting Output Generated From Base Model Line Number Check")
+                    isSuccessful, error = backportObj.testPatch(cve_number, base_model_output_line_check)
+                    logger.log_base_patch_test_result(isSuccessful, type(error).__name__ if error else "NO_ERROR", str(error) if error else "NO_ERROR", check_for="line_number_check")
+
+                    if isSuccessful:
+                        print("✅ Base Model Line Number Check Patch Successful for:", cve_number)
+                    else:
+                        print("❌ Base Model Line Number Check Patch Failed for:", cve_number)
+                        print(f"Error Type: {type(error).__name__}")
+                        print(f"Error Message: {str(error)}")
+                        print(f"Logs In: {stdout_file}")
+                        print(f"Manual Test File For Base Model Line Number Check: {manual_test_file}")
+
+                    # check for line content mismatch
+                    # check for whitespace character mismatch 
 
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
@@ -282,6 +261,75 @@ def runBaseModel():
                 print(f"Logs In: {stdout_file}")
                 print(f"Manual Test File For Base Model: {manual_test_file}")
             print(f"Finished handling CVE: {cve_number}\n\n")
+
+def runFinetunedModel():
+    cves = ["CVE-2025-32052"]
+    backportObj = BackportingHandler()
+    inputList, outputList = backportObj.getData()
+
+    for (cve_number, cve_description, upstream_patch, file_codes), azurelinux_patch in zip(inputList, outputList):
+        if cve_number in cves:
+            print("Handling CVE:", cve_number)
+            logger = Logger(cve_number, manual_test=False)
+            logger.log_cve_info(cve_number, cve_description, upstream_patch, file_codes, azurelinux_patch)
+
+            # Direct the stdout and stderr to a log file for this CVE
+            stdout_file = logger.create_stdout_log_file()
+
+            print(f"Logging stdout and stderr to: {stdout_file}")
+            with open(stdout_file, "w") as f:
+                sys.stdout = f
+                sys.stderr = f
+
+                print(f"\nGenerating Prompt for {cve_number}")
+                p = PromptHandler()
+                prompt = p.getBackportingInputPrompt(cve_number, cve_description, upstream_patch, file_codes)
+
+                logger.log_input_prompt("EMPTY_PROMPT_STATEMENT", p.getBackportingInputPrompt("", "", "", ""))
+                logger.log_input_prompt("INPUT_PROMPT", prompt)
+                print(f"Length of Prompt = {len(prompt)} (should be <= Context Length of the Model)")
+
+                print("\nGenerating LLM Output (Finetuned)")
+                llm = RunLLM(create_finetuned_pipeline=True)
+                finetuned_model_output = llm.generate_finetuned_output(prompt=prompt, max_new_tokens=2500)
+                manual_test_file = logger.log_finetuned_model_output(finetuned_model_output)
+
+                # print("\nClean Model Output")
+                # cleanObj = CleanData()
+                # cleaned_output = cleanObj.extractOutputFromGeneratedPatch(finetuned_model_output, prompt)
+                # logger.log_cleaned_finetuned_model_output(cleaned_output)
+
+                print("\nTesting Output Generated From Finetuned LLM")
+                isSuccessful, error = backportObj.testPatch(cve_number, finetuned_model_output)
+
+                logger.log_finetuned_patch_test_result(
+                    isSuccessful,
+                    type(error).__name__ if error else "NO_ERROR",
+                    str(error) if error else "NO_ERROR"
+                )
+
+                if isSuccessful:
+                    print("✅ Finetuned Model Generated Patch Successful for:", cve_number)
+                else:
+                    print("❌ Finetuned Model Generated Patch Failed for:", cve_number)
+                    print(f"Error Type: {type(error).__name__}")
+                    print(f"Error Message: {str(error)}")
+                    print(f"Logs In: {stdout_file}")
+                    print(f"Manual Test File For Finetuned Model: {manual_test_file}")
+
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+
+            if isSuccessful:
+                print("✅ Finetuned Model Generated Patch Successful for:", cve_number)
+            else:
+                print("❌ Finetuned Model Generated Patch Failed for:", cve_number)
+                print(f"Error Type: {type(error).__name__}")
+                print(f"Error Message: {str(error)}")
+                print(f"Logs In: {stdout_file}")
+                print(f"Manual Test File For Finetuned Model: {manual_test_file}")
+            print(f"Finished handling CVE: {cve_number}\n\n")
+
 
 def test_output_manually(manual_test_file):
     parts = os.path.normpath(manual_test_file).split(os.sep)
@@ -333,4 +381,5 @@ if __name__ == "__main__":
     runBaseModel()
 
     # finetuneLLM()
+    # runFinetunedModel()
     # createPrompts()

@@ -42,22 +42,29 @@ class Logger:
             log_file.write("Stdout log\n\n")
         return log_file_path
 
-    def log_input_prompt(self, empty_prompt, input_prompt):
+    def log_input_prompt(self, prompt_type, prompt):
         log_file_path = os.path.join(self.log_dir, "input_prompt.json")
 
+        # if it exists, read the existing content and append to it
+        if os.path.exists(log_file_path):
+            with open(log_file_path, "r") as log_file:
+                existing_data = json.load(log_file)
+        else:
+            existing_data = {}
+        existing_data[prompt_type] = prompt
         with open(log_file_path, "w") as log_file:
-            json.dump({
-                "PROMPT_STATEMENT": empty_prompt,
-                "INPUT_PROMPT": input_prompt
-            }, log_file, ensure_ascii=False, indent=4)
+            json.dump(existing_data, log_file, ensure_ascii=False, indent=4)
+        return
 
-    def log_base_model_output(self, base_model_output):
-        log_file_path = os.path.join(self.log_dir, "base_output.patch")
+    def log_base_model_output(self, base_model_output, check_for = ""):
+        file_name = "base_output.patch" if check_for == "" else f"base_output_{check_for}.patch"
+        log_file_path = os.path.join(self.log_dir, file_name)
 
         with open(log_file_path, "w") as log_file:
             log_file.write(base_model_output)
 
-        log_file_path = os.path.join(self.log_dir, "manual_test_base_output_copy.patch")
+        file_name = "manual_test_base_output_copy.patch" if check_for == "" else f"manual_test_base_output_{check_for}_copy.patch"
+        log_file_path = os.path.join(self.log_dir, file_name)
         with open(log_file_path, "w") as log_file:
             log_file.write(base_model_output)
         
@@ -69,8 +76,9 @@ class Logger:
         with open(log_file_path, "w") as log_file:
             log_file.write(cleaned_base_model_output)
 
-    def log_base_patch_test_result(self, is_successful, error_type, error):
-        log_file_path = os.path.join(self.log_dir, "base_patch_test_result.json")
+    def log_base_patch_test_result(self, is_successful, error_type, error, check_for = ""):
+        file_name = "base_patch_test_result.json" if check_for == "" else f"base_patch_test_result_{check_for}.json"
+        log_file_path = os.path.join(self.log_dir, file_name)
 
         with open(log_file_path, "w") as log_file:
             json.dump({
@@ -78,6 +86,30 @@ class Logger:
                 "ERROR_TYPE": error_type,
                 "ERROR": error
             }, log_file, ensure_ascii=False, indent=4)
+    
+    def log_finetuned_model_output(self, finetuned_model_output):
+        log_file_path = os.path.join(self.log_dir, "finetuned_output.patch")
+
+        with open(log_file_path, "w") as log_file:
+            log_file.write(finetuned_model_output)
+
+        log_file_path = os.path.join(self.log_dir, "manual_test_finetuned_output_copy.patch")
+        with open(log_file_path, "w") as log_file:
+            log_file.write(finetuned_model_output)
+        
+        return log_file_path
+
+
+    def log_finetuned_patch_test_result(self, is_successful, error_type, error):
+        log_file_path = os.path.join(self.log_dir, "finetuned_patch_test_result.json")
+
+        with open(log_file_path, "w") as log_file:
+            json.dump({
+                "IS_SUCCESSFUL": is_successful,
+                "ERROR_TYPE": error_type,
+                "ERROR": error
+            }, log_file, ensure_ascii=False, indent=4)
+
 
     def log_manual_patch(self, manual_patch):
         log_file_path = os.path.join(self.log_dir, "manual_patch.patch")
