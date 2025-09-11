@@ -57,12 +57,12 @@ class Main:
 
         return output
 
-    def getPrompts(self, prompt_type):
+    def getPrompts(self, prompt_type, **kwargs):
         print('Getting prompts of type:', prompt_type)
         self.logger.log_info(f"Getting prompts of type: {prompt_type}")
 
-        system_prompt, user_prompt = self.promptsObj.getPrompts(prompt_type, self.cve_number, self.cve_description, self.upstream_patch, self.file_codes)
-        
+        system_prompt, user_prompt = self.promptsObj.getPrompts(prompt_type, **kwargs)
+
         self.logger.log_prompt(prompt_type + "_System_Prompt", system_prompt)
         self.logger.log_prompt(prompt_type + "_User_Prompt", user_prompt)
         return system_prompt, user_prompt
@@ -83,7 +83,12 @@ class Main:
         print()
         print()
         self.setCVE(cve_number)
-        system_prompt, user_prompt = self.getPrompts('BASE')
+        system_prompt, user_prompt = self.getPrompts('BASE', 
+                                        cve_number = self.cve_number, 
+                                        cve_description = self.cve_description, 
+                                        upstream_patch = self.upstream_patch, 
+                                        file_code = self.file_codes)
+
         output = self.generateFromLLM(system_prompt, user_prompt, "BASE_MODEL_OUTPUT")
 
         isSuccess = self.testPatch(output, cve_number, "BASE_PATCH_TEST")
@@ -111,9 +116,23 @@ class Main:
         print()
         return False
 
-    def fixPatchCommonErrors(self, patch, cve_number):
-        # TODO: Fix line number in hunk, check line content for each line, check whitespace and tab characters.
-        return patch
+    def fixPatchCommonErrors(self, generated_patch, cve_number):
+        # TODO checkPatchLogic, fixWhitespace
+        # check for missing or extra lines (if they are correct as per the file code)
+
+        def fixLineNumber(patch):
+            system_prompt, user_prompt = self.getPrompts('FIRST_LINE_CONTENT', upstream_patch = patch)
+            first_line_content = self.generateFromLLM(system_prompt, user_prompt, "FIRST_LINE_CONTENT")
+
+            system_prompt, user_prompt = self.getPrompts('FIRST_LINE_NUMBER', upstream_patch = patch, first_line_content = first_line_content, file_code = self.file_codes)
+            first_line_numbers = self.generateFromLLM(system_prompt, user_prompt, "FIRST_LINE_NUMBER")
+
+            system_prompt, user_prompt = self.getPrompts('LINE_NUMBER_FIX', upstream_patch = patch, first_line_content = first_line_content, first_line_numbers = first_line_numbers)
+            output = self.generateFromLLM(system_prompt, user_prompt, "LINE_NUMBER_FIX")
+            return output
+
+        output = fixLineNumber(patch = generated_patch)
+        return output
 
 def main():
     print(f"Backporting For {PACKAGE_NAME}...")
