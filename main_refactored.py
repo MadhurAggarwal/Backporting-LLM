@@ -1,21 +1,21 @@
 from constants import PACKAGE_NAME, OUTPUT_RESULT_PATH, BACKPORT_EXAMPLE, STDOUT_PATH, TEST_SPLIT_DATASET, PROMPT_DATA_FILE, PREPARED_PROMPTS, PATCH_TEST_FILE
 from backporting_handler import BackportingHandler, CleanData
 from llm_handler import RunLLM, TrainLLM
-from prompt import PromptHandler
+from prompt_refactored import Prompts
 import json
 import sys
 from datasets import Dataset, load_dataset
-from logger import Logger
+from logger_refactored import Logger
 import os
 
 # Add BaseMain, FinetuneMain
 class Main:
     def __init__(self):
         self.backportObj = BackportingHandler()
-        self.promptsObj  = PromptHandler()
+        self.promptsObj  = Prompts()
         self.llm = RunLLM()
 
-        self.inputList, self.outputList = self.backportObj.load_input_output_data()
+        self.inputList, self.outputList = self.backportObj.getData()
     
     def setCVE(self, cve_number):
         print('Setting CVE to:', cve_number)
@@ -31,11 +31,17 @@ class Main:
                 self.file_codes = file_codes
                 self.azurelinux_patch = azurelinux_patch
                 break
+        
+        self.logger.log_input("CVE_DESCRIPTION", self.cve_description)
+        self.logger.log_input("UPSTREAM_PATCH", self.upstream_patch)
+        self.logger.log_input("FILE_CODES", self.file_codes)
+        self.logger.log_input("AZURELINUX_PATCH", self.azurelinux_patch)
 
     def setLogger(self, cve_number):
         self.logger = Logger(cve_number)
         self.logger.log_info(f"Backporting for CVE: {cve_number}")
-        # self.stdout_file = self.logger.create_stdout_log_file()
+        
+        self.log_file = self.logger.get_log_file_path()
 
     def generateFromLLM(self, system_prompt, user_prompt, logging_statement):
         max_new_tokens = 2048
@@ -49,21 +55,29 @@ class Main:
         manual_test_file = self.logger.log_generated_output(logging_statement, output)
         self.manual_test_files.append(manual_test_file)
 
+        return output
+
     def getPrompts(self, prompt_type):
         print('Getting prompts of type:', prompt_type)
         self.logger.log_info(f"Getting prompts of type: {prompt_type}")
 
-        # Move this logic to PromptHandler class
-        if prompt_type == 'BASE':
-            system_prompt = self.promptsObj.get_base_system_prompt()
-            user_prompt = self.promptsObj.get_base_user_prompt(self.cve_number, self.cve_description, self.upstream_patch, self.file_codes)
+        system_prompt, user_prompt = self.promptsObj.getPrompts(prompt_type, self.cve_number, self.cve_description, self.upstream_patch, self.file_codes)
         
         self.logger.log_prompt(prompt_type + "_System_Prompt", system_prompt)
         self.logger.log_prompt(prompt_type + "_User_Prompt", user_prompt)
         return system_prompt, user_prompt
     
     def testPatch(self, patch, cve_number, statement = "MANUAL_PATCH_TEST"):
-        pass
+        isSuccess, err = self.backportObj.testPatch(patch, cve_number)
+        
+        if isSuccess:
+            print(f"✅ Patch test for {statement} SUCCESS")
+            self.logger.log_info(f"✅ Patch test for {statement} SUCCESS")
+        else:
+            print(f"❌ Patch test for {statement} FAILED")
+            self.logger.log_info(f"❌ Patch test for {statement} FAILED")
+            self.logger.log_info(f"Error: {err}")
+            self.logger.log_test_result(statement, patch, str(err))
 
     def backportOneCVE(self, cve_number):
         print()
@@ -89,6 +103,7 @@ class Main:
         print(f"❌ Backporting failed for {cve_number}")
         self.logger.log_info(f"❌ Backporting failed for {cve_number}")
         print()
+        print("Check Logs in: ", self.log_file)
         print("Files for manually testing the LLM Generated Patch: ")
         for file in self.manual_test_files:
             print(file)
@@ -97,10 +112,13 @@ class Main:
         return False
 
     def fixPatchCommonErrors(self, patch, cve_number):
-        pass
+        # TODO: Fix line number in hunk, check line content for each line, check whitespace and tab characters.
+        return patch
 
 def main():
     print(f"Backporting For {PACKAGE_NAME}...")
+    MainObj = Main()
+    MainObj.backportOneCVE("CVE-2025-32052")
 
 if __name__ == "__main__":
     main()

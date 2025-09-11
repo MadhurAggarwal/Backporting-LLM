@@ -26,14 +26,16 @@ class BackportingHandler:
         if cve_number in self.upstream_data:
             patch = self.upstream_data[cve_number].get("upstream_patch", None)
             if patch is not None:
-                return json.dumps(patch, indent=2)
+                return patch.encode("utf-8").decode("unicode_escape")
+                # return json.dumps(patch, indent=2)
         return None
     
     def getCVEDescription(self, cve_number):
         if cve_number in self.upstream_data:
             description = self.upstream_data[cve_number].get("cve_description", None)
             if description is not None:
-                return json.dumps(description, indent=2)
+                return description.encode("utf-8").decode("unicode_escape")
+                # return json.dumps(description, indent=2)
         return None
 
     def getPRNumberForCVE(self, cve_number):
