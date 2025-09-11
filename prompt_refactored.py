@@ -40,6 +40,8 @@ class Prompts:
 
     ############################################ CHECK PATCH LOGIC ############################################
 
+    ############################################ CHECK MISSING / EXTRA LINES ############################################
+
     ############################################ LINE NUMBER FIX PROMPTS ############################################
     FIRST_LINE_CONTENT_ANALYZER_SYSTEM_PROMPT = """
     You are a Patch Analyzer.
@@ -56,7 +58,7 @@ class Prompts:
     Hunk Content in the patch contain some unchanged lines mentioned at start of hunk content. It is followed by changed lines which start with '+' or '-'.
     Find out the content of First Mentioned Unchanged Line in the Patch.
     Then Find the content First Changed Line in the Patch (First Removed (-) Line / Newly Added (+) Line)
-    
+    Only output the following:
     Output:
     First Mentioned Unchanged Line: <line content>
     First Changed Line: <line content>
@@ -83,9 +85,10 @@ class Prompts:
     <end>
 
     Find line numbers of the First Mentioned Unchanged Line and the First Changed Line in this code file.
+    DO NOT output any extra tokens, only the line numbers in the following format:
     Output:
-    First Mentioned Unchanged Line Number: <line number>
-    First Changed Line Number: <line number>
+    First Mentioned Unchanged Line Number: <line number>: <line content>
+    First Changed Line Number: <line number>: <line content>
     """
 
     LINE_NUMBER_FIX_SYSTEM_PROMPT = """
@@ -108,7 +111,7 @@ class Prompts:
 
     Update the line numbers in the hunk header of patch to match the FIRST MENTIONED UNCHANGED LINE number.
     Do NOT change the patch logic.
-    Only output the final updated patch in STANDARD GIT diff format.
+    Only output the final updated patch in STANDARD GIT diff format with NO any extra tokens like ```diff or <patch>.
     """
 
     ############################################ WHITESPACE, TABS FIX PROMPTS ############################################
@@ -120,53 +123,73 @@ class Prompts:
         for key, value in file_codes.items():
             prompt += f"File: {key}\n"
             for line in value:
-                prompt += f"{line}\n"
+                prompt += f"{line}"
+                if not line.endswith("\n"):
+                    prompt += "\n"
             prompt += "\n"
         return prompt
 
-    def getPrompts(self, prompt_type, 
-                   cve_number = None, cve_description = None, upstream_patch = None, file_code = None,
-                   first_line_content = None, first_line_numbers = None
-                ):
+    def getPrompts(
+        self,
+        prompt_type,
+        cve_number=None,
+        cve_description=None,
+        upstream_patch=None,
+        file_code=None,
+        first_line_content=None,
+        first_line_numbers=None,
+    ):
+        def base_prompts():
+            return (
+                self.BASE_SYSTEM_PROMPT,
+                self.BASE_USER_PROMPT.format(
+                    PACKAGE_NAME=PACKAGE_NAME,
+                    CVE_DESCRIPTION=cve_description,
+                    UPSTREAM_PATCH=upstream_patch,
+                    FILE_CODES=self.format_file_codes(file_code),
+                ),
+            )
 
-        if prompt_type == 'BASE':
-            system_prompt = self.BASE_SYSTEM_PROMPT
-            user_prompt = self.BASE_USER_PROMPT.format(
-                PACKAGE_NAME=PACKAGE_NAME,
-                # CVE_NUMBER=cve_number,
-                CVE_DESCRIPTION=cve_description,
-                UPSTREAM_PATCH=upstream_patch,
-                FILE_CODES=self.format_file_codes(file_code)
+        def first_line_content_prompts():
+            return (
+                self.FIRST_LINE_CONTENT_ANALYZER_SYSTEM_PROMPT,
+                self.FIRST_LINE_CONTENT_ANALYZER_USER_PROMPT.format(
+                    PATCH=upstream_patch,
+                ),
             )
-            return system_prompt, user_prompt
-        
-        elif prompt_type == 'FIRST_LINE_CONTENT':
-            system_prompt = self.FIRST_LINE_CONTENT_ANALYZER_SYSTEM_PROMPT
-            user_prompt = self.FIRST_LINE_CONTENT_ANALYZER_USER_PROMPT.format(
-                PATCH=upstream_patch
-            )
-            return system_prompt, user_prompt
 
-        elif prompt_type == 'FIRST_LINE_NUMBER':
-            system_prompt = self.FIRST_LINE_NUMBER_SYSTEM_PROMPT
-            user_prompt = self.FIRST_LINE_NUMBER_USER_PROMPT.format(
-                PATCH=upstream_patch,
-                FIRST_LINE_CONTENT=first_line_content,
-                FILE_CODE=self.format_file_codes(file_code)
+        def first_line_number_prompts():
+            return (
+                self.FIRST_LINE_NUMBER_SYSTEM_PROMPT,
+                self.FIRST_LINE_NUMBER_USER_PROMPT.format(
+                    PATCH=upstream_patch,
+                    FIRST_LINE_CONTENT=first_line_content,
+                    FILE_CODE=self.format_file_codes(file_code),
+                ),
             )
-            return system_prompt, user_prompt
 
-        elif prompt_type == 'LINE_NUMBER_FIX':
-            system_prompt = self.LINE_NUMBER_FIX_SYSTEM_PROMPT
-            user_prompt = self.LINE_NUMBER_FIX_USER_PROMPT.format(
-                PATCH=upstream_patch,
-                FIRST_LINE_CONTENT=first_line_content,
-                LINE_NUMBERS=first_line_numbers
+        def line_number_fix_prompts():
+            return (
+                self.LINE_NUMBER_FIX_SYSTEM_PROMPT,
+                self.LINE_NUMBER_FIX_USER_PROMPT.format(
+                    PATCH=upstream_patch,
+                    FIRST_LINE_CONTENT=first_line_content,
+                    LINE_NUMBERS=first_line_numbers,
+                ),
             )
-            return system_prompt, user_prompt
-        
-        else:
+
+        prompt_map = {
+            "BASE"               : base_prompts,
+            "FIRST_LINE_CONTENT" : first_line_content_prompts,
+            "FIRST_LINE_NUMBER"  : first_line_number_prompts,
+            "LINE_NUMBER_FIX"    : line_number_fix_prompts,
+        }
+
+        try:
+            return prompt_map[prompt_type]()
+        except KeyError:
             raise ValueError(f"Unknown prompt type: {prompt_type}")
+
 
     def getExpectedOutput(self, prompt_type, azurelinux_patch):
         if prompt_type == 'BASE':

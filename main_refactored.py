@@ -118,7 +118,14 @@ class Main:
 
     def fixPatchCommonErrors(self, generated_patch, cve_number):
         # TODO checkPatchLogic, fixWhitespace
-        # check for missing or extra lines (if they are correct as per the file code)
+        # TODO check for missing or extra lines (if they are correct as per the file code)
+        # TODO MAKE SURE TO CHECK IF ALL THESE WORK ON PATCHES WITH MULTIPLE HUNKS. otherwise, break a patch into multiple hunks and then call these functions on each hunk.
+
+        def checkPatchLogic(patch):
+            raise NotImplementedError("checkPatchLogic is not implemented yet.")
+
+        def checkMissingOrExtraLines(patch):
+            raise NotImplementedError("checkMissingOrExtraLines is not implemented yet.")
 
         def fixLineNumber(patch):
             system_prompt, user_prompt = self.getPrompts('FIRST_LINE_CONTENT', upstream_patch = patch)
@@ -130,6 +137,9 @@ class Main:
             system_prompt, user_prompt = self.getPrompts('LINE_NUMBER_FIX', upstream_patch = patch, first_line_content = first_line_content, first_line_numbers = first_line_numbers)
             output = self.generateFromLLM(system_prompt, user_prompt, "LINE_NUMBER_FIX")
             return output
+
+        def checkWhitespace(patch):
+            raise NotImplementedError("checkWhitespace is not implemented yet.")
 
         output = fixLineNumber(patch = generated_patch)
         return output
