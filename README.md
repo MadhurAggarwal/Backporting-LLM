@@ -30,5 +30,8 @@ hf download Qwen/Qwen2.5-Coder-32B-Instruct
 
 Now, just Run Main.py file!
 
+## How To Try With Some Other Package
+[To Be Added]
+
 ## Additional
 View [VM Setup](https://www.notion.so/VM-setup-2493774dee53802d8378ffbd953f1a0e?source=copy_link) used for running this framework
