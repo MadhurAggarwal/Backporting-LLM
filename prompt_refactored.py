@@ -115,6 +115,157 @@ class Prompts:
     """
 
     ############################################ WHITESPACE, TABS FIX PROMPTS ############################################
+#     HUNK_EXTRACT_SYSTEM_PROMPT = """
+#     You are a Patch Analyzer.
+#     You are given a Standard Git Diff format Patch.
+#     Extract the file lines EXACTLY as they appear in the patch, including whitespace, newline and tabs, exactly as the patch.
+#     """
+
+#     HUNK_EXTRACT_USER_PROMPT = """
+#     The Patch in standard Git Format is:
+#     <patch>
+# {PATCH}
+#     <end>
+
+#     TASK:
+#     1. Find each hunk in the patch.
+#     2. For each hunk, there is a hunk header and a hunk content which contains file lines.
+#     3. From the hunk content, extract file lines. File Lines should be exactly as they appear in the patch, including whitespace, newline and tabs, exactly as the patch.
+#        DO NOT miss any tab/whitespace/newline or anything else.
+#     4. Only output the extracted lines, do NOT output any extra tokens like ```diff or <patch>.
+
+#     Output:
+#     <hunk1>
+#     <extracted lines>
+
+#     <hunk2>
+#     <extracted lines>
+#     """
+
+    HUNK_FILE_CONTENT_EXTRACT_SYSTEM_PROMPT = """
+    You are a software developer. 
+    You are given a patch, and extracted lines from the patch, with proper formatting (whitespace, tabs, newlines etc.)
+    You are also given a code file. 
+    Return corresponding lines in the code file that match the extracted lines from the patch.
+    """
+
+    HUNK_FILE_CONTENT_EXTRACT_USER_PROMPT = """
+    The Patch in standard Git Format is:
+    <patch>
+{PATCH}
+    <end>
+
+    The downstream codefile has diverged a bit from the upstream file for which this patch was created.
+    The downstream code file in format <line_number>: <line_content> is:
+    <code_file>
+{FILE_CODE}
+    <end>
+
+    TASK:
+    1. Find the corresponding Hunk Content from the patch in the file code.
+        The Corresponding hunk in the file code could have some extra / missing lines.
+        There could also be some whitespace / tab differences or newline differences.
+    2. Give me ONLY the corresponding lines from the patch in the file code.
+       Ensure that format (whitespace, tabs, newlines etc.) of the lines is exactly as in the file code.
+       If there are some extra / missing lines in the corresponding hunk in the file code, INCLUDE them as well.
+    3. Ensure that lines extracted are as close to the patch hunk as possible.
+       
+    I want to know what the corresponding hunk in the downstream file code looks like.
+    Do not give any lines outside the corresponding hunk or any extra formatting tokens like ``` or <>
+    Output:
+    <corresponding_hunk_in_file_code>
+    """
+
+    HUNK_CONTENT_FIX_SYSTEM_PROMPT = """
+    You are Git Diff Patch Fixer.
+    Given a patch in the Standard Git Diff format, update the patch as per the given task.
+    ONLY output the final updated patch in STANDARD GIT diff format.
+    """
+
+    HUNK_CONTENT_FIX_USER_PROMPT = """
+    The upstream patch in Standard Git Diff format is:
+    <Patch>
+{UPSTREAM_PATCH}
+    <end>
+
+    The downstream file code has diverged from upstream.
+    Here, the line content in the diverged file is:
+{LINE_CONTENT}
+
+    TASK:
+    The upstream patch uses different whitespace, tabs etc. than the downstream code
+    Also some lines could be missing / extra in the new file code, from when the patch was created.
+    So, update the patch to the new line content.
+
+    Ensure that the patch logic is NOT changed.
+    Ensure that line content like newlines, tabs, whitespace etc matches the downstream file code.
+
+    Do NOT give any extra tokens like diff ``` or <patch>.
+    Only output the final patch in STANDARD GIT diff format.
+"""
+
+    ############################################ CHANGED FILE EXTRACT ############################################
+
+    CHANGED_CODE_EXTRACT_SYSTEM_PROMPT = """
+    You are a software developer.
+    Given a patch in the Standard Git Diff format, and complete file code
+    The patch does not cleanly apply to the file code due to some extra / missing lines in the file code.
+    Apply the patch to the file code, and return the changed code from the file code after
+    """
+
+    CHANGED_CODE_EXTRACT_USER_PROMPT = """
+    The Patch in standard Git Format is:
+    <patch>
+{PATCH}
+    <end>
+
+    Downstream file code in format <line_number>: <line_content> is given below:
+    <Downstream_Code>
+{FILE_CODES}
+    <end>
+
+    The First Mentioned Unchanged Line and First Changed Line in the patch are:
+{FIRST_LINE_NUMBERS}
+
+    TASK:
+    1. The Patch and file code have diverged, with some extra / missing lines in the file code.
+    2. Identify the line changed in the patch, find the line in file code, and apply the patch.
+    3. Only Return the changed code from CODE FILE, (Not The Patch, the Code File), after applying the patch on it.
+    4. Ensure that missing / extra lines from the code file Are PRESERVED. The output should be exactly as per the code file, with only changes from the patch applied.
+        Do not give any other tokens.
+    Output:
+    <changed_code>
+    """
+
+    CHANGED_CODE_FIX_SYSTEM_PROMPT = """
+    You are a patch generator.
+    You are given an upstream Patch in Standard Git Diff Format.
+    Also, you are given a diverged downstream code, and code after applying the patch.
+    Fix the patch so that it cleanly applies to the diverged downstream code.
+    ONLY output the final updated patch in STANDARD GIT diff format.
+    """
+
+    CHANGED_CODE_EXTRACT_USER_PROMPT = """
+    The upstream patch in Standard Git Diff format is:
+    <Patch>
+{UPSTREAM_PATCH}
+    <end>
+
+    The ORIGINAL downstream file code has diverged from upstream.
+    Here, the file code before applying the patch is:
+{FILE_CODE}
+    <end>
+
+    The file code after applying the patch is:
+{CHANGED_FILE_CODE}
+
+    Update the Patch so that it cleanly applies to the ORIGINAL downstream file code.
+    Ensure that the patch logic is NOT changed.
+    Ensure that line content like newlines, tabs, whitespace etc matches the downstream file code.
+    Do NOT give any extra tokens like diff ``` or <patch>.
+
+    Only output the final patch in STANDARD GIT diff format.
+    """
 
     ############################################ HANDLER ############################################
 
@@ -138,6 +289,8 @@ class Prompts:
         file_code=None,
         first_line_content=None,
         first_line_numbers=None,
+        hunk_file_content=None,
+        changed_file_code=None,
     ):
         def base_prompts():
             return (
@@ -177,12 +330,54 @@ class Prompts:
                     LINE_NUMBERS=first_line_numbers,
                 ),
             )
+        
+        def extract_hunk_content_from_file_prompts():
+            return (
+                self.HUNK_FILE_CONTENT_EXTRACT_SYSTEM_PROMPT,
+                self.HUNK_FILE_CONTENT_EXTRACT_USER_PROMPT.format(
+                    PATCH=upstream_patch,
+                    FILE_CODE=self.format_file_codes(file_code),
+                ),
+            )
+
+        def fix_hunk_content_prompts():
+            return (
+                self.HUNK_CONTENT_FIX_SYSTEM_PROMPT,
+                self.HUNK_CONTENT_FIX_USER_PROMPT.format(
+                    UPSTREAM_PATCH=upstream_patch,
+                    LINE_CONTENT=hunk_file_content,
+                ),
+            )
+        
+        def extract_changed_code():
+            return (
+                self.CHANGED_CODE_EXTRACT_SYSTEM_PROMPT,
+                self.CHANGED_CODE_EXTRACT_USER_PROMPT.format(
+                    PATCH=upstream_patch,
+                    FILE_CODES=self.format_file_codes(file_code),
+                    FIRST_LINE_NUMBERS=first_line_numbers,
+                ),
+            )
+        
+        def fix_changed_code():
+            return (
+                self.CHANGED_CODE_FIX_SYSTEM_PROMPT,
+                self.CHANGED_CODE_EXTRACT_USER_PROMPT.format(
+                    UPSTREAM_PATCH=upstream_patch,
+                    FILE_CODE=self.format_file_codes(file_code),
+                    CHANGED_FILE_CODE=changed_file_code,
+                ),
+            )
 
         prompt_map = {
-            "BASE"               : base_prompts,
-            "FIRST_LINE_CONTENT" : first_line_content_prompts,
-            "FIRST_LINE_NUMBER"  : first_line_number_prompts,
-            "LINE_NUMBER_FIX"    : line_number_fix_prompts,
+            "BASE"                      : base_prompts,
+            "FIRST_LINE_CONTENT"        : first_line_content_prompts,
+            "FIRST_LINE_NUMBER"         : first_line_number_prompts,
+            "LINE_NUMBER_FIX"           : line_number_fix_prompts,
+            "HUNK_FILE_CONTENT_EXTRACT" : extract_hunk_content_from_file_prompts,
+            "HUNK_CONTENT_FIX"          : fix_hunk_content_prompts,
+            "CHANGED_CODE_EXTRACT"      : extract_changed_code,
+            "CHANGED_CODE_FIX"          : fix_changed_code,
         }
 
         try:

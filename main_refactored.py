@@ -97,7 +97,7 @@ class Main:
             self.logger.log_info(f"✅ Backporting successful for {cve_number}")
             return True
         
-        output = self.fixPatchCommonErrors(output, cve_number)
+        output = self.fixPatchCommonErrors(self.upstream_patch, cve_number)
         isSuccess = self.testPatch(output, cve_number, "BASE_FIXED_PATCH_TEST")
 
         if isSuccess:
@@ -116,7 +116,7 @@ class Main:
         print()
         return False
 
-    def fixPatchCommonErrors(self, generated_patch, cve_number):
+    def fixPatchCommonErrors(self, input_patch, cve_number):
         # TODO checkPatchLogic, fixWhitespace
         # TODO check for missing or extra lines (if they are correct as per the file code)
         # TODO MAKE SURE TO CHECK IF ALL THESE WORK ON PATCHES WITH MULTIPLE HUNKS. otherwise, break a patch into multiple hunks and then call these functions on each hunk.
@@ -134,14 +134,27 @@ class Main:
             system_prompt, user_prompt = self.getPrompts('FIRST_LINE_NUMBER', upstream_patch = patch, first_line_content = first_line_content, file_code = self.file_codes)
             first_line_numbers = self.generateFromLLM(system_prompt, user_prompt, "FIRST_LINE_NUMBER")
 
-            system_prompt, user_prompt = self.getPrompts('LINE_NUMBER_FIX', upstream_patch = patch, first_line_content = first_line_content, first_line_numbers = first_line_numbers)
+            system_prompt, user_prompt = self.getPrompts('CHANGED_CODE_EXTRACT', upstream_patch = patch, file_code = self.file_codes, first_line_numbers = first_line_numbers)
+            changed_lines = self.generateFromLLM(system_prompt, user_prompt, "CHANGED_CODE_EXTRACT")
+
+            system_prompt, user_prompt = self.getPrompts('CHANGED_CODE_FIX', upstream_patch = patch, file_code = self.file_codes, changed_file_code = changed_lines)
+            changed_line_patch = self.generateFromLLM(system_prompt, user_prompt, "CHANGED_CODE_FIX")
+
+            system_prompt, user_prompt = self.getPrompts('LINE_NUMBER_FIX', upstream_patch = changed_line_patch, first_line_content = first_line_content, first_line_numbers = first_line_numbers)
             output = self.generateFromLLM(system_prompt, user_prompt, "LINE_NUMBER_FIX")
             return output
 
-        def checkWhitespace(patch):
-            raise NotImplementedError("checkWhitespace is not implemented yet.")
+        def fixLineContent(patch):
+            system_prompt, user_prompt = self.getPrompts('HUNK_FILE_CONTENT_EXTRACT', upstream_patch = patch, file_code = self.file_codes)
+            hunk_file_content = self.generateFromLLM(system_prompt, user_prompt, "HUNK_FILE_CONTENT_EXTRACT")
 
-        output = fixLineNumber(patch = generated_patch)
+            system_prompt, user_prompt = self.getPrompts('HUNK_CONTENT_FIX', upstream_patch = patch, file_code = self.file_codes, hunk_file_content = hunk_file_content)
+            output = self.generateFromLLM(system_prompt, user_prompt, "HUNK_CONTENT_FIX")
+            return output
+
+        # output = fixLineContent(patch = input_patch)
+        output = fixLineNumber(patch = input_patch)
+        # output = fixLineContent(patch = output)
         return output
 
 def main():
