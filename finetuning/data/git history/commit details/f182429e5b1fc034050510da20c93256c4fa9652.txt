@@ -1,0 +1,21 @@
+commit f182429e5b1fc034050510da20c93256c4fa9652
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sat Nov 16 12:07:30 2024 -0600
+
+    Fix heap buffer overflow in soup_content_sniffer_sniff
+    
+    Co-Author: Ar Jun <pkillarjun@protonmail.com>
+
+diff --git a/libsoup/content-sniffer/soup-content-sniffer.c b/libsoup/content-sniffer/soup-content-sniffer.c
+index de0985ea..b62e4888 100644
+--- a/libsoup/content-sniffer/soup-content-sniffer.c
++++ b/libsoup/content-sniffer/soup-content-sniffer.c
+@@ -524,7 +524,7 @@ sniff_unknown (SoupContentSniffer *sniffer, GBytes *buffer,
+ 			guint index_pattern = 0;
+ 			gboolean skip_row = FALSE;
+ 
+-			while ((index_stream < resource_length) &&
++			while ((index_stream < resource_length - 1) &&
+ 			       (index_pattern <= type_row->pattern_length)) {
+ 				/* Skip insignificant white space ("WS" in the spec) */
+ 				if (type_row->pattern[index_pattern] == ' ') {

@@ -1,0 +1,119 @@
+commit e308ed1a277c6b9c35c3f5c0e8e9deb06b2bcf89
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Mon Jan 13 11:50:35 2025 -0600
+
+    Mark several tests as slow
+    
+    Let's allow 30 seconds to run most tests, or 5 minutes for tests marked
+    slow. Most of them are fast on my computer:
+    
+     1/34 cache-test               OK              0.08s   7 subtests passed
+     2/34 chunk-io-test            OK              0.08s   1 subtests passed
+     3/34 coding-test              OK              0.08s   11 subtests passed
+     4/34 continue-test            OK              0.08s   12 subtests passed
+     5/34 cookies-test             OK              0.07s   13 subtests passed
+     6/34 date-test                OK              0.07s   66 subtests passed
+     7/34 header-parsing-test      OK              0.07s   8 subtests passed
+     8/34 logger-test              OK              0.05s   6 subtests passed
+     9/34 multipart-test           OK              0.05s   4 subtests passed
+    10/34 multithread-test         OK              0.05s   8 subtests passed
+    11/34 no-ssl-test              OK              0.04s   1 subtests passed
+    12/34 redirect-test            OK              0.04s   29 subtests passed
+    13/34 request-body-test        OK              0.04s   18 subtests passed
+    14/34 samesite-test            OK              0.04s   16 subtests passed
+    15/34 streaming-test           OK              0.02s   4 subtests passed
+    16/34 tld-test                 OK              0.02s   2 subtests passed
+    17/34 uri-parsing-test         OK              0.02s   4 subtests passed
+    18/34 sniffing-test            OK              0.03s   37 subtests passed
+    19/34 brotli-decompressor-test OK              0.01s   3 subtests passed
+    20/34 unix-socket-test         OK              0.01s   1 subtests passed
+    21/34 hsts-db-test             OK              0.08s   3 subtests passed
+    22/34 forms-test               OK              0.11s   5 subtests passed
+    23/34 server-test              OK              0.08s   18 subtests passed
+    24/34 ntlm-test                OK              0.10s   21 subtests passed
+    25/34 ssl-test                 OK              0.12s   7 subtests passed
+    26/34 session-test             OK              0.16s   6 subtests passed
+    27/34 misc-test                OK              0.22s   18 subtests passed
+    28/34 context-test             OK              0.41s   1 subtests passed
+    29/34 server-auth-test         OK              0.37s   12 subtests passed
+    30/34 http2-test               OK              2.73s   35 subtests passed
+    31/34 websocket-test           OK              3.97s   55 subtests passed
+    32/34 timeout-test             OK              4.08s   4 subtests passed
+    33/34 http2-body-stream-test   OK              8.05s   3 subtests passed
+    34/34 hsts-test                OK             12.12s   25 subtests passed
+    
+    A 2 minute timeout is not good enough, so let's use 5 minutes.
+    
+    I'm not marking hsts-test as slow because it is fast with the exception
+    of some hardcoded 2-3 second timeouts that should never cause the total
+    time to exceed 30s.
+
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 099b604a..d26f7cae 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -92,7 +92,7 @@ fedora-asan:
+   script:
+     # Introspection doesn't work when linking to libasan, the NTLM tests fail most likely due to unsafe usage of setenv()
+     - meson _build --auto-features=enabled -Db_sanitize=address -Dintrospection=disabled -Dvapi=disabled -Dntlm=disabled -Ddocs=disabled
+-    - meson test --no-suite autobahn-quick --no-suite autobahn -C _build --verbose --timeout-multiplier=10
++    - meson test --no-suite autobahn-quick --no-suite autobahn -C _build --verbose --timeout-multiplier=2
+   artifacts:
+     reports:
+       junit: "_build/meson-logs/testlog.junit.xml"
+@@ -107,7 +107,7 @@ fedora-asan:
+ #     CC: clang
+ #   script:
+ #     - meson _build --auto-features=enabled -Dfuzzing=enabled -Dintrospection=disabled -Dvapi=disabled
+-#     - meson test -C _build --suite=fuzzing --timeout-multiplier=10
++#     - meson test -C _build --suite=fuzzing --timeout-multiplier=2
+ #   artifacts:
+ #     when: on_failure
+ #     paths:
+diff --git a/tests/meson.build b/tests/meson.build
+index ee118a01..b4dc8064 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -87,8 +87,8 @@ tests = [
+   {'name': 'date'},
+   {'name': 'forms'},
+   {'name': 'header-parsing'},
+-  {'name': 'http2'},
+-  {'name': 'http2-body-stream'},
++  {'name': 'http2', 'slow': true},
++  {'name': 'http2-body-stream', 'slow': true},
+   {'name': 'hsts'},
+   {'name': 'hsts-db'},
+   {'name': 'logger'},
+@@ -115,11 +115,12 @@ tests = [
+    ]
+   },
+   {'name': 'streaming'},
+-  {'name': 'timeout'},
++  {'name': 'timeout', 'slow': true},
+   {'name': 'tld'},
+   {'name': 'uri-parsing'},
+   {'name': 'websocket',
+-   'dependencies': [libz_dep]},
++   'dependencies': [libz_dep],
++   'slow': true},
+ ]
+ 
+ if brotlidec_dep.found()
+@@ -219,14 +220,13 @@ foreach test: tests
+     install_dir : installed_tests_execdir,
+     install_rpath : abs_installed_tests_execdir,
+   )
+-  # Increase the timeout as on some architectures the tests could be slower
+-  # than the default 30 seconds.
++
+   test(test_name, test_target,
+     args : ['--debug'],
+     env : env,
+     is_parallel : test.get('parallel', true),
+     depends : test.get('depends', []),
+-    timeout : 60,
++    timeout : test.get('slow', false) ? 300 : 30,
+     protocol : 'tap',
+   )
+ endforeach

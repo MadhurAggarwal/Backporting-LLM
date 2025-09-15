@@ -1,0 +1,27 @@
+commit 0e24f33bf9dc82c29f8dc2fb987825615a2e76d2
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sat Jan 11 13:52:32 2025 -0600
+
+    3.6.3
+
+diff --git a/NEWS b/NEWS
+index 45e77052..47488584 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,4 +1,4 @@
+-Changes in libsoup from 3.6.1 to 3.6.2:
++Changes in libsoup from 3.6.1 to 3.6.3:
+ 
+ * http2: Significantly reduce memory usage of large requests [Patrick Griffis]
+ * server: Treat `ECONNREFUSED` when listening on IPv6 as unsupported [Michael Catanzaro]
+diff --git a/meson.build b/meson.build
+index eecdfce4..9e6d4618 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('libsoup', 'c',
+-        version: '3.6.2',
++        version: '3.6.3',
+         meson_version : '>= 0.54',
+         license : 'LGPL-2.0-or-later',
+         default_options : [

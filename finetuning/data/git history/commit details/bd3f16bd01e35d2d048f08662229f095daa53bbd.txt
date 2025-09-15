@@ -1,0 +1,21 @@
+commit bd3f16bd01e35d2d048f08662229f095daa53bbd
+Author: Elliot Chen <elliot.chen@nxp.com>
+Date:   Fri May 16 14:46:03 2025 +0900
+
+    soup-message: check io_data before visiting it
+    
+    Related to https://gitlab.gnome.org/GNOME/libsoup/-/issues/418
+
+diff --git a/libsoup/soup-message.c b/libsoup/soup-message.c
+index 91f6584f..72ca8387 100644
+--- a/libsoup/soup-message.c
++++ b/libsoup/soup-message.c
+@@ -2830,6 +2830,8 @@ soup_message_io_skip (SoupMessage  *msg,
+                       GError      **error)
+ {
+         SoupMessagePrivate *priv = soup_message_get_instance_private (msg);
++        if (!priv->io_data)
++                return TRUE;
+ 
+         return soup_client_message_io_skip (priv->io_data, msg, blocking, cancellable, error);
+ }

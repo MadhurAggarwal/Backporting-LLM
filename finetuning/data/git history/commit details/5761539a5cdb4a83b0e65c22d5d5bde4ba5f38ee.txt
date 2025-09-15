@@ -1,0 +1,19 @@
+commit 5761539a5cdb4a83b0e65c22d5d5bde4ba5f38ee
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sat Dec 14 17:52:05 2024 -0600
+
+    tests: Fix /http2/flow-control/large/sync not using sync io
+
+diff --git a/tests/http2-test.c b/tests/http2-test.c
+index 8c955eef..39a14655 100644
+--- a/tests/http2-test.c
++++ b/tests/http2-test.c
+@@ -1449,7 +1449,7 @@ main (int argc, char **argv)
+                     setup_session,
+                     do_flow_control_large_test,
+                     teardown_session);
+-        g_test_add ("/http2/flow-control/large/sync", Test, GINT_TO_POINTER (TRUE),
++        g_test_add ("/http2/flow-control/large/sync", Test, GINT_TO_POINTER (FALSE),
+                     setup_session,
+                     do_flow_control_large_test,
+                     teardown_session);

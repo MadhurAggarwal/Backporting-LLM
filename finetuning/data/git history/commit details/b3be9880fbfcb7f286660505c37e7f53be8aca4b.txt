@@ -1,0 +1,26 @@
+commit b3be9880fbfcb7f286660505c37e7f53be8aca4b
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Tue Mar 18 13:16:52 2025 -0500
+
+    tests: Don't use env var to detect asan
+    
+    This env var can and is set in normal environments.
+
+diff --git a/tests/http2-test.c b/tests/http2-test.c
+index 06526038..5b6da5e4 100644
+--- a/tests/http2-test.c
++++ b/tests/http2-test.c
+@@ -779,10 +779,10 @@ do_connections_test (Test *test, gconstpointer data)
+         guint complete_count = 0;
+         GUri *uri;
+ 
+-        if (g_getenv ("ASAN_OPTIONS")) {
+-                g_test_skip ("Flakey on asan GitLab runner");
+-                return;
+-        }
++#ifdef __SANITIZE_ADDRESS__
++        g_test_skip ("Flakey on asan GitLab runner");
++        return;
++#endif
+ 
+         async_context = g_main_context_ref_thread_default ();

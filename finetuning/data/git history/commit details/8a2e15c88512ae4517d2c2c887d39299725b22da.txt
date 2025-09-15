@@ -1,0 +1,26 @@
+commit 8a2e15c88512ae4517d2c2c887d39299725b22da
+Author: Milan Crha <mcrha@redhat.com>
+Date:   Tue May 13 09:52:48 2025 +0200
+
+    soup-body-input-stream: Correct chunked trailers end detection
+    
+    The `if` was always `true`, because the `metabuf` cannot be both values
+    at the same time, thus at least one of the `strncmp` returned non-zero.
+    
+    Related to https://gitlab.gnome.org/GNOME/libsoup/-/issues/445
+    
+    Part-of: <https://gitlab.gnome.org/GNOME/libsoup/-/merge_requests/458>
+
+diff --git a/libsoup/http1/soup-body-input-stream.c b/libsoup/http1/soup-body-input-stream.c
+index 3f51568c..64d6f509 100644
+--- a/libsoup/http1/soup-body-input-stream.c
++++ b/libsoup/http1/soup-body-input-stream.c
+@@ -244,7 +244,7 @@ again:
+ 			return -1;
+ 		}
+ 
+-		if (strncmp (metabuf, "\r\n", nread) || strncmp (metabuf, "\n", nread)) {
++		if ((nread == 2 && strncmp (metabuf, "\r\n", nread) == 0) || (nread == 1 && strncmp (metabuf, "\n", nread) == 0)) {
+ 			priv->chunked_state = SOUP_BODY_INPUT_STREAM_STATE_DONE;
+ 			priv->eof = TRUE;
+ 		}

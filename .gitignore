@@ -2,3 +2,4 @@ data_creation_scripts/.env
 logs/
 finetuned_weights/
 __pycache__/
+finetuning/__pycache__

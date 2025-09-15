@@ -1,0 +1,36 @@
+commit 225d2857ebdc391d7423d6246abde419205a001b
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Tue Dec 17 17:37:22 2024 -0600
+
+    server: fix listening on localhost when IPv6 is not supported
+    
+    If the application requests that we listen on both IPv4 and IPv6
+    localhost, and IPv4 succeeds but IPv6 fails, that is perfectly fine. One
+    or the other is good enough unless the application has specified
+    otherwise. We already have a case to test for this, but it's not working
+    because it's expecting a different error code. Maybe the error code
+    changed at some point.
+    
+    Fixes #172
+
+diff --git a/libsoup/server/soup-server.c b/libsoup/server/soup-server.c
+index f6d452ed..229f42d9 100644
+--- a/libsoup/server/soup-server.c
++++ b/libsoup/server/soup-server.c
+@@ -1340,12 +1340,13 @@ soup_server_listen_ipv4_ipv6 (SoupServer *server,
+ 	}
+ 	g_object_unref (addr6);
+ 
+-	if (v4sock && g_error_matches (my_error, G_IO_ERROR,
+-				       G_IO_ERROR_NOT_SUPPORTED
+-				       )) {
++	if (v4sock &&
++            (g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED) ||
++             g_error_matches (my_error, G_IO_ERROR, G_IO_ERROR_CONNECTION_REFUSED))) {
+ 		/* No IPv6 support, but IPV6_ONLY wasn't specified, so just
+ 		 * ignore the failure.
+ 		 */
++                g_debug ("Ignoring IPv6 listen error, assuming it isn't supported: %s", my_error->message);
+ 		g_error_free (my_error);
+ 		return TRUE;
+ 	}

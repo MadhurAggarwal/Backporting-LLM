@@ -1,0 +1,23 @@
+commit 3eec3d8b9b5d8ac1e202d02c715663a440e6a508
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Wed Apr 30 12:07:01 2025 -0500
+
+    test-utils: flush stdout after printing
+    
+    test_printf() would be more useful if it were to actually guarantee
+    that everything has printed; otherwise, it cannot be used to determine
+    how far we've made it in a test before a hang.
+
+diff --git a/tests/test-utils.c b/tests/test-utils.c
+index d29d1175..df4cee44 100644
+--- a/tests/test-utils.c
++++ b/tests/test-utils.c
+@@ -143,6 +143,8 @@ debug_printf (int level, const char *format, ...)
+ 	va_start (args, format);
+ 	g_vprintf (format, args);
+ 	va_end (args);
++
++	fflush (stdout);
+ }
+ 
+ gboolean

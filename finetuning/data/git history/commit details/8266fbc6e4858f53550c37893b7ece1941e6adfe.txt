@@ -1,0 +1,208 @@
+commit 8266fbc6e4858f53550c37893b7ece1941e6adfe
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Mon Feb 17 10:10:54 2025 -0600
+
+    Fix minor clang-tidy warnings
+
+diff --git a/libsoup/auth/soup-auth-negotiate.c b/libsoup/auth/soup-auth-negotiate.c
+index c5567bba..b78bde54 100644
+--- a/libsoup/auth/soup-auth-negotiate.c
++++ b/libsoup/auth/soup-auth-negotiate.c
+@@ -45,7 +45,7 @@ soup_auth_negotiate_supported (void)
+ #endif
+ }
+ 
+-#define AUTH_GSS_ERROR      -1
++#define AUTH_GSS_ERROR      (-1)
+ #define AUTH_GSS_COMPLETE    1
+ #define AUTH_GSS_CONTINUE    0
+ 
+diff --git a/libsoup/cache/soup-cache.c b/libsoup/cache/soup-cache.c
+index bc733a63..fa5fb973 100644
+--- a/libsoup/cache/soup-cache.c
++++ b/libsoup/cache/soup-cache.c
+@@ -67,7 +67,7 @@ static void soup_cache_session_feature_init (SoupSessionFeatureInterface *featur
+ static SoupContentProcessorInterface *soup_cache_default_content_processor_interface;
+ static void soup_cache_content_processor_init (SoupContentProcessorInterface *interface, gpointer interface_data);
+ 
+-#define DEFAULT_MAX_SIZE 50 * 1024 * 1024
++#define DEFAULT_MAX_SIZE (50 * 1024 * 1024)
+ #define MAX_ENTRY_DATA_PERCENTAGE 10 /* Percentage of the total size
+ 	                                of the cache that can be
+ 	                                filled by a single entry */
+diff --git a/libsoup/http1/soup-message-io-data.h b/libsoup/http1/soup-message-io-data.h
+index 37bdb7a7..0840fab7 100644
+--- a/libsoup/http1/soup-message-io-data.h
++++ b/libsoup/http1/soup-message-io-data.h
+@@ -26,12 +26,12 @@ typedef enum {
+ } SoupMessageIOState;
+ 
+ #define SOUP_MESSAGE_IO_STATE_ACTIVE(state) \
+-	(state != SOUP_MESSAGE_IO_STATE_NOT_STARTED && \
+-	 state != SOUP_MESSAGE_IO_STATE_BLOCKING && \
+-	 state != SOUP_MESSAGE_IO_STATE_DONE)
++	((state) != SOUP_MESSAGE_IO_STATE_NOT_STARTED && \
++	 (state) != SOUP_MESSAGE_IO_STATE_BLOCKING && \
++	 (state) != SOUP_MESSAGE_IO_STATE_DONE)
+ #define SOUP_MESSAGE_IO_STATE_POLLABLE(state) \
+ 	(SOUP_MESSAGE_IO_STATE_ACTIVE (state) && \
+-	 state != SOUP_MESSAGE_IO_STATE_BODY_DONE)
++	 (state) != SOUP_MESSAGE_IO_STATE_BODY_DONE)
+ 
+ typedef struct {
+ 	GInputStream         *body_istream;
+diff --git a/libsoup/soup-connection-manager.c b/libsoup/soup-connection-manager.c
+index 5c4ec741..48f01597 100644
+--- a/libsoup/soup-connection-manager.c
++++ b/libsoup/soup-connection-manager.c
+@@ -44,7 +44,7 @@ typedef struct {
+         GSource *keep_alive_src;
+ } SoupHost;
+ 
+-#define HOST_KEEP_ALIVE 5 * 60 * 1000 /* 5 min in msecs */
++#define HOST_KEEP_ALIVE (5 * 60 * 1000) /* 5 min in msecs */
+ 
+ static SoupHost *
+ soup_host_new (GUri         *uri,
+diff --git a/libsoup/soup-form.c b/libsoup/soup-form.c
+index 218e9e91..2eb5d572 100644
+--- a/libsoup/soup-form.c
++++ b/libsoup/soup-form.c
+@@ -31,7 +31,7 @@
+  **/
+ 
+ #define XDIGIT(c) ((c) <= '9' ? (c) - '0' : ((c) & 0x4F) - 'A' + 10)
+-#define HEXCHAR(s) ((XDIGIT (s[1]) << 4) + XDIGIT (s[2]))
++#define HEXCHAR(s) ((XDIGIT ((s)[1]) << 4) + XDIGIT ((s)[2]))
+ 
+ static gboolean
+ form_decode (char *part)
+diff --git a/libsoup/soup-http2-utils.h b/libsoup/soup-http2-utils.h
+index f3a7c735..dbb3cb11 100644
+--- a/libsoup/soup-http2-utils.h
++++ b/libsoup/soup-http2-utils.h
+@@ -17,17 +17,17 @@
+ 
+ #define MAKE_NV(NAME, VALUE, VALUELEN)                                                           \
+         {                                                                                        \
+-                (uint8_t *)NAME, (uint8_t *)VALUE, strlen (NAME), VALUELEN, NGHTTP2_NV_FLAG_NONE \
++                (uint8_t *)(NAME), (uint8_t *)(VALUE), strlen (NAME), VALUELEN, NGHTTP2_NV_FLAG_NONE \
+         }
+ 
+ #define MAKE_NV2(NAME, VALUE)                                                                          \
+         {                                                                                              \
+-                (uint8_t *)NAME, (uint8_t *)VALUE, strlen (NAME), strlen (VALUE), NGHTTP2_NV_FLAG_NONE \
++                (uint8_t *)(NAME), (uint8_t *)(VALUE), strlen (NAME), strlen (VALUE), NGHTTP2_NV_FLAG_NONE \
+         }
+ 
+ #define MAKE_NV3(NAME, VALUE, FLAGS)                                                     \
+         {                                                                                \
+-                (uint8_t *)NAME, (uint8_t *)VALUE, strlen (NAME), strlen (VALUE),  FLAGS \
++                (uint8_t *)(NAME), (uint8_t *)(VALUE), strlen (NAME), strlen (VALUE),  FLAGS \
+         }
+ 
+ 
+diff --git a/libsoup/soup-misc.h b/libsoup/soup-misc.h
+index cb2986b3..f31b87d4 100644
+--- a/libsoup/soup-misc.h
++++ b/libsoup/soup-misc.h
+@@ -41,28 +41,28 @@ extern const char soup_char_attributes[];
+ #define SOUP_CHAR_HTTP_SEPARATOR      0x08
+ #define SOUP_CHAR_HTTP_CTL            0x10
+ 
+-#define soup_char_is_uri_percent_encoded(ch) (soup_char_attributes[(guchar)ch] & SOUP_CHAR_URI_PERCENT_ENCODED)
+-#define soup_char_is_uri_gen_delims(ch)      (soup_char_attributes[(guchar)ch] & SOUP_CHAR_URI_GEN_DELIMS)
+-#define soup_char_is_uri_sub_delims(ch)      (soup_char_attributes[(guchar)ch] & SOUP_CHAR_URI_SUB_DELIMS)
+-#define soup_char_is_uri_unreserved(ch)      (!(soup_char_attributes[(guchar)ch] & (SOUP_CHAR_URI_PERCENT_ENCODED | SOUP_CHAR_URI_GEN_DELIMS | SOUP_CHAR_URI_SUB_DELIMS)))
+-#define soup_char_is_token(ch)               (!(soup_char_attributes[(guchar)ch] & (SOUP_CHAR_HTTP_SEPARATOR | SOUP_CHAR_HTTP_CTL)))
++#define soup_char_is_uri_percent_encoded(ch) (soup_char_attributes[(guchar)(ch)] & SOUP_CHAR_URI_PERCENT_ENCODED)
++#define soup_char_is_uri_gen_delims(ch)      (soup_char_attributes[(guchar)(ch)] & SOUP_CHAR_URI_GEN_DELIMS)
++#define soup_char_is_uri_sub_delims(ch)      (soup_char_attributes[(guchar)(ch)] & SOUP_CHAR_URI_SUB_DELIMS)
++#define soup_char_is_uri_unreserved(ch)      (!(soup_char_attributes[(guchar)(ch)] & (SOUP_CHAR_URI_PERCENT_ENCODED | SOUP_CHAR_URI_GEN_DELIMS | SOUP_CHAR_URI_SUB_DELIMS)))
++#define soup_char_is_token(ch)               (!(soup_char_attributes[(guchar)(ch)] & (SOUP_CHAR_HTTP_SEPARATOR | SOUP_CHAR_HTTP_CTL)))
+ 
+ /* At some point it might be possible to mark additional methods
+  * safe or idempotent...
+  */
+-#define SOUP_METHOD_IS_SAFE(method) (method == SOUP_METHOD_GET || \
+-				     method == SOUP_METHOD_HEAD || \
+-				     method == SOUP_METHOD_OPTIONS || \
+-				     method == SOUP_METHOD_PROPFIND || \
+-				     method == SOUP_METHOD_TRACE)
+-
+-#define SOUP_METHOD_IS_IDEMPOTENT(method) (method == SOUP_METHOD_GET || \
+-					   method == SOUP_METHOD_HEAD || \
+-					   method == SOUP_METHOD_OPTIONS || \
+-					   method == SOUP_METHOD_PROPFIND || \
+-					   method == SOUP_METHOD_TRACE || \
+-					   method == SOUP_METHOD_PUT || \
+-					   method == SOUP_METHOD_DELETE)
++#define SOUP_METHOD_IS_SAFE(method) ((method) == SOUP_METHOD_GET || \
++				     (method) == SOUP_METHOD_HEAD || \
++				     (method) == SOUP_METHOD_OPTIONS || \
++				     (method) == SOUP_METHOD_PROPFIND || \
++				     (method) == SOUP_METHOD_TRACE)
++
++#define SOUP_METHOD_IS_IDEMPOTENT(method) ((method) == SOUP_METHOD_GET || \
++					   (method) == SOUP_METHOD_HEAD || \
++					   (method) == SOUP_METHOD_OPTIONS || \
++					   (method) == SOUP_METHOD_PROPFIND || \
++					   (method) == SOUP_METHOD_TRACE || \
++					   (method) == SOUP_METHOD_PUT || \
++					   (method) == SOUP_METHOD_DELETE)
+ 
+ guint soup_message_headers_get_ranges_internal (SoupMessageHeaders  *hdrs,
+ 						goffset              total_length,
+diff --git a/libsoup/soup-uri-utils-private.h b/libsoup/soup-uri-utils-private.h
+index 3dbdb855..0119f081 100644
+--- a/libsoup/soup-uri-utils-private.h
++++ b/libsoup/soup-uri-utils-private.h
+@@ -28,6 +28,6 @@ GUri        *soup_uri_copy_with_normalized_flags (GUri  *uri);
+ 
+ char        *soup_uri_get_host_for_headers  (GUri       *uri);
+ 
+-#define SOUP_URI_IS_VALID(x) (x && g_uri_get_host(x) && g_uri_get_host(x)[0])
++#define SOUP_URI_IS_VALID(x) ((x) && g_uri_get_host(x) && g_uri_get_host(x)[0])
+ 
+ G_END_DECLS
+diff --git a/libsoup/soup-uri-utils.c b/libsoup/soup-uri-utils.c
+index a20397f8..0963a114 100644
+--- a/libsoup/soup-uri-utils.c
++++ b/libsoup/soup-uri-utils.c
+@@ -395,6 +395,8 @@ get_maybe_default_port (GUri *uri)
+                 if (!strcmp (scheme, "https") || !strcmp (scheme, "wss"))
+                         return -1;
+                 break;
++        default:
++                break;
+         }
+ 
+         return port;
+diff --git a/tests/connection-test.c b/tests/connection-test.c
+index 307a695f..bd7a0264 100644
+--- a/tests/connection-test.c
++++ b/tests/connection-test.c
+@@ -426,7 +426,7 @@ static GMainLoop *max_conns_loop;
+ static int msgs_done;
+ static guint quit_loop_timeout;
+ #define MAX_CONNS 2
+-#define TEST_CONNS (MAX_CONNS * 2) + 1
++#define TEST_CONNS ((MAX_CONNS * 2) + 1)
+ 
+ static gboolean
+ idle_start_server (gpointer data)
+diff --git a/tests/http2-body-stream-test.c b/tests/http2-body-stream-test.c
+index ee3218bc..540beb3b 100644
+--- a/tests/http2-body-stream-test.c
++++ b/tests/http2-body-stream-test.c
+@@ -23,8 +23,8 @@
+ static void
+ do_large_data_test (void)
+ {
+-#define CHUNK_SIZE (gsize)1024 * 1024 * 512 // 512 MiB
+-#define TEST_SIZE CHUNK_SIZE * 20 // 10 GiB
++#define CHUNK_SIZE ((gsize)1024 * 1024 * 512) // 512 MiB
++#define TEST_SIZE (CHUNK_SIZE * 20) // 10 GiB
+ 
+         GInputStream *stream = soup_body_input_stream_http2_new ();
+         SoupBodyInputStreamHttp2 *mem_stream = SOUP_BODY_INPUT_STREAM_HTTP2 (stream);

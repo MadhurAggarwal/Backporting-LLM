@@ -1,0 +1,40 @@
+commit ba563247db4659ebc0749a6b72bb365e56a11681
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun May 5 12:45:21 2024 -0500
+
+    3.5.1
+
+diff --git a/NEWS b/NEWS
+index cdb6f519..ae254d49 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,3 +1,18 @@
++Changes in libsoup from 3.4.4 to 3.5.1:
++
++* Add `SOUP_METHOD_PATCH` [Jan-Michael Brummer]
++* websocket: Add `SoupWebsocketConnection:keepalive-pong-timeout` property [Martin Nordholts]
++* Increase maxmimum size of HTTP headers [Filipe Norte]
++* Fix `soup_uri_copy()` in Vala [Val Och]
++* Fix leak in `soup_message_new_from_encoded_form()` [Andy Holmes]
++* multipart: Improve handling of messages missing termination [Vitaly Dyachkov]
++* logger: Fix request filter function being called with response user data [Jan-Michael Brummer]
++* logger: Fix response bodies never being logged if request bodies aren't [Patrick Griffis]
++* logger: Add Soup-Host to logged headers for when Host is missing [Jan-Michael Brummer]
++* cookies: Fix incorrect logic in determining same-site cookies [Patrick Griffis]
++* cookie-jar-db: Explicitly handle old databases lacking same-site column [Kanagaraj]
++* cookies: Limit the Max-Age to 1 year [Max Schmitt]
++
+ Changes in libsoup from 3.4.3 to 3.4.4:
+ 
+ * Improve HTTP/2 performance when a lot of buffering happens [Keyu Tao]
+diff --git a/meson.build b/meson.build
+index 15781bd8..2494c3db 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('libsoup', 'c',
+-        version: '3.5.0',
++        version: '3.5.1',
+         meson_version : '>= 0.54',
+         license : 'LGPL-2.0-or-later',
+         default_options : [

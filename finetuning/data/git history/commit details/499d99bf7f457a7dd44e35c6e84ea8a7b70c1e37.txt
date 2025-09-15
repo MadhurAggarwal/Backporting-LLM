@@ -1,0 +1,271 @@
+commit 499d99bf7f457a7dd44e35c6e84ea8a7b70c1e37
+Author: Martin Nordholts <martn@axis.com>
+Date:   Mon Jan 22 08:24:43 2024 +0100
+
+    Depend on GLib 2.70.0 and remove GLIB_CHECK_VERSION
+    
+    GLib 2.69.1 is a development version, so depend on 2.70.0
+    instead. Also remove all GLIB_CHECK_VERSION checks since
+    they are not needed any longer.
+
+diff --git a/libsoup/http1/soup-message-io-data.c b/libsoup/http1/soup-message-io-data.c
+index e1bc3f8f..9b5d076f 100644
+--- a/libsoup/http1/soup-message-io-data.c
++++ b/libsoup/http1/soup-message-io-data.c
+@@ -177,11 +177,7 @@ soup_message_io_data_get_source (SoupMessageIOData      *io,
+ 		base_source = g_timeout_source_new (0);
+ 
+         source = soup_message_io_source_new (base_source, msg, io && io->paused, message_io_source_check);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 	g_source_set_static_name (source, "SoupMessageIOData");
+-#else
+-	g_source_set_name (source, "SoupMessageIOData");
+-#endif
+ 	g_source_set_callback (source, (GSourceFunc) callback, user_data, NULL);
+ 	return source;
+ }
+diff --git a/libsoup/http2/soup-client-message-io-http2.c b/libsoup/http2/soup-client-message-io-http2.c
+index cfb64db2..c2c0fa82 100644
+--- a/libsoup/http2/soup-client-message-io-http2.c
++++ b/libsoup/http2/soup-client-message-io-http2.c
+@@ -375,11 +375,7 @@ io_try_write (SoupClientMessageIOHTTP2 *io,
+                         return;
+ 
+                 io->write_idle_source = g_idle_source_new ();
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                 g_source_set_static_name (io->write_idle_source, "Soup HTTP/2 write idle source");
+-#else
+-                g_source_set_name (io->write_idle_source, "Soup HTTP/2 write idle source");
+-#endif
+                 /* Give write more priority than read */
+                 g_source_set_priority (io->write_idle_source, G_PRIORITY_DEFAULT - 1);
+                 g_source_set_callback (io->write_idle_source, (GSourceFunc)io_write_idle_cb, io, NULL);
+@@ -398,11 +394,7 @@ io_try_write (SoupClientMessageIOHTTP2 *io,
+         if (!blocking && g_error_matches (error, G_IO_ERROR, G_IO_ERROR_WOULD_BLOCK)) {
+                 g_clear_error (&error);
+                 io->write_source = g_pollable_output_stream_create_source (G_POLLABLE_OUTPUT_STREAM (io->ostream), NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                 g_source_set_static_name (io->write_source, "Soup HTTP/2 write source");
+-#else
+-                g_source_set_name (io->write_source, "Soup HTTP/2 write source");
+-#endif
+                 /* Give write more priority than read */
+                 g_source_set_priority (io->write_source, G_PRIORITY_DEFAULT - 1);
+                 g_source_set_callback (io->write_source, (GSourceFunc)io_write_ready, io, NULL);
+@@ -957,11 +949,7 @@ on_frame_send_callback (nghttp2_session     *session,
+ 
+                         /* Close in idle to ensure all pending io is finished first */
+                         source = g_idle_source_new ();
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                         g_source_set_static_name (source, "Soup HTTP/2 close source");
+-#else
+-                        g_source_set_name (source, "Soup HTTP/2 close source");
+-#endif
+                         g_source_set_callback (source, (GSourceFunc)close_in_idle_cb, io, NULL);
+                         g_source_attach (source, g_task_get_context (io->close_task));
+                         g_source_unref (source);
+@@ -1194,11 +1182,7 @@ on_data_source_read_callback (nghttp2_session     *session,
+ 
+                                 h2_debug (data->io, data, "[SEND_BODY] Polling");
+                                 data->data_source_poll = g_pollable_input_stream_create_source (in_stream, data->item->cancellable);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                                 g_source_set_static_name (data->data_source_poll, "Soup HTTP/2 data polling");
+-#else
+-                                g_source_set_name (data->data_source_poll, "Soup HTTP/2 data polling");
+-#endif
+                                 g_source_set_callback (data->data_source_poll, (GSourceFunc)on_data_readable, data, NULL);
+                                 g_source_set_priority (data->data_source_poll, get_data_io_priority (data));
+                                 g_source_attach (data->data_source_poll, g_main_context_get_thread_default ());
+@@ -1845,11 +1829,7 @@ soup_client_message_io_http2_set_owner (SoupClientMessageIOHTTP2 *io,
+                 return;
+ 
+         io->read_source = g_pollable_input_stream_create_source (G_POLLABLE_INPUT_STREAM (io->istream), NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+         g_source_set_static_name (io->read_source, "Soup HTTP/2 read source");
+-#else
+-        g_source_set_name (io->read_source, "Soup HTTP/2 read source");
+-#endif
+         g_source_set_priority (io->read_source, G_PRIORITY_DEFAULT);
+         g_source_set_callback (io->read_source, (GSourceFunc)io_read_ready, io, NULL);
+         g_source_attach (io->read_source, g_main_context_get_thread_default ());
+diff --git a/libsoup/server/http2/soup-server-message-io-http2.c b/libsoup/server/http2/soup-server-message-io-http2.c
+index ab90345a..52790f92 100644
+--- a/libsoup/server/http2/soup-server-message-io-http2.c
++++ b/libsoup/server/http2/soup-server-message-io-http2.c
+@@ -404,11 +404,7 @@ io_try_write (SoupServerMessageIOHTTP2 *io)
+                         return;
+ 
+                 io->write_idle_source = g_idle_source_new ();
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                 g_source_set_static_name (io->write_idle_source, "Soup server HTTP/2 write idle source");
+-#else
+-                g_source_set_name (io->write_idle_source, "Soup server HTTP/2 write idle source");
+-#endif
+                 g_source_set_priority (io->write_idle_source, G_PRIORITY_DEFAULT);
+                 g_source_set_callback (io->write_idle_source, (GSourceFunc)io_write_idle_cb, io, NULL);
+                 g_source_attach (io->write_idle_source, g_main_context_get_thread_default ());
+@@ -429,11 +425,7 @@ io_try_write (SoupServerMessageIOHTTP2 *io)
+                 if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_WOULD_BLOCK)) {
+                         g_clear_error (&error);
+                         io->write_source = g_pollable_output_stream_create_source (G_POLLABLE_OUTPUT_STREAM (io->ostream), NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                         g_source_set_static_name (io->write_source, "Soup server HTTP/2 write source");
+-#else
+-                        g_source_set_name (io->write_source, "Soup server HTTP/2 write source");
+-#endif
+                         g_source_set_callback (io->write_source, (GSourceFunc)io_write_ready, io, NULL);
+                         g_source_attach (io->write_source, g_main_context_get_thread_default ());
+                 }
+@@ -913,11 +905,7 @@ soup_server_message_io_http2_new (SoupServerConnection  *conn,
+         soup_server_message_io_http2_init (io);
+ 
+         io->read_source = g_pollable_input_stream_create_source (G_POLLABLE_INPUT_STREAM (io->istream), NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+         g_source_set_static_name (io->read_source, "Soup server HTTP/2 read source");
+-#else
+-        g_source_set_name (io->read_source, "Soup server HTTP/2 read source");
+-#endif
+         g_source_set_callback (io->read_source, (GSourceFunc)io_read_ready, io, NULL);
+         g_source_attach (io->read_source, g_main_context_get_thread_default ());
+ 
+diff --git a/libsoup/server/soup-listener.c b/libsoup/server/soup-listener.c
+index 31d378eb..f904aea6 100644
+--- a/libsoup/server/soup-listener.c
++++ b/libsoup/server/soup-listener.c
+@@ -96,11 +96,7 @@ soup_listener_constructed (GObject *object)
+         priv->conn = (GIOStream *)g_socket_connection_factory_create_connection (priv->socket);
+         priv->iostream = soup_io_stream_new (priv->conn, FALSE);
+         priv->source = g_pollable_input_stream_create_source (G_POLLABLE_INPUT_STREAM (g_io_stream_get_input_stream (priv->iostream)), NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+         g_source_set_static_name (priv->source, "SoupListener");
+-#else
+-        g_source_set_name (priv->source, "SoupListener");
+-#endif
+         g_source_set_callback (priv->source, (GSourceFunc)listen_watch, listener, NULL);
+         g_source_attach (priv->source, g_main_context_get_thread_default ());
+ 
+diff --git a/libsoup/server/soup-server.c b/libsoup/server/soup-server.c
+index 1ea81fce..abe7c447 100644
+--- a/libsoup/server/soup-server.c
++++ b/libsoup/server/soup-server.c
+@@ -1339,11 +1339,7 @@ soup_server_listen_ipv4_ipv6 (SoupServer *server,
+ 	g_object_unref (addr6);
+ 
+ 	if (v4sock && g_error_matches (my_error, G_IO_ERROR,
+-#if GLIB_CHECK_VERSION (2, 41, 0)
+ 				       G_IO_ERROR_NOT_SUPPORTED
+-#else
+-				       G_IO_ERROR_FAILED
+-#endif
+ 				       )) {
+ 		/* No IPv6 support, but IPV6_ONLY wasn't specified, so just
+ 		 * ignore the failure.
+diff --git a/libsoup/soup-connection.c b/libsoup/soup-connection.c
+index ed34ae49..2e4b2112 100644
+--- a/libsoup/soup-connection.c
++++ b/libsoup/soup-connection.c
+@@ -178,11 +178,7 @@ soup_connection_set_property (GObject *object, guint prop_id,
+         case PROP_CONTEXT:
+                 priv->idle_timeout_src = g_timeout_source_new (0);
+                 g_source_set_ready_time (priv->idle_timeout_src, -1);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+                 g_source_set_static_name (priv->idle_timeout_src, "Soup connection idle timeout");
+-#else
+-                g_source_set_name (priv->idle_timeout_src, "Soup connection idle timeout");
+-#endif
+                 g_source_set_callback (priv->idle_timeout_src, idle_timeout, object, NULL);
+                 g_source_attach (priv->idle_timeout_src, g_value_get_pointer (value));
+                 break;
+diff --git a/libsoup/soup-misc.c b/libsoup/soup-misc.c
+index 414b0874..dd00abe8 100644
+--- a/libsoup/soup-misc.c
++++ b/libsoup/soup-misc.c
+@@ -61,11 +61,7 @@ soup_add_completion_reffed (GMainContext   *async_context,
+ {
+ 	GSource *source = g_idle_source_new ();
+ 
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 	g_source_set_static_name (source, "SoupCompletion");
+-#else
+-	g_source_set_name (source, "SoupCompletion");
+-#endif
+ 	g_source_set_priority (source, G_PRIORITY_DEFAULT);
+ 	g_source_set_callback (source, function, data, dnotify);
+ 	g_source_attach (source, async_context);
+@@ -114,11 +110,7 @@ soup_add_timeout (GMainContext *async_context,
+ 		  GSourceFunc function, gpointer data)
+ {
+ 	GSource *source = g_timeout_source_new (interval);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 	g_source_set_static_name (source, "SoupTimeout");
+-#else
+-	g_source_set_name (source, "SoupTimeout");
+-#endif
+ 	g_source_set_callback (source, function, data, NULL);
+ 	g_source_attach (source, async_context);
+ 	return source;
+diff --git a/libsoup/websocket/soup-websocket-connection.c b/libsoup/websocket/soup-websocket-connection.c
+index 2f7d9204..acf54710 100644
+--- a/libsoup/websocket/soup-websocket-connection.c
++++ b/libsoup/websocket/soup-websocket-connection.c
+@@ -299,11 +299,7 @@ soup_websocket_connection_start_input_source (SoupWebsocketConnection *self)
+ 		return;
+ 
+ 	priv->input_source = g_pollable_input_stream_create_source (priv->input, NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 	g_source_set_static_name (priv->input_source, "SoupWebsocketConnection input");
+-#else
+-	g_source_set_name (priv->input_source, "SoupWebsocketConnection input");
+-#endif
+ 	g_source_set_callback (priv->input_source, (GSourceFunc)on_web_socket_input, self, NULL);
+ 	g_source_attach (priv->input_source, g_main_context_get_thread_default ());
+ }
+@@ -330,11 +326,7 @@ soup_websocket_connection_start_output_source (SoupWebsocketConnection *self)
+ 		return;
+ 
+ 	priv->output_source = g_pollable_output_stream_create_source (priv->output, NULL);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 	g_source_set_static_name (priv->output_source, "SoupWebsocketConnection output");
+-#else
+-	g_source_set_name (priv->output_source, "SoupWebsocketConnection output");
+-#endif
+ 	g_source_set_callback (priv->output_source, (GSourceFunc)on_web_socket_output, self, NULL);
+ 	g_source_attach (priv->output_source, g_main_context_get_thread_default ());
+ }
+@@ -447,11 +439,7 @@ close_io_after_timeout (SoupWebsocketConnection *self)
+ 
+ 	g_debug ("waiting %d seconds for peer to close io", timeout);
+ 	priv->close_timeout = g_timeout_source_new_seconds (timeout);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 	g_source_set_static_name (priv->close_timeout, "SoupWebsocketConnection close timeout");
+-#else
+-	g_source_set_name (priv->close_timeout, "SoupWebsocketConnection close timeout");
+-#endif
+ 	g_source_set_callback (priv->close_timeout, on_timeout_close_io, self, NULL);
+ 	g_source_attach (priv->close_timeout, g_main_context_get_thread_default ());
+ }
+@@ -2168,11 +2156,7 @@ soup_websocket_connection_set_keepalive_interval (SoupWebsocketConnection *self,
+ 
+ 		if (interval > 0) {
+ 			priv->keepalive_timeout = g_timeout_source_new_seconds (interval);
+-#if GLIB_CHECK_VERSION(2, 70, 0)
+ 			g_source_set_static_name (priv->keepalive_timeout, "SoupWebsocketConnection keepalive timeout");
+-#else
+-			g_source_set_name (priv->keepalive_timeout, "SoupWebsocketConnection keepalive timeout");
+-#endif
+ 			g_source_set_callback (priv->keepalive_timeout, on_queue_ping, self, NULL);
+ 			g_source_attach (priv->keepalive_timeout, g_main_context_get_thread_default ());
+ 		}
+diff --git a/meson.build b/meson.build
+index c7553ed2..bccca5f6 100644
+--- a/meson.build
++++ b/meson.build
+@@ -98,7 +98,7 @@ endif
+ 
+ add_project_arguments(common_flags, language : 'c')
+ 
+-glib_required_version = '>= 2.69.1'
++glib_required_version = '>= 2.70.0'
+ glib_dep = dependency('glib-2.0', version : glib_required_version,
+                        fallback: ['glib', 'libglib_dep'])
+ gmodule_dep = dependency('gmodule-2.0', version : glib_required_version,

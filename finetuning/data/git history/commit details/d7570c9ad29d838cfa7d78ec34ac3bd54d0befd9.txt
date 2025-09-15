@@ -1,0 +1,51 @@
+commit d7570c9ad29d838cfa7d78ec34ac3bd54d0befd9
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Fri Dec 6 16:34:49 2024 -0600
+
+    docs: Add logo and favicons
+
+diff --git a/docs/reference/images/favicon-16x16.png b/docs/reference/images/favicon-16x16.png
+new file mode 100644
+index 00000000..a83c4b9c
+Binary files /dev/null and b/docs/reference/images/favicon-16x16.png differ
+diff --git a/docs/reference/images/favicon-180x180.png b/docs/reference/images/favicon-180x180.png
+new file mode 100644
+index 00000000..87ba32df
+Binary files /dev/null and b/docs/reference/images/favicon-180x180.png differ
+diff --git a/docs/reference/images/favicon-192x192.png b/docs/reference/images/favicon-192x192.png
+new file mode 100644
+index 00000000..270a895c
+Binary files /dev/null and b/docs/reference/images/favicon-192x192.png differ
+diff --git a/docs/reference/images/favicon-32x32.png b/docs/reference/images/favicon-32x32.png
+new file mode 100644
+index 00000000..261c07e3
+Binary files /dev/null and b/docs/reference/images/favicon-32x32.png differ
+diff --git a/docs/reference/images/favicon.ico b/docs/reference/images/favicon.ico
+new file mode 100644
+index 00000000..723b779c
+Binary files /dev/null and b/docs/reference/images/favicon.ico differ
+diff --git a/docs/reference/libsoup.toml.in b/docs/reference/libsoup.toml.in
+index b927f134..838f885f 100644
+--- a/docs/reference/libsoup.toml.in
++++ b/docs/reference/libsoup.toml.in
+@@ -4,7 +4,8 @@ version = "@VERSION@"
+ browse_url = "https://gitlab.gnome.org/GNOME/libsoup"
+ repository_url = "https://gitlab.gnome.org/GNOME/libsoup.git"
+ docs_url = "https://libsoup.org/libsoup-3.0/"
+-website_url = "https://libsoup.org/"
++website_url = "https://libsoup.gnome.org/"
++logo_url = "https://gitlab.gnome.org/uploads/-/system/project/avatar/1630/logo.png"
+ authors = "Dan Winship, Claudio Saavedra, Patrick Griffis, and Carlos Garcia Campos"
+ license = "LGPL-2.0-or-later"
+ description = "HTTP client/server library for GNOME"
+@@ -48,5 +49,10 @@ content_files = [
+ ]
+ 
+ content_images = [
++  "images/favicon.ico",
++  "images/favicon-16x16.png",
++  "images/favicon-32x32.png",
++  "images/favicon-180x180.png",
++  "images/favicon-192x192.png",
+ ]
+ urlmap_file = "urlmap.js"

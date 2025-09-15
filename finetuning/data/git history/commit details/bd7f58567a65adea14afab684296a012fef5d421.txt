@@ -1,0 +1,20 @@
+commit bd7f58567a65adea14afab684296a012fef5d421
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Wed Jan 8 17:22:53 2025 -0600
+
+    build: Don't always enable address/undefined sanitizer when fuzzing
+    
+    This instead allows the `b_sanitize` option to work as expected.
+
+diff --git a/fuzzing/meson.build b/fuzzing/meson.build
+index 5dd0f417..41bc7e19 100644
+--- a/fuzzing/meson.build
++++ b/fuzzing/meson.build
+@@ -8,7 +8,7 @@ fuzz_targets = [
+   'fuzz_header_parsing',
+ ]
+ 
+-fuzzing_args = '-fsanitize=fuzzer,address,undefined'
++fuzzing_args = '-fsanitize=fuzzer'
+ have_fuzzing = cc.has_argument(fuzzing_args)
+ fuzzing_feature = get_option('fuzzing')

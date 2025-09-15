@@ -1,0 +1,25 @@
+commit 2f14f0c72e1f16b4c990e813651a47d5449b4490
+Author: Milan Crha <mcrha@redhat.com>
+Date:   Thu May 22 10:41:08 2025 +0200
+
+    soup-session: Fix a memory leak in conditional_get_ready_cb()
+    
+    The GError is sent, but never passed anywhere nor freed.
+    
+    This had been uncovered by the cache-test.
+
+diff --git a/libsoup/soup-session.c b/libsoup/soup-session.c
+index 60009dc8..fc7d7d90 100644
+--- a/libsoup/soup-session.c
++++ b/libsoup/soup-session.c
+@@ -2987,9 +2987,11 @@ conditional_get_ready_cb (SoupSession               *session,
+ 		soup_cache_cancel_conditional_request (data->cache, data->conditional_msg);
+ 		cancel_cache_response (data->item);
+ 		async_cache_conditional_data_free (data);
++		g_clear_error (&error);
+ 		return;
+ 	}
+ 	g_object_unref (stream);
++	g_clear_error (&error);
+ 
+ 	soup_cache_update_from_conditional_request (data->cache, data->conditional_msg);

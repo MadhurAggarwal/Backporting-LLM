@@ -1,0 +1,25 @@
+commit 41a6cca1ae136d51a3aa88bff49e84676fef7e18
+Author: Seungha Yang <seungha@centricular.com>
+Date:   Thu May 1 23:26:59 2025 +0900
+
+    tests: Fix MSVC build error
+    
+    sniffing-test.c(349): error C2099: initializer is not a constant
+
+diff --git a/tests/sniffing-test.c b/tests/sniffing-test.c
+index 7857732d..d7fb9d3e 100644
+--- a/tests/sniffing-test.c
++++ b/tests/sniffing-test.c
+@@ -342,11 +342,10 @@ test_disabled (gconstpointer data)
+ 	g_uri_unref (uri);
+ }
+ 
+-static const gsize MARKUP_LENGTH = strlen ("<!--") + strlen ("-->");
+-
+ static void
+ do_skip_whitespace_test (void)
+ {
++        const gsize MARKUP_LENGTH = strlen ("<!--") + strlen ("-->");
+         SoupContentSniffer *sniffer = soup_content_sniffer_new ();
+         SoupMessage *msg = soup_message_new (SOUP_METHOD_GET, "http://example.org");
+         const char *test_cases[] = {

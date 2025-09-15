@@ -1,0 +1,1476 @@
+commit dee8a6f82fce178c6d44214440eccdbe7bbd5a16
+Author: Brian Yurko <155515-byurko@users.noreply.gitlab.gnome.org>
+Date:   Tue May 20 19:54:03 2025 -0400
+
+    docs: Update gi-docgen links from gtk-doc format within descriptions
+    
+    Searching the code comments for #Soup to recognize which lines have not
+    yet been converted to linked targets. Parameters and Returns were not
+    adjusted. Only bare references within the more paragraph oriented areas
+    such as the Description areas.
+    
+    Considering the generated documentation gi-docgen knows the type of
+    parameters and return types and therefore links those adjacent to the
+    developer supplied description. It feels unnecessary or undesired to
+    add excessive numbers of links considering the page as rendered.
+    
+    Closes #456
+
+diff --git a/libsoup/auth/soup-auth-manager.c b/libsoup/auth/soup-auth-manager.c
+index e3d35181..3df7b039 100644
+--- a/libsoup/auth/soup-auth-manager.c
++++ b/libsoup/auth/soup-auth-manager.c
+@@ -26,10 +26,10 @@
+  *
+  * HTTP client-side authentication handler.
+  *
+- * #SoupAuthManager is the [iface@SessionFeature] that handles HTTP
++ * [class@AuthManager] is the [iface@SessionFeature] that handles HTTP
+  * authentication for a [class@Session].
+  *
+- * A #SoupAuthManager is added to the session by default, and normally
++ * A [class@AuthManager] is added to the session by default, and normally
+  * you don't need to worry about it at all. However, if you want to
+  * disable HTTP authentication, you can remove the feature from the
+  * session with [method@Session.remove_feature_by_type] or disable it on
+diff --git a/libsoup/auth/soup-auth.c b/libsoup/auth/soup-auth.c
+index b9de5e9a..950ef0c2 100644
+--- a/libsoup/auth/soup-auth.c
++++ b/libsoup/auth/soup-auth.c
+@@ -26,7 +26,7 @@
+  * but applications never need to be aware of the specific subclasses being
+  * used.
+  *
+- * #SoupAuth objects store the authentication data associated with a given bit
++ * [class@Auth] objects store the authentication data associated with a given bit
+  * of web space. They are created automatically by [class@Session].
+  **/
+ 
+@@ -237,17 +237,17 @@ soup_auth_class_init (SoupAuthClass *auth_class)
+ 
+ /**
+  * soup_auth_new: (constructor)
+- * @type: the type of auth to create (a subtype of #SoupAuth)
++ * @type: the type of auth to create (a subtype of [class@Auth])
+  * @msg: the #SoupMessage the auth is being created for
+  * @auth_header: the WWW-Authenticate/Proxy-Authenticate header
+  *
+- * Creates a new #SoupAuth of type @type with the information from
++ * Creates a new [class@Auth] of type @type with the information from
+  * @msg and @auth_header.
+  *
+  * This is called by [class@Session]; you will normally not create auths
+  * yourself.
+  *
+- * Returns: (nullable): the new #SoupAuth, or %NULL if it could
++ * Returns: (nullable): the new [class@Auth], or %NULL if it could
+  *   not be created
+  **/
+ SoupAuth *
+@@ -308,7 +308,7 @@ soup_auth_new (GType type, SoupMessage *msg, const char *auth_header)
+  * As with [ctor@Auth.new], this is normally only used by [class@Session].
+  *
+  * Returns: %TRUE if @auth is still a valid (but potentially
+- *   unauthenticated) #SoupAuth. %FALSE if something about @auth_params
++ *   unauthenticated) [class@Auth]. %FALSE if something about @auth_params
+  *   could not be parsed or incorporated into @auth at all.
+  **/
+ gboolean
+@@ -387,7 +387,7 @@ soup_auth_authenticate (SoupAuth *auth, const char *username, const char *passwo
+  *
+  * You need to cancel an auth to complete an asynchronous authenticate operation
+  * when no credentials are provided ([method@Auth.authenticate] is not called).
+- * The #SoupAuth will be cancelled on dispose if it hans't been authenticated.
++ * The [class@Auth] will be cancelled on dispose if it hasn't been authenticated.
+  */
+ void
+ soup_auth_cancel (SoupAuth *auth)
+@@ -486,7 +486,7 @@ soup_auth_get_realm (SoupAuth *auth)
+  *
+  * Gets an opaque identifier for @auth.
+  *
+- * The identifier can be used as a hash key or the like. #SoupAuth objects from
++ * The identifier can be used as a hash key or the like. [class@Auth] objects from
+  * the same server with the same identifier refer to the same authentication
+  * domain (eg, the URLs associated with them take the same usernames and
+  * passwords).
+diff --git a/libsoup/cache/soup-cache.c b/libsoup/cache/soup-cache.c
+index fa5fb973..60f09a2d 100644
+--- a/libsoup/cache/soup-cache.c
++++ b/libsoup/cache/soup-cache.c
+@@ -1295,7 +1295,7 @@ soup_cache_has_response (SoupCache *cache, SoupMessage *msg)
+  *
+  * Calculates whether the @msg can be cached or not.
+  *
+- * Returns: a #SoupCacheability value indicating whether the @msg can be cached
++ * Returns: a [flags@Cacheability] value indicating whether the @msg can be cached
+  *   or not.
+  */
+ SoupCacheability
+@@ -1406,7 +1406,7 @@ clear_cache_files (SoupCache *cache)
+  *
+  * Will remove all entries in the @cache plus all the cache files.
+  *
+- * This is not thread safe and must be called only from the thread that created the #SoupCache
++ * This is not thread safe and must be called only from the thread that created the [class@Cache]
+  */
+ void
+ soup_cache_clear (SoupCache *cache)
+@@ -1568,7 +1568,7 @@ pack_entry (gpointer data,
+  * You must call this before exiting if you want your cache data to
+  * persist between sessions.
+  *
+- * This is not thread safe and must be called only from the thread that created the #SoupCache
++ * This is not thread safe and must be called only from the thread that created the [class@Cache]
+  */
+ void
+ soup_cache_dump (SoupCache *cache)
+@@ -1631,7 +1631,7 @@ insert_cache_file (SoupCache *cache, const char *name, GHashTable *leaked_entrie
+  *
+  * Loads the contents of @cache's index into memory.
+  *
+- * This is not thread safe and must be called only from the thread that created the #SoupCache
++ * This is not thread safe and must be called only from the thread that created the [class@Cache]
+  */
+ void
+ soup_cache_load (SoupCache *cache)
+diff --git a/libsoup/content-decoder/soup-content-decoder.c b/libsoup/content-decoder/soup-content-decoder.c
+index f75ebce4..24833905 100644
+--- a/libsoup/content-decoder/soup-content-decoder.c
++++ b/libsoup/content-decoder/soup-content-decoder.c
+@@ -25,23 +25,23 @@
+  *
+  * Handles decoding of HTTP messages.
+  *
+- * #SoupContentDecoder handles adding the "Accept-Encoding" header on
++ * [class@ContentDecoder] handles adding the "Accept-Encoding" header on
+  * outgoing messages, and processing the "Content-Encoding" header on
+  * incoming ones. Currently it supports the "gzip", "deflate", and "br"
+  * content codings.
+  *
+- * A #SoupContentDecoder will automatically be
++ * A [class@ContentDecoder] will automatically be
+  * added to the session by default. (You can use
+  * [method@Session.remove_feature_by_type] if you don't
+  * want this.)
+  *
+- * If #SoupContentDecoder successfully decodes the Content-Encoding,
++ * If [class@ContentDecoder] successfully decodes the Content-Encoding,
+  * the message body will contain the decoded data; however, the message headers
+  * will be unchanged (and so "Content-Encoding" will still be present,
+  * "Content-Length" will describe the original encoded length, etc).
+  *
+  * If "Content-Encoding" contains any encoding types that
+- * #SoupContentDecoder doesn't recognize, then none of the encodings
++ * [class@ContentDecoder] doesn't recognize, then none of the encodings
+  * will be decoded.
+  *
+  * (Note that currently there is no way to (automatically) use
+diff --git a/libsoup/content-sniffer/soup-content-sniffer.c b/libsoup/content-sniffer/soup-content-sniffer.c
+index a5e18d5d..26757a6a 100644
+--- a/libsoup/content-sniffer/soup-content-sniffer.c
++++ b/libsoup/content-sniffer/soup-content-sniffer.c
+@@ -28,10 +28,10 @@
+  *
+  * Sniffs the mime type of messages.
+  *
+- * A #SoupContentSniffer tries to detect the actual content type of
++ * A [class@ContentSniffer] tries to detect the actual content type of
+  * the files that are being downloaded by looking at some of the data
+  * before the [class@Message] emits its [signal@Message::got-headers] signal.
+- * #SoupContentSniffer implements [iface@SessionFeature], so you can add
++ * [class@ContentSniffer] implements [iface@SessionFeature], so you can add
+  * content sniffing to a session with [method@Session.add_feature] or
+  * [method@Session.add_feature_by_type].
+  **/
+@@ -906,7 +906,7 @@ soup_content_sniffer_session_feature_init (SoupSessionFeatureInterface *feature_
+ /**
+  * soup_content_sniffer_new:
+  *
+- * Creates a new #SoupContentSniffer.
++ * Creates a new [class@ContentSniffer].
+  *
+  * Returns: a new #SoupContentSniffer
+  **/
+diff --git a/libsoup/cookies/soup-cookie-jar-db.c b/libsoup/cookies/soup-cookie-jar-db.c
+index 780dad92..ef883299 100644
+--- a/libsoup/cookies/soup-cookie-jar-db.c
++++ b/libsoup/cookies/soup-cookie-jar-db.c
+@@ -23,7 +23,7 @@
+  *
+  * Database-based Cookie Jar.
+  *
+- * #SoupCookieJarDB is a [class@CookieJar] that reads cookies from and writes
++ * [class@CookieJarDB] is a [class@CookieJar] that reads cookies from and writes
+  * them to a sqlite database in the new Mozilla format.
+  *
+  * (This is identical to `SoupCookieJarSqlite` in
+@@ -112,7 +112,7 @@ soup_cookie_jar_db_get_property (GObject *object, guint prop_id,
+  * @filename: the filename to read to/write from, or %NULL
+  * @read_only: %TRUE if @filename is read-only
+  *
+- * Creates a #SoupCookieJarDB.
++ * Creates a [class@CookieJarDB].
+  *
+  * @filename will be read in at startup to create an initial set of cookies. If
+  * @read_only is %FALSE, then the non-session cookies will be written to
+diff --git a/libsoup/cookies/soup-cookie-jar-text.c b/libsoup/cookies/soup-cookie-jar-text.c
+index cea09045..5d4bf270 100644
+--- a/libsoup/cookies/soup-cookie-jar-text.c
++++ b/libsoup/cookies/soup-cookie-jar-text.c
+@@ -21,7 +21,7 @@
+  *
+  * Text-file-based ("cookies.txt") Cookie Jar
+  *
+- * #SoupCookieJarText is a [class@CookieJar] that reads cookies from and writes
++ * [class@CookieJarText] is a [class@CookieJar] that reads cookies from and writes
+  * them to a text file in format similar to Mozilla's "cookies.txt".
+  **/
+ 
+@@ -106,7 +106,7 @@ soup_cookie_jar_text_get_property (GObject *object, guint prop_id,
+  * @filename: the filename to read to/write from
+  * @read_only: %TRUE if @filename is read-only
+  *
+- * Creates a #SoupCookieJarText.
++ * Creates a [class@CookieJarText].
+  *
+  * @filename will be read in at startup to create an initial set of cookies. If
+  * @read_only is %FALSE, then the non-session cookies will be written to
+diff --git a/libsoup/cookies/soup-cookie-jar.c b/libsoup/cookies/soup-cookie-jar.c
+index fac53a5f..f79cc3f9 100644
+--- a/libsoup/cookies/soup-cookie-jar.c
++++ b/libsoup/cookies/soup-cookie-jar.c
+@@ -25,12 +25,12 @@
+  *
+  * Automatic cookie handling for SoupSession.
+  *
+- * A #SoupCookieJar stores [struct@Cookie]s and arrange for them to be sent with
+- * the appropriate [class@Message]s. #SoupCookieJar implements
++ * A [class@CookieJar] stores [struct@Cookie]s and arrange for them to be sent with
++ * the appropriate [class@Message]s. [class@CookieJar] implements
+  * [iface@SessionFeature], so you can add a cookie jar to a session with
+  * [method@Session.add_feature] or [method@Session.add_feature_by_type].
+  *
+- * Note that the base #SoupCookieJar class does not support any form
++ * Note that the base [class@CookieJar] class does not support any form
+  * of long-term cookie persistence.
+  **/
+ 
+@@ -225,9 +225,9 @@ soup_cookie_jar_class_init (SoupCookieJarClass *jar_class)
+ /**
+  * soup_cookie_jar_new:
+  *
+- * Creates a new #SoupCookieJar.
++ * Creates a new [class@CookieJar].
+  *
+- * The base #SoupCookieJar class does not support persistent storage of cookies;
++ * The base [class@CookieJar] class does not support persistent storage of cookies;
+  * use a subclass for that.
+  *
+  * Returns: a new #SoupCookieJar
+@@ -401,7 +401,7 @@ get_cookies (SoupCookieJar *jar,
+  * If @for_http is %TRUE, the return value will include cookies marked
+  * "HttpOnly" (that is, cookies that the server wishes to keep hidden
+  * from client-side scripting operations such as the JavaScript
+- * document.cookies property). Since #SoupCookieJar sets the Cookie
++ * document.cookies property). Since [class@CookieJar] sets the Cookie
+  * header itself when making the actual HTTP request, you should
+  * almost certainly be setting @for_http to %FALSE if you are calling
+  * this.
+@@ -441,12 +441,12 @@ soup_cookie_jar_get_cookies (SoupCookieJar *jar, GUri *uri,
+  *   to an HTTP operation
+  *
+  * Retrieves the list of cookies that would be sent with a request to @uri
+- * as a [struct@GLib.List] of #SoupCookie objects.
++ * as a [struct@GLib.List] of [struct@Cookie] objects.
+  *
+  * If @for_http is %TRUE, the return value will include cookies marked
+  * "HttpOnly" (that is, cookies that the server wishes to keep hidden
+  * from client-side scripting operations such as the JavaScript
+- * document.cookies property). Since #SoupCookieJar sets the Cookie
++ * document.cookies property). Since [class@CookieJar] sets the Cookie
+  * header itself when making the actual HTTP request, you should
+  * almost certainly be setting @for_http to %FALSE if you are calling
+  * this.
+@@ -1051,7 +1051,7 @@ soup_cookie_jar_delete_cookie (SoupCookieJar *jar,
+  *   from that page, reject any cookie that it could try to set unless it
+  *   already has a cookie in the cookie jar. For libsoup to be able to tell
+  *   apart first party cookies from the rest, the application must call
+- *   [method@Message.set_first_party] on each outgoing #SoupMessage, setting the
++ *   [method@Message.set_first_party] on each outgoing [class@Message], setting the
+  *   [struct@GLib.Uri] of the main document. If no first party is set in a
+  *   message when this policy is in effect, cookies will be assumed to be third
+  *   party by default.
+diff --git a/libsoup/cookies/soup-cookie.c b/libsoup/cookies/soup-cookie.c
+index cc80d001..ba949239 100644
+--- a/libsoup/cookies/soup-cookie.c
++++ b/libsoup/cookies/soup-cookie.c
+@@ -380,7 +380,7 @@ cookie_new_internal (const char *name, const char *value,
+  * @path: cookie path, or %NULL
+  * @max_age: max age of the cookie, or -1 for a session cookie
+  *
+- * Creates a new #SoupCookie with the given attributes.
++ * Creates a new [struct@Cookie] with the given attributes.
+  *
+  * Use [method@Cookie.set_secure] and [method@Cookie.set_http_only] if you
+  * need to set those attributes on the returned cookie.
+@@ -429,14 +429,14 @@ soup_cookie_new (const char *name, const char *value,
+  * @header: a cookie string (eg, the value of a Set-Cookie header)
+  * @origin: (nullable): origin of the cookie
+  *
+- * Parses @header and returns a #SoupCookie.
++ * Parses @header and returns a [struct@Cookie].
+  *
+  * If @header contains multiple cookies, only the first one will be parsed.
+  *
+  * If @header does not have "path" or "domain" attributes, they will
+  * be defaulted from @origin. If @origin is %NULL, path will default
+  * to "/", but domain will be left as %NULL. Note that this is not a
+- * valid state for a #SoupCookie, and you will need to fill in some
++ * valid state for a [struct@Cookie], and you will need to fill in some
+  * appropriate string for the domain if you want to actually make use
+  * of the cookie.
+  *
+@@ -932,7 +932,7 @@ soup_cookies_from_response (SoupMessage *msg)
+  * `SoupCookie`s.
+  *
+  * As the "Cookie" header, unlike "Set-Cookie", only contains cookie names and
+- * values, none of the other #SoupCookie fields will be filled in. (Thus, you
++ * values, none of the other [struct@Cookie] fields will be filled in. (Thus, you
+  * can't generally pass a cookie returned from this method directly to
+  * [func@cookies_to_response].)
+  *
+@@ -969,7 +969,7 @@ soup_cookies_from_request (SoupMessage *msg)
+ 
+ /**
+  * soup_cookies_to_response:
+- * @cookies: (element-type SoupCookie): a #GSList of #SoupCookie
++ * @cookies: (element-type SoupCookie): a #GSList of [struct@Cookie]
+  * @msg: a #SoupMessage
+  *
+  * Appends a "Set-Cookie" response header to @msg for each cookie in
+@@ -996,7 +996,7 @@ soup_cookies_to_response (GSList *cookies, SoupMessage *msg)
+ 
+ /**
+  * soup_cookies_to_request:
+- * @cookies: (element-type SoupCookie): a #GSList of #SoupCookie
++ * @cookies: (element-type SoupCookie): a #GSList of [struct@Cookie]
+  * @msg: a #SoupMessage
+  *
+  * Adds the name and value of each cookie in @cookies to @msg's
+@@ -1024,7 +1024,7 @@ soup_cookies_to_request (GSList *cookies, SoupMessage *msg)
+ 
+ /**
+  * soup_cookies_free: (skip)
+- * @cookies: (element-type SoupCookie): a #GSList of #SoupCookie
++ * @cookies: (element-type SoupCookie): a #GSList of [struct@Cookie]
+  *
+  * Frees @cookies.
+  **/
+@@ -1036,9 +1036,9 @@ soup_cookies_free (GSList *cookies)
+ 
+ /**
+  * soup_cookies_to_cookie_header:
+- * @cookies: (element-type SoupCookie): a #GSList of #SoupCookie
++ * @cookies: (element-type SoupCookie): a #GSList of [struct@Cookie]
+  *
+- * Serializes a [struct@GLib.SList] of #SoupCookie into a string suitable for
++ * Serializes a [struct@GLib.SList] of [struct@Cookie] into a string suitable for
+  * setting as the value of the "Cookie" header.
+  *
+  * Returns: the serialization of @cookies
+diff --git a/libsoup/hsts/soup-hsts-enforcer-db.c b/libsoup/hsts/soup-hsts-enforcer-db.c
+index dbdea067..bbb14c3c 100644
+--- a/libsoup/hsts/soup-hsts-enforcer-db.c
++++ b/libsoup/hsts/soup-hsts-enforcer-db.c
+@@ -23,7 +23,7 @@
+  *
+  * Persistent HTTP Strict Transport Security enforcer.
+  *
+- * #SoupHSTSEnforcerDB is a [class@HSTSEnforcer] that uses a SQLite
++ * [class@HSTSEnforcerDB] is a [class@HSTSEnforcer] that uses a SQLite
+  * database as a backend for persistency.
+  **/
+ 
+@@ -104,13 +104,13 @@ soup_hsts_enforcer_db_get_property (GObject *object, guint prop_id,
+  * soup_hsts_enforcer_db_new:
+  * @filename: the filename of the database to read/write from.
+  *
+- * Creates a #SoupHSTSEnforcerDB.
++ * Creates a [class@HSTSEnforcerDB].
+  *
+  * @filename will be read in during the initialization of a
+- * #SoupHSTSEnforcerDB, in order to create an initial set of HSTS
++ * [class@HSTSEnforcerDB], in order to create an initial set of HSTS
+  * policies. If the file doesn't exist, a new database will be created
+  * and initialized. Changes to the policies during the lifetime of a
+- * #SoupHSTSEnforcerDB will be written to @filename when
++ * [class@HSTSEnforcerDB] will be written to @filename when
+  * [signal@HSTSEnforcer::changed] is emitted.
+  *
+  * Returns: the new #SoupHSTSEnforcer
+diff --git a/libsoup/hsts/soup-hsts-enforcer.c b/libsoup/hsts/soup-hsts-enforcer.c
+index b0873639..fe2cc9d6 100644
+--- a/libsoup/hsts/soup-hsts-enforcer.c
++++ b/libsoup/hsts/soup-hsts-enforcer.c
+@@ -23,24 +23,24 @@
+  *
+  * Automatic HTTP Strict Transport Security enforcing for [class@Session].
+  *
+- * A #SoupHSTSEnforcer stores HSTS policies and enforces them when
+- * required. #SoupHSTSEnforcer implements [iface@SessionFeature], so you
++ * A [class@HSTSEnforcer] stores HSTS policies and enforces them when
++ * required. [class@HSTSEnforcer] implements [iface@SessionFeature], so you
+  * can add an HSTS enforcer to a session with
+  * [method@Session.add_feature] or [method@Session.add_feature_by_type].
+  *
+- * #SoupHSTSEnforcer keeps track of all the HTTPS destinations that,
++ * [class@HSTSEnforcer] keeps track of all the HTTPS destinations that,
+  * when connected to, return the Strict-Transport-Security header with
+- * valid values. #SoupHSTSEnforcer will forget those destinations
++ * valid values. [class@HSTSEnforcer] will forget those destinations
+  * upon expiry or when the server requests it.
+  *
+- * When the [class@Session] the #SoupHSTSEnforcer is attached to queues or
+- * restarts a message, the #SoupHSTSEnforcer will rewrite the URI to HTTPS if
++ * When the [class@Session] the [class@HSTSEnforcer] is attached to queues or
++ * restarts a message, the [class@HSTSEnforcer] will rewrite the URI to HTTPS if
+  * the destination is a known HSTS host and is contacted over an insecure
+- * transport protocol (HTTP). Users of #SoupHSTSEnforcer are advised to listen
++ * transport protocol (HTTP). Users of [class@HSTSEnforcer] are advised to listen
+  * to changes in the [property@Message:uri] property in order to be aware of
+  * changes in the message URI.
+  *
+- * Note that #SoupHSTSEnforcer does not support any form of long-term
++ * Note that [class@HSTSEnforcer] does not support any form of long-term
+  * HSTS policy persistence. See [class@HSTSEnforcerDB] for a persistent
+  * enforcer.
+  **/
+@@ -176,9 +176,9 @@ soup_hsts_enforcer_class_init (SoupHSTSEnforcerClass *hsts_enforcer_class)
+ /**
+  * soup_hsts_enforcer_new:
+  *
+- * Creates a new #SoupHSTSEnforcer.
++ * Creates a new [class@HSTSEnforcer].
+  *
+- * The base #SoupHSTSEnforcer class does not support persistent storage of HSTS
++ * The base [class@HSTSEnforcer] class does not support persistent storage of HSTS
+  * policies, see [class@HSTSEnforcerDB] for that.
+  *
+  * Returns: a new #SoupHSTSEnforcer
+diff --git a/libsoup/hsts/soup-hsts-enforcer.h b/libsoup/hsts/soup-hsts-enforcer.h
+index 08791311..2ea7d94a 100644
+--- a/libsoup/hsts/soup-hsts-enforcer.h
++++ b/libsoup/hsts/soup-hsts-enforcer.h
+@@ -20,13 +20,13 @@ G_DECLARE_DERIVABLE_TYPE (SoupHSTSEnforcer, soup_hsts_enforcer, SOUP, HSTS_ENFOR
+  * @is_persistent: The @is_persistent function advertises whether the enforcer is persistent or
+  * whether changes made to it will be lost when the underlying [class@Session] is finished.
+  * @has_valid_policy: The @has_valid_policy function is called to check whether there is a valid
+- * policy for the given domain. This method should return %TRUE for #SoupHSTSEnforcer to
+- * change the scheme of the #GUri in the #SoupMessage to HTTPS. Implementations might want to
++ * policy for the given domain. This method should return %TRUE for [class@HSTSEnforcer] to
++ * change the scheme of the #GUri in the [class@Message] to HTTPS. Implementations might want to
+  * chain up to the @has_valid_policy in the parent class to check, for instance, for runtime
+  * policies.
+- * @changed: The class closure for the #SoupHSTSEnforcer::changed signal.
++ * @changed: The class closure for the [signal@HSTSEnforcer::changed] signal.
+  *
+- * Class structure for #SoupHSTSEnforcer.
++ * Class structure for [class@HSTSEnforcer].
+  **/
+ struct _SoupHSTSEnforcerClass {
+ 	GObjectClass parent_class;
+diff --git a/libsoup/hsts/soup-hsts-policy.c b/libsoup/hsts/soup-hsts-policy.c
+index a2610775..3e0c5196 100644
+--- a/libsoup/hsts/soup-hsts-policy.c
++++ b/libsoup/hsts/soup-hsts-policy.c
+@@ -21,7 +21,7 @@
+ /**
+  * SoupHSTSPolicy:
+  *
+- * #SoupHSTSPolicy implements HTTP policies, as described by
++ * [struct@HSTSPolicy] implements HTTP policies, as described by
+  * [RFC 6797](http://tools.ietf.org/html/rfc6797).
+  *
+  * @domain represents the host that this policy applies to. The domain
+@@ -123,7 +123,7 @@ is_hostname_valid (const char *hostname)
+  * @max_age: max age of the policy
+  * @include_subdomains: %TRUE if the policy applies on subdomains
+  *
+- * Creates a new #SoupHSTSPolicy with the given attributes.
++ * Creates a new [struct@HSTSPolicy] with the given attributes.
+  *
+  * @domain is a domain on which the strict transport security policy
+  * represented by this object must be enforced.
+@@ -211,7 +211,7 @@ soup_hsts_policy_new_full (const char *domain,
+  * @domain: policy domain or hostname
+  * @include_subdomains: %TRUE if the policy applies on sub domains
+  *
+- * Creates a new session #SoupHSTSPolicy with the given attributes.
++ * Creates a new session [struct@HSTSPolicy] with the given attributes.
+  *
+  * A session policy is a policy that is valid during the lifetime of
+  * the [class@HSTSEnforcer] it is added to. Contrary to regular policies,
+@@ -243,7 +243,7 @@ soup_hsts_policy_new_session_policy (const char *domain,
+  * @msg: a #SoupMessage
+  *
+  * Parses @msg's first "Strict-Transport-Security" response header and
+- * returns a #SoupHSTSPolicy.
++ * returns a [struct@HSTSPolicy].
+  *
+  * Returns: (nullable): a new #SoupHSTSPolicy, or %NULL if no valid
+  *   "Strict-Transport-Security" response header was found.
+diff --git a/libsoup/http1/soup-body-output-stream.c b/libsoup/http1/soup-body-output-stream.c
+index 3cbd770b..cb6e17e4 100644
+--- a/libsoup/http1/soup-body-output-stream.c
++++ b/libsoup/http1/soup-body-output-stream.c
+@@ -356,7 +356,7 @@ soup_body_output_stream_class_init (SoupBodyOutputStreamClass *stream_class)
+          * @count: the bytes written
+          * @is_metadata: whether the data being written is control data
+          *
+-         * Emitted every time data is written in a #SoupBodyOutputStream
++         * Emitted every time data is written in a [type@BodyOutputStream]
+          */
+         signals[WROTE_DATA] =
+                 g_signal_new ("wrote-data",
+diff --git a/libsoup/http2/soup-body-input-stream-http2.c b/libsoup/http2/soup-body-input-stream-http2.c
+index fc633934..a48129a7 100644
+--- a/libsoup/http2/soup-body-input-stream-http2.c
++++ b/libsoup/http2/soup-body-input-stream-http2.c
+@@ -28,7 +28,7 @@
+  * SoupBodyInputStreamHttp2
+  * @short_description: Streaming input operations on memory chunks
+  *
+- * #SoupBodyInputStreamHttp2 is a class for using arbitrary
++ * [type@BodyInputStreamHttp2] is a class for using arbitrary
+  * memory chunks as input for GIO streaming input operations.
+  *
+  * It differs from #GMemoryInputStream in that it frees older chunks
+@@ -68,7 +68,7 @@ static guint signals [LAST_SIGNAL] = { 0 };
+ /**
+  * soup_body_input_stream_http2_new:
+  *
+- * Creates a new empty #SoupBodyInputStreamHttp2. 
++ * Creates a new empty [type@BodyInputStreamHttp2].
+  *
+  * Returns: a new #GInputStream
+  */
+diff --git a/libsoup/server/soup-auth-domain-basic.c b/libsoup/server/soup-auth-domain-basic.c
+index 6c9dc7ef..f6b9412e 100644
+--- a/libsoup/server/soup-auth-domain-basic.c
++++ b/libsoup/server/soup-auth-domain-basic.c
+@@ -21,7 +21,7 @@
+  *
+  * Server-side "Basic" authentication.
+  *
+- * #SoupAuthDomainBasic handles the server side of HTTP "Basic" (ie,
++ * [class@AuthDomainBasic] handles the server side of HTTP "Basic" (ie,
+  * cleartext password) authentication.
+  */
+ 
+@@ -114,7 +114,7 @@ soup_auth_domain_basic_get_property (GObject *object, guint prop_id,
+  * @optname1: name of first option, or %NULL
+  * @...: option name/value pairs
+  *
+- * Creates a #SoupAuthDomainBasic.
++ * Creates a [class@AuthDomainBasic].
+  *
+  * You must set the [property@AuthDomain:realm] property, to indicate the realm
+  * name to be returned with the authentication challenge to the client. Other
+@@ -146,7 +146,7 @@ soup_auth_domain_basic_new (const char *optname1, ...)
+  * @password: the password provided by the client
+  * @user_data: the data passed to [method@AuthDomainBasic.set_auth_callback]
+  *
+- * Callback used by #SoupAuthDomainBasic for authentication purposes.
++ * Callback used by [class@AuthDomainBasic] for authentication purposes.
+  *
+  * The application should verify that @username and @password and valid
+  * and return %TRUE or %FALSE.
+diff --git a/libsoup/server/soup-auth-domain-digest.c b/libsoup/server/soup-auth-domain-digest.c
+index 944fdd72..8edb5c17 100644
+--- a/libsoup/server/soup-auth-domain-digest.c
++++ b/libsoup/server/soup-auth-domain-digest.c
+@@ -24,7 +24,7 @@
+  *
+  * Server-side "Digest" authentication.
+  *
+- * #SoupAuthDomainDigest handles the server side of HTTP "Digest"
++ * [class@AuthDomainDigest] handles the server side of HTTP "Digest"
+  * authentication.
+  */
+ 
+@@ -118,7 +118,7 @@ soup_auth_domain_digest_get_property (GObject *object, guint prop_id,
+  * @optname1: name of first option, or %NULL
+  * @...: option name/value pairs
+  *
+- * Creates a #SoupAuthDomainDigest.
++ * Creates a [class@AuthDomainDigest].
+  *
+  * You must set the [property@AuthDomain:realm] property, to indicate the realm name to
+  * be returned with the authentication challenge to the client. Other parameters
+@@ -149,7 +149,7 @@ soup_auth_domain_digest_new (const char *optname1, ...)
+  * @username: the username provided by the client
+  * @user_data: the data passed to [method@AuthDomainDigest.set_auth_callback]
+  *
+- * Callback used by #SoupAuthDomainDigest for authentication purposes.
++ * Callback used by [class@AuthDomainDigest] for authentication purposes.
+  *
+  * The application should look up @username in its password database,
+  * and return the corresponding encoded password (see
+@@ -359,7 +359,7 @@ soup_auth_domain_digest_challenge (SoupAuthDomain    *domain,
+  * That is, it returns a stringified MD5 hash of
+  * @username, @realm, and @password concatenated together. This is
+  * the form that is needed as the return value of
+- * #SoupAuthDomainDigest's auth handler.
++ * [class@AuthDomainDigest]'s auth handler.
+  *
+  * For security reasons, you should store the encoded hash, rather
+  * than storing the cleartext password itself and calling this method
+diff --git a/libsoup/server/soup-auth-domain.c b/libsoup/server/soup-auth-domain.c
+index c901bd2f..073d184e 100644
+--- a/libsoup/server/soup-auth-domain.c
++++ b/libsoup/server/soup-auth-domain.c
+@@ -21,9 +21,9 @@
+  *
+  * Server-side authentication.
+  *
+- * A #SoupAuthDomain manages authentication for all or part of a
++ * A [class@AuthDomain] manages authentication for all or part of a
+  * [class@Server]. To make a server require authentication, first create
+- * an appropriate subclass of #SoupAuthDomain, and then add it to the
++ * an appropriate subclass of [class@AuthDomain], and then add it to the
+  * server with [method@Server.add_auth_domain].
+  *
+  * In order for an auth domain to have any effect, you must add one or more
+@@ -308,7 +308,7 @@ soup_auth_domain_remove_path (SoupAuthDomain *domain, const char *path)
+  * @msg: a #SoupServerMessage
+  * @user_data: the data passed to [method@AuthDomain.set_filter]
+  *
+- * The prototype for a #SoupAuthDomain filter.
++ * The prototype for a [class@AuthDomain] filter.
+  *
+  * See [method@AuthDomain.set_filter] for details.
+  *
+@@ -387,11 +387,11 @@ soup_auth_domain_get_realm (SoupAuthDomain *domain)
+ /**
+  * SoupAuthDomainGenericAuthCallback:
+  * @domain: a #SoupAuthDomain
+- * @msg: the #SoupServerMessage being authenticated
++ * @msg: the [class@ServerMessage] being authenticated
+  * @username: the username from @msg
+  * @user_data: the data passed to [method@AuthDomain.set_generic_auth_callback]
+  *
+- * The prototype for a #SoupAuthDomain generic authentication callback.
++ * The prototype for a [class@AuthDomain] generic authentication callback.
+  *
+  * The callback should look up the user's password, call
+  * [method@AuthDomain.check_password], and use the return value from that method
+diff --git a/libsoup/server/soup-message-body.c b/libsoup/server/soup-message-body.c
+index 8c469cbd..134ea56e 100644
+--- a/libsoup/server/soup-message-body.c
++++ b/libsoup/server/soup-message-body.c
+@@ -33,7 +33,7 @@
+  * @data: (array length=length) (element-type guint8): the data
+  * @length: length of @data
+  *
+- * #SoupMessageBody represents the request or response body of a
++ * [struct@MessageBody] represents the request or response body of a
+  * [class@Message].
+  *
+  * Note that while @length always reflects the full length of the
+@@ -59,7 +59,7 @@ typedef struct {
+ /**
+  * soup_message_body_new:
+  *
+- * Creates a new #SoupMessageBody.
++ * Creates a new [struct@MessageBody]
+  *
+  * [class@Message] uses this internally; you
+  * will not normally need to call it yourself.
+@@ -328,7 +328,7 @@ soup_message_body_get_chunk (SoupMessageBody *body, goffset offset)
+  * @body: a #SoupMessageBody
+  * @chunk: a #GBytes received from the network
+  *
+- * Handles the #SoupMessageBody part of receiving a chunk of data from
++ * Handles the [struct@MessageBody] part of receiving a chunk of data from
+  * the network.
+  *
+  * Normally this means appending @chunk to @body, exactly as with
+@@ -354,7 +354,7 @@ soup_message_body_got_chunk (SoupMessageBody *body, GBytes *chunk)
+  * @body: a #SoupMessageBody
+  * @chunk: a #GBytes returned from [method@MessageBody.get_chunk]
+  *
+- * Handles the #SoupMessageBody part of writing a chunk of data to the
++ * Handles the [struct@MessageBody] part of writing a chunk of data to the
+  * network.
+  *
+  * Normally this is a no-op, but if you have set @body's accumulate flag to
+diff --git a/libsoup/server/soup-server-message.c b/libsoup/server/soup-server-message.c
+index 7d902d51..096fd431 100644
+--- a/libsoup/server/soup-server-message.c
++++ b/libsoup/server/soup-server-message.c
+@@ -22,15 +22,15 @@
+  *
+  * An HTTP server request and response pair.
+  *
+- * A SoupServerMessage represents an HTTP message that is being sent or
++ * A [class@ServerMessage] represents an HTTP message that is being sent or
+  * received on a [class@Server].
+  *
+- * [class@Server] will create `SoupServerMessage`s automatically for
++ * [class@Server] will create [class@ServerMessage]s automatically for
+  * incoming requests, which your application will receive via handlers.
+  *
+  * Note that libsoup's terminology here does not quite match the HTTP
+  * specification: in RFC 2616, an "HTTP-message" is *either* a Request, *or* a
+- * Response. In libsoup, a #SoupServerMessage combines both the request and the
++ * Response. In libsoup, a [class@ServerMessage] combines both the request and the
+  * response.
+  **/
+ 
+@@ -393,7 +393,7 @@ soup_server_message_class_init (SoupServerMessageClass *klass)
+ 	/**
+ 	 * SoupServerMessage:tls-peer-certificate-errors:
+ 	 *
+-	 * The verification errors on #SoupServerMessage:tls-peer-certificate
++	 * The verification errors on [property@ServerMessage:tls-peer-certificate]
+ 	 *
+ 	 * Since: 3.2
+ 	 */
+@@ -921,7 +921,7 @@ soup_server_message_get_uri (SoupServerMessage *msg)
+  *   a data buffer containing the body of the message response.
+  * @resp_length: the byte length of @resp_body.
+  *
+- * Convenience function to set the response body of a #SoupServerMessage. If
++ * Convenience function to set the response body of a [class@ServerMessage]. If
+  * @content_type is %NULL, the response body must be empty as well.
+  */
+ void
+@@ -1081,7 +1081,7 @@ soup_server_message_get_remote_host (SoupServerMessage *msg)
+  * soup_server_message_steal_connection:
+  * @msg: a #SoupServerMessage
+  *
+- * "Steals" the HTTP connection associated with @msg from its #SoupServer. This
++ * "Steals" the HTTP connection associated with @msg from its [class@Server]. This
+  * happens immediately, regardless of the current state of the connection; if
+  * the response to @msg has not yet finished being sent, then it will be
+  * discarded; you can steal the connection from a
+diff --git a/libsoup/server/soup-server.c b/libsoup/server/soup-server.c
+index 229f42d9..7358bcf8 100644
+--- a/libsoup/server/soup-server.c
++++ b/libsoup/server/soup-server.c
+@@ -28,7 +28,7 @@
+ /**
+  * SoupServer:
+  *
+- * #SoupServer provides a basic implementation of an HTTP server. The
++ * [class@Server] provides a basic implementation of an HTTP server. The
+  * recommended usage of this server is for internal use, tasks like
+  * a mock server for tests, a private service for IPC, etc. It is not
+  * recommended to be exposed to untrusted clients as it may be vulnerable
+@@ -42,20 +42,20 @@
+  * the path.)
+  *
+  * When a new connection is accepted (or a new request is started on
+- * an existing persistent connection), the #SoupServer will emit
++ * an existing persistent connection), the [class@Server] will emit
+  * [signal@Server::request-started] and then begin processing the request
+  * as described below, but note that once the message is assigned a
+  * status-code, then callbacks after that point will be
+  * skipped. Note also that it is not defined when the callbacks happen
+  * relative to various [class@ServerMessage] signals.
+  *
+- * Once the headers have been read, #SoupServer will check if there is
++ * Once the headers have been read, [class@Server] will check if there is
+  * a [class@AuthDomain] `(qv)` covering the Request-URI; if so, and if the
+  * message does not contain suitable authorization, then the
+  * [class@AuthDomain] will set a status of %SOUP_STATUS_UNAUTHORIZED on
+  * the message.
+  *
+- * After checking for authorization, #SoupServer will look for "early"
++ * After checking for authorization, [class@Server] will look for "early"
+  * handlers (added with [method@Server.add_early_handler]) matching the
+  * Request-URI. If one is found, it will be run; in particular, this
+  * can be used to connect to signals to do a streaming read of the
+@@ -63,10 +63,10 @@
+  *
+  * (At this point, if the request headers contain `Expect:
+  * 100-continue`, and a status code has been set, then
+- * #SoupServer will skip the remaining steps and return the response.
++ * [class@Server] will skip the remaining steps and return the response.
+  * If the request headers contain `Expect:
+  * 100-continue` and no status code has been set,
+- * #SoupServer will return a %SOUP_STATUS_CONTINUE status before
++ * [class@Server] will return a %SOUP_STATUS_CONTINUE status before
+  * continuing.)
+  *
+  * The server will then read in the response body (if present). At
+@@ -80,7 +80,7 @@
+  * run.
+  *
+  * Then, if the path has a WebSocket handler registered (and has
+- * not yet been assigned a status), #SoupServer will attempt to
++ * not yet been assigned a status), [class@Server] will attempt to
+  * validate the WebSocket handshake, filling in the response and
+  * setting a status of %SOUP_STATUS_SWITCHING_PROTOCOLS or
+  * %SOUP_STATUS_BAD_REQUEST accordingly.
+@@ -105,13 +105,13 @@
+  * Once the server is set up, make one or more calls to
+  * [method@Server.listen], [method@Server.listen_local], or
+  * [method@Server.listen_all] to tell it where to listen for
+- * connections. (All ports on a #SoupServer use the same handlers; if
++ * connections. (All ports on a [class@Server] use the same handlers; if
+  * you need to handle some ports differently, such as returning
+  * different data for http and https, you'll need to create multiple
+- * `SoupServer`s, or else check the passed-in URI in the handler
++ * [class@Server]s, or else check the passed-in URI in the handler
+  * function.).
+  *
+- * #SoupServer will begin processing connections as soon as you return
++ * [class@Server] will begin processing connections as soon as you return
+  * to (or start) the main loop for the current thread-default
+  * [struct@GLib.MainContext].
+  */
+@@ -527,7 +527,7 @@ soup_server_class_init (SoupServerClass *server_class)
+ 	 *
+ 	 * As with [property@Session:user_agent], if you set a
+ 	 * [property@Server:server-header] property that has trailing
+-	 * whitespace, #SoupServer will append its own product token (eg,
++	 * whitespace, [class@Server] will append its own product token (eg,
+ 	 * `libsoup/2.3.2`) to the end of the header for you.
+ 	 **/
+         properties[PROP_SERVER_HEADER] =
+@@ -547,7 +547,7 @@ soup_server_class_init (SoupServerClass *server_class)
+  * @optname1: name of first property to set
+  * @...: value of @optname1, followed by additional property/value pairs
+  *
+- * Creates a new #SoupServer.
++ * Creates a new [class@Server].
+  *
+  * This is exactly equivalent to calling [ctor@GObject.Object.new] and
+  * specifying %SOUP_TYPE_SERVER as the type.
+@@ -710,7 +710,7 @@ soup_server_get_tls_auth_mode (SoupServer *server)
+  * certificate to use.
+  *
+  * If you are using the deprecated single-listener APIs, then a return value of
+- * %TRUE indicates that the #SoupServer serves https exclusively. If you are
++ * %TRUE indicates that the [class@Server] serves https exclusively. If you are
+  * using [method@Server.listen], etc, then a %TRUE return value merely indicates
+  * that the server is *able* to do https, regardless of whether it actually
+  * currently is or not. Use [method@Server.get_uris] to see if it currently has
+@@ -1746,7 +1746,7 @@ soup_server_add_early_handler (SoupServer            *server,
+  * @msg: the #SoupServerMessage
+  * @user_data: the data passed to @soup_server_add_handler
+  *
+- * A callback used to handle WebSocket requests to a #SoupServer.
++ * A callback used to handle WebSocket requests to a [class@Server].
+  *
+  * The callback will be invoked after sending the handshake response back to the
+  * client (and is only invoked if the handshake was successful).
+@@ -1895,7 +1895,7 @@ soup_server_remove_auth_domain (SoupServer *server, SoupAuthDomain *auth_domain)
+  * resume I/O.
+  *
+  * This must only be called on a [class@ServerMessage] which was created by the
+- * #SoupServer and are currently doing I/O, such as those passed into a
++ * [class@Server] and are currently doing I/O, such as those passed into a
+  * [callback@ServerCallback] or emitted in a [signal@Server::request-read]
+  * signal.
+  *
+@@ -1923,7 +1923,7 @@ soup_server_pause_message (SoupServer        *server,
+  * I/O won't actually resume until you return to the main loop.
+  *
+  * This must only be called on a [class@ServerMessage] which was created by the
+- * #SoupServer and are currently doing I/O, such as those passed into a
++ * [class@Server] and are currently doing I/O, such as those passed into a
+  * [callback@ServerCallback] or emitted in a [signal@Server::request-read]
+  * signal.
+  *
+diff --git a/libsoup/soup-logger.c b/libsoup/soup-logger.c
+index 4a27513e..32df731d 100644
+--- a/libsoup/soup-logger.c
++++ b/libsoup/soup-logger.c
+@@ -27,12 +27,12 @@
+  *
+  * Debug logging support
+  *
+- * #SoupLogger watches a [class@Session] and logs the HTTP traffic that
++ * [class@Logger] watches a [class@Session] and logs the HTTP traffic that
+  * it generates, for debugging purposes. Many applications use an
+  * environment variable to determine whether or not to use
+- * #SoupLogger, and to determine the amount of debugging output.
++ * [class@Logger], and to determine the amount of debugging output.
+  *
+- * To use #SoupLogger, first create a logger with [ctor@Logger.new], optionally
++ * To use [class@Logger], first create a logger with [ctor@Logger.new], optionally
+  * configure it with [method@Logger.set_request_filter],
+  * [method@Logger.set_response_filter], and [method@Logger.set_printer], and
+  * then attach it to a session (or multiple sessions) with
+@@ -63,7 +63,7 @@
+  * [class@Session], [class@Message], and [class@Gio.Socket] involved; the hex
+  * numbers are the addresses of the objects in question (which may be useful if
+  * you are running in a debugger). The decimal IDs are simply counters that
+- * uniquely identify objects across the lifetime of the #SoupLogger. In
++ * uniquely identify objects across the lifetime of the [class@Logger]. In
+  * particular, this can be used to identify when multiple messages are sent
+  * across the same connection.
+  *
+@@ -75,7 +75,7 @@
+  * from the network (from the [signal@Message::got-body] or
+  * [signal@Message::got-informational] signal), which means that the
+  * [signal@Message::got-headers] signal, and anything triggered off it (such as
+- * #SoupMessage::authenticate) will be emitted *before* the response headers are
++ * [signal@Message::authenticate]) will be emitted *before* the response headers are
+  * actually logged.
+  *
+  * If the response doesn't happen to trigger the [signal@Message::got-body] nor
+@@ -374,7 +374,7 @@ soup_logger_class_init (SoupLoggerClass *logger_class)
+  * soup_logger_new:
+  * @level: the debug level
+  *
+- * Creates a new #SoupLogger with the given debug level.
++ * Creates a new [class@Logger] with the given debug level.
+  *
+  * If you need finer control over what message parts are and aren't
+  * logged, use [method@Logger.set_request_filter] and
+diff --git a/libsoup/soup-message-headers.c b/libsoup/soup-message-headers.c
+index e799082b..d4260a8e 100644
+--- a/libsoup/soup-message-headers.c
++++ b/libsoup/soup-message-headers.c
+@@ -62,7 +62,7 @@ struct _SoupMessageHeaders {
+  * soup_message_headers_new:
+  * @type: the type of headers
+  *
+- * Creates a #SoupMessageHeaders.
++ * Creates a [struct@MessageHeaders].
+  *
+  * ([class@Message] does this automatically for its own headers. You would only
+  * need to use this method if you are manually parsing or generating message
+@@ -780,8 +780,7 @@ soup_message_headers_get_list (SoupMessageHeaders *hdrs, const char *name)
+ /**
+  * SoupMessageHeadersIter:
+  *
+- * An opaque type used to iterate over a #SoupMessageHeaders
+- * structure.
++ * An opaque type used to iterate over a [struct@MessageHeaders] structure
+  *
+  * After intializing the iterator with [func@MessageHeadersIter.init], call
+  * [method@MessageHeadersIter.next] to fetch data from it.
+@@ -797,8 +796,7 @@ typedef struct {
+ 
+ /**
+  * soup_message_headers_iter_init:
+- * @iter: (out) (transfer none): a pointer to a #SoupMessageHeadersIter
+- *   structures
++ * @iter: (out) (transfer none): a pointer to a #SoupMessageHeadersIter structure
+  * @hdrs: a #SoupMessageHeaders
+  *
+  * Initializes @iter for iterating @hdrs.
+@@ -1279,7 +1277,7 @@ soup_message_headers_get_ranges_internal (SoupMessageHeaders  *hdrs,
+  * Beware that even if given a @total_length, this function does not
+  * check that the ranges are satisfiable.
+  *
+- * #SoupServer has built-in handling for range requests. If your
++ * [class@Server] has built-in handling for range requests. If your
+  * server handler returns a %SOUP_STATUS_OK response containing the
+  * complete response body (rather than pausing the message and
+  * returning some of the response body later), and there is a Range
+diff --git a/libsoup/soup-message.c b/libsoup/soup-message.c
+index 555fe015..91f6584f 100644
+--- a/libsoup/soup-message.c
++++ b/libsoup/soup-message.c
+@@ -25,10 +25,10 @@
+  *
+  * Represents an HTTP message being sent or received.
+  *
+- * A #SoupMessage represents an HTTP message that is being sent or
++ * A [class@Message] represents an HTTP message that is being sent or
+  * received.
+  *
+- * You would create a #SoupMessage with [ctor@Message.new] or
++ * You would create a [class@Message] with [ctor@Message.new] or
+  * [ctor@Message.new_from_uri], set up its fields appropriately, and send it.
+  *
+  * [property@Message:status-code] will normally be a [enum@Status] value, eg,
+@@ -43,7 +43,7 @@
+  *
+  * Note that libsoup's terminology here does not quite match the HTTP
+  * specification: in RFC 2616, an "HTTP-message" is *either* a Request, *or* a
+- * Response. In libsoup, a #SoupMessage combines both the request and the
++ * Response. In libsoup, a [class@Message] combines both the request and the
+  * response.
+  */
+ 
+@@ -920,7 +920,7 @@ soup_message_class_init (SoupMessageClass *message_class)
+ 	/**
+ 	 SoupMessage:priority: (attributes org.gtk.Property.get=soup_message_get_priority org.gtk.Property.set=soup_message_set_priority)
+ 	 *
+-	 * Sets the priority of the #SoupMessage. See
++	 * Sets the priority of the [class@Message]. See
+ 	 * [method@Message.set_priority] for further details.
+ 	 **/
+         properties[PROP_PRIORITY] =
+@@ -937,7 +937,7 @@ soup_message_class_init (SoupMessageClass *message_class)
+ 	 *
+ 	 * Whether the message is an OPTIONS ping.
+ 	 *
+-	 * The #SoupMessage is intended to be used to send
++	 * The [class@Message] is intended to be used to send
+          * `OPTIONS *` to a server. When set to %TRUE, the
+          * path of [property@Message:uri] will be ignored and
+          * [property@Message:method] set to %SOUP_METHOD_OPTIONS.
+@@ -959,7 +959,7 @@ soup_message_class_init (SoupMessageClass *message_class)
+  * @method: the HTTP method for the created request
+  * @uri_string: the destination endpoint (as a string)
+  * 
+- * Creates a new empty #SoupMessage, which will connect to @uri.
++ * Creates a new empty [class@Message], which will connect to @uri.
+  *
+  * Returns: (transfer full) (nullable): the new #SoupMessage (or %NULL if @uri
+  *   could not be parsed).
+@@ -991,7 +991,7 @@ soup_message_new (const char *method, const char *uri_string)
+  * @method: the HTTP method for the created request
+  * @uri: the destination endpoint
+  * 
+- * Creates a new empty #SoupMessage, which will connect to @uri.
++ * Creates a new empty [class@Message], which will connect to @uri.
+  *
+  * Returns: (transfer full): the new #SoupMessage
+  */
+@@ -1011,7 +1011,7 @@ soup_message_new_from_uri (const char *method, GUri *uri)
+  * soup_message_new_options_ping:
+  * @base_uri: the destination endpoint
+  *
+- * Creates a new #SoupMessage to send `OPTIONS *` to a server. The path of
++ * Creates a new [class@Message] to send `OPTIONS *` to a server. The path of
+  * @base_uri will be ignored.
+  *
+  * Returns: (transfer full): the new #SoupMessage
+@@ -1034,7 +1034,7 @@ soup_message_new_options_ping (GUri *base_uri)
+  * @uri_string: the destination endpoint (as a string)
+  * @encoded_form: (transfer full): a encoded form
+  *
+- * Creates a new #SoupMessage and sets it up to send the given @encoded_form
++ * Creates a new [class@Message] and sets it up to send the given @encoded_form
+  * to @uri via @method. If @method is "GET", it will include the form data
+  * into @uri's query field, and if @method is "POST" or "PUT", it will be set as
+  * request body.
+@@ -1091,7 +1091,7 @@ soup_message_new_from_encoded_form (const char *method,
+  * @uri_string: the destination endpoint
+  * @multipart: a #SoupMultipart
+  *
+- * Creates a new #SoupMessage and sets it up to send @multipart to
++ * Creates a new [class@Message] and sets it up to send @multipart to
+  * @uri_string via POST.
+  *
+  * Returns: (transfer full) (nullable): the new #SoupMessage, or %NULL if @uri_string
+@@ -1132,7 +1132,7 @@ soup_message_new_from_multipart (const char    *uri_string,
+  * @stream: (nullable): a #GInputStream to read the request body from
+  * @content_length: the byte length of @stream or -1 if unknown
+  *
+- * Set the request body of a #SoupMessage.
++ * Set the request body of a [class@Message].
+  *
+  * If @content_type is %NULL and @stream is not %NULL the Content-Type header will
+  * not be changed if present.
+@@ -1179,7 +1179,7 @@ soup_message_set_request_body (SoupMessage  *msg,
+  * @content_type: (nullable): MIME Content-Type of the body, or %NULL if unknown
+  * @bytes: (nullable): a #GBytes with the request body data
+  *
+- * Set the request body of a #SoupMessage from [struct@GLib.Bytes].
++ * Set the request body of a [class@Message] from [struct@GLib.Bytes].
+  *
+  * If @content_type is %NULL and @bytes is not %NULL the Content-Type header will
+  * not be changed if present.
+@@ -1910,8 +1910,7 @@ soup_message_cleanup_response (SoupMessage *msg)
+  *   [method@Message.disable_feature] passing #SOUP_TYPE_AUTH_MANAGER instead.
+  * @SOUP_MESSAGE_COLLECT_METRICS: Metrics will be collected for this message.
+  *
+- * Various flags that can be set on a #SoupMessage to alter its
+- * behavior.
++ * Various flags that can be set on a [class@Message] to alter its behavior.
+  **/
+ 
+ /**
+@@ -2212,7 +2211,7 @@ soup_message_set_status (SoupMessage *msg,
+ /**
+  * soup_message_disable_feature:
+  * @msg: a #SoupMessage
+- * @feature_type: the #GType of a #SoupSessionFeature
++ * @feature_type: the #GType of a [iface@SessionFeature]
+  *
+  * Disables the actions of [iface@SessionFeature]s with the
+  * given @feature_type (or a subclass of that type) on @msg.
+@@ -2266,7 +2265,7 @@ soup_message_disables_feature (SoupMessage *msg, gpointer feature)
+ /**
+  * soup_message_is_feature_disabled:
+  * @msg: a #SoupMessage
+- * @feature_type: the #GType of a #SoupSessionFeature
++ * @feature_type: the #GType of a [iface@SessionFeature]
+  *
+  * Get whether [iface@SessionFeature]s of the given @feature_type
+  * (or a subclass of that type) are disabled on @msg.
+@@ -2646,14 +2645,14 @@ soup_message_tls_client_certificate_password_request_complete (SoupMessage *msg)
+  * @SOUP_MESSAGE_PRIORITY_VERY_LOW: The lowest priority, the messages
+  *   with this priority will be the last ones to be attended.
+  * @SOUP_MESSAGE_PRIORITY_LOW: Use this for low priority messages, a
+- *   #SoupMessage with the default priority will be processed first.
++ *   [class@Message] with the default priority will be processed first.
+  * @SOUP_MESSAGE_PRIORITY_NORMAL: The default priotity, this is the
+- *   priority assigned to the #SoupMessage by default.
+- * @SOUP_MESSAGE_PRIORITY_HIGH: High priority, a #SoupMessage with
++ *   priority assigned to the [class@Message] by default.
++ * @SOUP_MESSAGE_PRIORITY_HIGH: High priority, a [class@Message] with
+  *   this priority will be processed before the ones with the default
+  *   priority.
+  * @SOUP_MESSAGE_PRIORITY_VERY_HIGH: The highest priority, use this
+- *   for very urgent #SoupMessage as they will be the first ones to be
++ *   for very urgent [class@Message] as they will be the first ones to be
+  *   attended.
+  *
+  * Priorities that can be set on a [class@Message] to instruct the message queue
+@@ -2981,7 +2980,7 @@ soup_message_get_reason_phrase (SoupMessage *msg)
+  *
+  * Returns the headers sent with the request.
+  *
+- * Returns: (transfer none): The #SoupMessageHeaders
++ * Returns: (transfer none): The [struct@MessageHeaders]
+  */
+ SoupMessageHeaders *
+ soup_message_get_request_headers (SoupMessage  *msg)
+@@ -2999,7 +2998,7 @@ soup_message_get_request_headers (SoupMessage  *msg)
+  *
+  * Returns the headers recieved with the response.
+  * 
+- * Returns: (transfer none): The #SoupMessageHeaders
++ * Returns: (transfer none): The [struct@MessageHeaders]
+  */
+ SoupMessageHeaders *
+ soup_message_get_response_headers (SoupMessage  *msg)
+diff --git a/libsoup/soup-method.h b/libsoup/soup-method.h
+index 445b5bc2..806df833 100644
+--- a/libsoup/soup-method.h
++++ b/libsoup/soup-method.h
+@@ -20,10 +20,10 @@ G_BEGIN_DECLS
+  * 
+  * The thing that these defines <emphasis>are</emphasis> useful for is
+  * performing quick comparisons against soup_message_get_method();
+- * because #SoupMessage always contains an interned string, and these
++ * because [class@Message] always contains an interned string, and these
+  * macros return interned strings, you can compare methods directly
+  * against these macros rather than needing to use strcmp(). This is
+- * most useful in #SoupServer handlers. Eg:
++ * most useful in [class@Server] handlers. Eg:
+  * 
+  * <informalexample><programlisting>
+  * 	if (soup_message_get_method (msg) != SOUP_METHOD_GET &amp;&amp; soup_message_get_method (msg) != SOUP_METHOD_HEAD) {
+diff --git a/libsoup/soup-multipart-input-stream.c b/libsoup/soup-multipart-input-stream.c
+index 5bbd4bed..55f7162b 100644
+--- a/libsoup/soup-multipart-input-stream.c
++++ b/libsoup/soup-multipart-input-stream.c
+@@ -31,7 +31,7 @@
+  * [method@MultipartInputStream.next_part] before reading. Responses
+  * which are not wrapped will be treated like non-multipart responses.
+  *
+- * Note that although #SoupMultipartInputStream is a [class@Gio.InputStream],
++ * Note that although [class@MultipartInputStream] is a [class@Gio.InputStream],
+  * you should not read directly from it, and the results are undefined
+  * if you do.
+  **/
+@@ -431,7 +431,7 @@ soup_multipart_input_stream_read_headers (SoupMultipartInputStream  *multipart,
+  * @msg: the #SoupMessage the response is related to.
+  * @base_stream: the #GInputStream returned by sending the request.
+  *
+- * Creates a new #SoupMultipartInputStream that wraps the
++ * Creates a new [class@MultipartInputStream] that wraps the
+  * [class@Gio.InputStream] obtained by sending the [class@Message].
+  *
+  * Reads should not be done directly through this object, use the input streams
+@@ -459,7 +459,7 @@ soup_multipart_input_stream_new (SoupMessage  *msg,
+  * Obtains an input stream for the next part.
+  *
+  * When dealing with a multipart response the input stream needs to be wrapped
+- * in a #SoupMultipartInputStream and this function or its async counterpart
++ * in a [class@MultipartInputStream] and this function or its async counterpart
+  * need to be called to obtain the first part for reading.
+  *
+  * After calling this function,
+@@ -584,7 +584,7 @@ soup_multipart_input_stream_next_part_finish (SoupMultipartInputStream	*multipar
+  * Obtains the headers for the part currently being processed.
+  *
+  * Note that the [struct@MessageHeaders] that are returned are owned by the
+- * #SoupMultipartInputStream and will be replaced when a call is made to
++ * [class@MultipartInputStream] and will be replaced when a call is made to
+  * [method@MultipartInputStream.next_part] or its async counterpart, so if
+  * keeping the headers is required, a copy must be made.
+  *
+diff --git a/libsoup/soup-multipart.c b/libsoup/soup-multipart.c
+index 102ce372..7b1e20cf 100644
+--- a/libsoup/soup-multipart.c
++++ b/libsoup/soup-multipart.c
+@@ -25,12 +25,12 @@
+  * Of particular interest to HTTP are `multipart/byte-ranges` and
+  * `multipart/form-data`,
+  *
+- * Although the headers of a #SoupMultipart body part will contain the
++ * Although the headers of a [struct@Multipart] body part will contain the
+  * full headers from that body part, libsoup does not interpret them
+  * according to MIME rules. For example, each body part is assumed to
+  * have "binary" Content-Transfer-Encoding, even if its headers
+  * explicitly state otherwise. In other words, don't try to use
+- * #SoupMultipart for handling real MIME multiparts.
++ * [struct@Multipart] for handling real MIME multiparts.
+  *
+  **/
+ 
+@@ -73,7 +73,7 @@ generate_boundary (void)
+  * soup_multipart_new:
+  * @mime_type: the MIME type of the multipart to create.
+  *
+- * Creates a new empty #SoupMultipart with a randomly-generated
++ * Creates a new empty [struct@Multipart] with a randomly-generated
+  * boundary string.
+  *
+  * Note that @mime_type must be the full MIME type, including "multipart/".
+@@ -120,7 +120,7 @@ find_boundary (const char *start, const char *end,
+  * @headers: the headers of the HTTP message to parse
+  * @body: the body of the HTTP message to parse
+  *
+- * Parses @headers and @body to form a new #SoupMultipart
++ * Parses @headers and @body to form a new [struct@Multipart]
+  *
+  * Returns: (nullable): a new #SoupMultipart (or %NULL if the
+  *   message couldn't be parsed or wasn't multipart).
+diff --git a/libsoup/soup-session-feature.c b/libsoup/soup-session-feature.c
+index 5545d984..9278c865 100644
+--- a/libsoup/soup-session-feature.c
++++ b/libsoup/soup-session-feature.c
+@@ -18,10 +18,10 @@
+  *
+  * Interface for miscellaneous [class@Session] features.
+  *
+- * #SoupSessionFeature is the interface used by classes that extend
++ * [iface@SessionFeature] is the interface used by classes that extend
+  * the functionality of a [class@Session]. Some features like HTTP
+  * authentication handling are implemented internally via
+- * `SoupSessionFeature`s. Other features can be added to the session
++ * [iface@SessionFeature]s. Other features can be added to the session
+  * by the application. (Eg, [class@Logger], [class@CookieJar].)
+  *
+  * See [method@Session.add_feature], etc, to add a feature to a session.
+diff --git a/libsoup/soup-session.c b/libsoup/soup-session.c
+index 931708d1..0c3bf7b2 100644
+--- a/libsoup/soup-session.c
++++ b/libsoup/soup-session.c
+@@ -34,13 +34,13 @@
+  *
+  * Soup session state object.
+  *
+- * #SoupSession is the object that controls client-side HTTP. A
+- * #SoupSession encapsulates all of the state that libsoup is keeping
++ * [class@Session] is the object that controls client-side HTTP. A
++ * [class@Session] encapsulates all of the state that libsoup is keeping
+  * on behalf of your program; cached HTTP connections, authentication
+  * information, etc. It also keeps track of various global options
+  * and features that you are using.
+  *
+- * Most applications will only need a single #SoupSession; the primary
++ * Most applications will only need a single [class@Session]; the primary
+  * reason you might need multiple sessions is if you need to have
+  * multiple independent authentication contexts. (Eg, you are
+  * connecting to a server and authenticating as two different users at
+@@ -49,7 +49,7 @@
+  * one session for the first user, and a second session for the other
+  * user.)
+  *
+- * Additional #SoupSession functionality is provided by
++ * Additional [class@Session] functionality is provided by
+  * [iface@SessionFeature] objects, which can be added to a session with
+  * [method@Session.add_feature] or [method@Session.add_feature_by_type]
+  * For example, [class@Logger] provides support for
+@@ -61,7 +61,7 @@
+  *
+  * All `SoupSession`s are created with a [class@AuthManager], and support
+  * for %SOUP_TYPE_AUTH_BASIC and %SOUP_TYPE_AUTH_DIGEST. Additionally,
+- * sessions using the plain #SoupSession class (rather than one of its deprecated
++ * sessions using the plain [class@Session] class (rather than one of its deprecated
+  * subtypes) have a [class@ContentDecoder] by default.
+  *
+  * Note that all async methods will invoke their callbacks on the thread-default
+@@ -162,7 +162,7 @@ static GParamSpec *properties[LAST_PROPERTY] = { NULL, };
+  * @SOUP_SESSION_ERROR_MESSAGE_ALREADY_IN_QUEUE: the message is already in the
+  *   session queue. Messages can only be reused after unqueued.
+  *
+- * A #SoupSession error.
++ * A [class@Session] error.
+  */
+ G_DEFINE_QUARK (soup-session-error-quark, soup_session_error)
+ 
+@@ -516,7 +516,7 @@ soup_session_get_property (GObject *object, guint prop_id,
+ /**
+  * soup_session_new:
+  *
+- * Creates a #SoupSession with the default options.
++ * Creates a [class@Session] with the default options.
+  *
+  * Returns: (transfer full): the new session.
+  */
+@@ -531,7 +531,7 @@ soup_session_new (void)
+  * @optname1: name of first property to set
+  * @...: value of @optname1, followed by additional property/value pairs
+  *
+- * Creates a #SoupSession with the specified options.
++ * Creates a [class@Session] with the specified options.
+  *
+  * Returns: the new session.
+  */
+@@ -1191,7 +1191,7 @@ soup_session_requeue_item (SoupSession          *session,
+  * header, and requeues it on @session. Use this when you have set
+  * %SOUP_MESSAGE_NO_REDIRECT on a message, but have decided to allow a
+  * particular redirection to occur, or if you want to allow a
+- * redirection that #SoupSession will not perform automatically (eg,
++ * redirection that [class@Session] will not perform automatically (eg,
+  * redirecting a non-safe method such as DELETE).
+  *
+  * If @msg's status code indicates that it should be retried as a GET
+@@ -2075,7 +2075,7 @@ feature_already_added (SoupSession *session, GType feature_type)
+  * Adds @feature's functionality to @session. You cannot add multiple
+  * features of the same [alias@GObject.Type] to a session.
+  *
+- * See the main #SoupSession documentation for information on what
++ * See the main [class@Session] documentation for information on what
+  * features are present in sessions by default.
+  **/
+ void
+@@ -2110,7 +2110,7 @@ soup_session_add_feature (SoupSession *session, SoupSessionFeature *feature)
+  * existing feature on @session the chance to accept @feature_type as
+  * a "subfeature". This can be used to add new [class@Auth] types, for instance.
+  *
+- * See the main #SoupSession documentation for information on what
++ * See the main [class@Session] documentation for information on what
+  * features are present in sessions by default.
+  **/
+ void
+@@ -2582,7 +2582,7 @@ soup_session_class_init (SoupSessionClass *session_class)
+ 	 * enclosed in parentheses, between or after the tokens.
+ 	 *
+ 	 * If you set a [property@Session:user-agent] property that has trailing
+-	 * whitespace, #SoupSession will append its own product token
++	 * whitespace, [class@Session] will append its own product token
+ 	 * (eg, `libsoup/2.3.2`) to the end of the
+ 	 * header for you.
+ 	 **/
+@@ -2613,7 +2613,7 @@ soup_session_class_init (SoupSessionClass *session_class)
+ 	/**
+ 	 * SoupSession:accept-language-auto: (attributes org.gtk.Property.get=soup_session_get_accept_language_auto org.gtk.Property.set=soup_session_set_accept_language_auto)
+ 	 *
+-	 * If %TRUE, #SoupSession will automatically set the string
++	 * If %TRUE, [class@Session] will automatically set the string
+ 	 * for the "Accept-Language" header on every [class@Message]
+ 	 * sent, based on the return value of [func@GLib.get_language_names].
+ 	 *
+diff --git a/libsoup/soup-tld.c b/libsoup/soup-tld.c
+index 2d815166..02e54059 100644
+--- a/libsoup/soup-tld.c
++++ b/libsoup/soup-tld.c
+@@ -24,7 +24,7 @@ static const char *soup_tld_get_base_domain_internal (const char *hostname,
+  * soup_tld_get_base_domain:
+  * @hostname: a hostname
+  * @error: return location for a #GError, or %NULL to ignore
+- *   errors. See #SoupTLDError for the available error codes
++ *   errors. See [error@TLDError] for the available error codes
+  *
+  * Finds the base domain for a given @hostname
+  *
+diff --git a/libsoup/websocket/soup-websocket-connection.c b/libsoup/websocket/soup-websocket-connection.c
+index a1448134..30df9841 100644
+--- a/libsoup/websocket/soup-websocket-connection.c
++++ b/libsoup/websocket/soup-websocket-connection.c
+@@ -34,7 +34,7 @@
+  *
+  * A WebSocket connection.
+  *
+- * A #SoupWebsocketConnection is a WebSocket connection to a peer.
++ * A [class@WebsocketConnection] is a WebSocket connection to a peer.
+  * This API is modeled after the W3C API for interacting with
+  * WebSockets.
+  *
+@@ -1807,7 +1807,7 @@ soup_websocket_connection_class_init (SoupWebsocketConnectionClass *klass)
+  * @protocol: (nullable): the subprotocol in use
+  * @extensions: (element-type SoupWebsocketExtension) (transfer full): a #GList of #SoupWebsocketExtension objects
+  *
+- * Creates a #SoupWebsocketConnection on @stream with the given active @extensions.
++ * Creates a [class@WebsocketConnection] on @stream with the given active @extensions.
+  *
+  * This should be called after completing the handshake to begin using the WebSocket
+  * protocol.
+diff --git a/libsoup/websocket/soup-websocket-extension-manager.c b/libsoup/websocket/soup-websocket-extension-manager.c
+index 23776c95..3b4aec76 100644
+--- a/libsoup/websocket/soup-websocket-extension-manager.c
++++ b/libsoup/websocket/soup-websocket-extension-manager.c
+@@ -38,7 +38,7 @@
+  * SoupWebsocketExtensionManager is the [iface@SessionFeature] that handles WebSockets
+  * extensions for a [class@Session].
+  *
+- * A #SoupWebsocketExtensionManager is added to the session by default, and normally
++ * A [class@WebsocketExtensionManager] is added to the session by default, and normally
+  * you don't need to worry about it at all. However, if you want to
+  * disable WebSocket extensions, you can remove the feature from the
+  * session with [method@Session.remove_feature_by_type] or disable it on
+diff --git a/libsoup/websocket/soup-websocket-extension.c b/libsoup/websocket/soup-websocket-extension.c
+index 0ae8b5f0..8882d2c0 100644
+--- a/libsoup/websocket/soup-websocket-extension.c
++++ b/libsoup/websocket/soup-websocket-extension.c
+@@ -31,7 +31,7 @@
+  *
+  * A WebSocket extension
+  *
+- * #SoupWebsocketExtension is the base class for WebSocket extension objects.
++ * [class@WebsocketExtension] is the base class for WebSocket extension objects.
+  */
+ 
+ /**
+@@ -48,7 +48,7 @@
+  * @process_incoming_message: called to process the payload data of a message
+  *    after it's received. Reserved bits of the header should be cleared.
+  *
+- * The class structure for the #SoupWebsocketExtension.
++ * The class structure for the [class@WebsocketExtension].
+  */
+ 
+ G_DEFINE_ABSTRACT_TYPE (SoupWebsocketExtension, soup_websocket_extension, G_TYPE_OBJECT)
+diff --git a/libsoup/websocket/soup-websocket.c b/libsoup/websocket/soup-websocket.c
+index 64e66fd0..7c00a5b1 100644
+--- a/libsoup/websocket/soup-websocket.c
++++ b/libsoup/websocket/soup-websocket.c
+@@ -52,11 +52,11 @@
+  * WebSocket handshake, and [func@websocket_server_process_handshake] for
+  * handling the server side.)
+  *
+- * #SoupWebsocketConnection handles the details of WebSocket communication. You
++ * [class@WebsocketConnection] handles the details of WebSocket communication. You
+  * can use [method@WebsocketConnection.send_text] and
+  * [method@WebsocketConnection.send_binary] to send data, and the
+  * [signal@WebsocketConnection::message] signal to receive data.
+- * (#SoupWebsocketConnection currently only supports asynchronous I/O.)
++ * ([class@WebsocketConnection] currently only supports asynchronous I/O.)
+  */
+ 
+ /**
+@@ -664,7 +664,7 @@ respond_handshake_bad (SoupServerMessage *msg,
+  * @supported_extensions: (nullable) (element-type GObject.TypeClass): list
+  *   of supported extension types
+  * @accepted_extensions: (out) (optional) (element-type SoupWebsocketExtension): a
+- *   #GList of #SoupWebsocketExtension objects
++ *   #GList of [class@WebsocketExtension] objects
+  *
+  * Examines the method and request headers in @msg and (assuming @msg
+  * contains a valid handshake request), fills in the handshake
+@@ -782,7 +782,7 @@ soup_websocket_server_process_handshake (SoupServerMessage *msg,
+  * @supported_extensions: (nullable) (element-type GObject.TypeClass): list
+  *   of supported extension types
+  * @accepted_extensions: (out) (optional) (element-type SoupWebsocketExtension): a
+- *   #GList of #SoupWebsocketExtension objects
++ *   #GList of [class@WebsocketExtension] objects
+  * @error: return location for a #GError
+  *
+  * Looks at the response status code and headers in @msg and
