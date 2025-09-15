@@ -142,26 +142,65 @@ PATCH_BACKPORT_USER_PROMPT = """
 {PATCH_HUNK}
 
     This Patch is for the latest version of the package.
-    You need to backport this patch hunk for an older version of the package, before a specific commit was made.
-    The commit details are:
+
+    Here, Create a dataset using this hunk:
+    ORIGINAL_HUNK_DATA:
+        File_PATH: <file path as per patch hunk>
+        HUNK_START_LINE_NUMBER: <line number as per the hunk header of the patch>
+        FUNCTION_SIGNATURE: <function signature as per the hunk header of the patch>
+        FIRST_CHANGED_LINE_NUMBER: <line number of the first added / removed (+/-) line in the hunk content. Calculate using the number of lines between this line and the hunk start line number>
+        HUNK_LINES: <all the lines in the hunk content of the patch>
+
+    Now, look at this commit:
 {COMMIT_DATA}
 
-    Here, Answer the following Questions:
-        1. Is the file name or path of the hunk file changed in the commit?
-            if YES, what should be the old file name or path, before the commit?
-        2. Look at the start line number for the hunk in the hunk header of the patch.
-           Based on the commit data, are there any lines added or removed above the hunk start line in the commit?
-           if YES, what should be the starting line number, before the commit?
-        3. Look at the function signature mentioned in the hunk header.
-           Does the commit change the function signature or function name? 
-           if Yes, what was the old function signature before the commit was made?
-        4. Are there some lines added or removed in the hunk content, due to the commit?
-              if YES, what should be the hunk content for the older version, before the commit was made?
-        5. Are there changes to variables or datatypes in the hunk content, due to the commit?
-        
-    Output the data as:
-    FILE_PATH                : <file path before commit changes or original as per patch hunk if not changed>
-    HUNK_START_LINE_NUMBER   : <line number before the commit added / removed of lines above the hunk. Original line number as per patch if not affected by the commit.>
-    FUNCTION_SIGNATURE       : <function signature before commit or original if not changed>
-    HUNK_LINES_BEFORE_COMMIT : <hunk lines, after removing any extra lines due to commit, or adding removed lines due to commit. Also take care of variable name / datatype changes due to commit.>
+    The given patch was created AFTER this commit was made. You need to backport this patch, to apply it to the older version of the codebase, BEFORE this commit was made.
+    So, based on the commit data, answer the following:
+
+    BACKPORTED_HUNK_DATA:
+        FILE_PATH: If the commit changed the file name or path, give the path before the commit.
+        HUNK_START_LINE_NUMBER: If the commit added or removed lines above the hunk start line, adjust the line number accordingly.
+        FUNCTION_SIGNATURE: If the commit changed the function signature or function name, give the old function signature before the commit.
+        HUNK_LINES: Look at the lines of the patch hunk that were modified by the commit. Give the hunk lines for the older version, before the commit was made.
+
+    Give the data as Json List Object containing "question" and "answer" keys, where:
+        - "question": A string containing the ORIGINAL_HUNK_DATA 
+        - "answer": A string containing the BACKPORTED_HUNK_DATA, which is the patch for the version before the commit was made.
+    
+    Example format:
+    [
+    {{ "question": "
+            ORIGINAL_HUNK_DATA:
+                FILE_PATH: src/module/a/b/c.py
+                HUNK_START_LINE_NUMBER: 120
+                FUNCTION_SIGNATURE: def function_name(param1, param2):
+                FIRST_CHANGED_LINE_NUMBER: 124
+                HUNK_LINES:
+                    int x = 200;
+                    x -= foo();             // line added in commit
+                    if (x > 100) {
+                        x += bar();
+                +       x *= baz();
+                    }
+                    return x;",
+        "answer": "
+            BACKPORTED_HUNK_DATA:
+                FILE_PATH: src/module/a/b_old/c.py
+                HUNK_START_LINE_NUMBER: 118
+                FUNCTION_SIGNATURE: def old_function_name(old_param1, old_param2):
+                FIRST_CHANGED_LINE_NUMBER: 121
+                HUNK_LINES:
+                    int x = 200;
+                    if (x > 100) {
+                        x += bar();
+                +       x *= baz();
+                    }
+                    return x;",
+    }}
+    ]
+    
+    Ensure that hunk lines do not change the logic of the patch hunk. Only change the lines that were modified by the commit.
+    If the commit did NOT affect the same file / lines of codes as the Patch Hunk, return ONLY an empty array [].
+
+    Output Only the valid JSON array of objects with "question" and "answer" keys only.
 """
