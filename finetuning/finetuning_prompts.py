@@ -1,3 +1,5 @@
+from constants import PACKAGE_NAME
+
 ############################################ CODEBASE UNDERSTANDING PROMPTS ############################################
 
 ############################################ COMMIT DETAILS PROMPTS ############################################
@@ -35,7 +37,7 @@ COMMIT_DETAILS_USER_PROMPT = """
     Example format:
         [
         {{
-            "question": "The variable 'x' of type 'long' in function 'y' had what type in the old version?",
+            "question": "The variable 'x' of datatype 'long' in function 'y' had what type in the old version?",
             "answer": "int"
         }},
         {{
@@ -58,11 +60,10 @@ COMMIT_DETAILS_USER_PROMPT = """
     <valid JSON array of objects with "question" and "answer" keys only.>
 """
 
-############################################ PATCH HUNKS SEPARATE PROMPTS ############################################
-
-# HUNK_EXTRACT -> Can Make it deterministic (regex on --diff)
-
 ############################################ HUNK CHANGES PROMPTS ############################################
+
+COMMIT_TO_HUNK_CHANGES_SYSTEM_PROMPT = """
+"""
 
 COMMIT_TO_HUNK_CHANGES_USER_PROMPT = """
     Look at this hunk from a Patch for {PACKAGE_NAME} package:
@@ -162,6 +163,8 @@ PATCH_BACKPORT_USER_PROMPT = """
         HUNK_START_LINE_NUMBER: If the commit added or removed lines above the hunk start line, adjust the line number accordingly.
         FUNCTION_SIGNATURE: If the commit changed the function signature or function name, give the old function signature before the commit.
         HUNK_LINES: Look at the lines of the patch hunk that were modified by the commit. Give the hunk lines for the older version, before the commit was made.
+    
+    If commit did NOT affect any of the key, its value is same as in ORIGINAL_HUNK_DATA.
 
     Give the data as Json List Object containing "question" and "answer" keys, where:
         - "question": A string containing the ORIGINAL_HUNK_DATA 
@@ -204,3 +207,51 @@ PATCH_BACKPORT_USER_PROMPT = """
 
     Output Only the valid JSON array of objects with "question" and "answer" keys only.
 """
+
+############################################ UTILITY CLASS ############################################
+class FinetuningPrompts:
+    def getPrompts(
+            self,
+            prompt_type,
+            package_name=PACKAGE_NAME,
+            commit_data=None,
+            patch_hunk=None
+        ):
+
+            def get_commit_details_prompts():
+                return {
+                    "system_prompt": COMMIT_DETAILS_SYSTEM_PROMPT,
+                    "user_prompt": COMMIT_DETAILS_USER_PROMPT.format(
+                        PACKAGE_NAME=package_name,
+                        COMMIT_DATA=commit_data
+                    )
+                }
+
+            def get_commit_to_hunk_changes_prompts():
+                return {
+                    "user_prompt": COMMIT_TO_HUNK_CHANGES_USER_PROMPT.format(
+                        PACKAGE_NAME=package_name,
+                        PATCH_HUNK=patch_hunk,
+                        COMMIT_DATA=commit_data
+                    )
+                }
+
+            def get_patch_backport_prompts():
+                return {
+                    "user_prompt": PATCH_BACKPORT_USER_PROMPT.format(
+                        PACKAGE_NAME=package_name,
+                        PATCH_HUNK=patch_hunk,
+                        COMMIT_DATA=commit_data
+                    )
+                }
+
+            prompt_map = {
+                "COMMIT_DETAILS": get_commit_details_prompts,
+                "COMMIT_TO_HUNK_CHANGES": get_commit_to_hunk_changes_prompts,
+                "PATCH_BACKPORT": get_patch_backport_prompts
+            }
+
+            try:
+                return prompt_map[prompt_type]()
+            except KeyError:
+                raise ValueError(f"Invalid prompt_type: {prompt_type}")

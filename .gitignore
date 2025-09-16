@@ -3,3 +3,4 @@ logs/
 finetuned_weights/
 __pycache__/
 finetuning/__pycache__
+finetuning/.env
