@@ -1,0 +1,365 @@
+{"question": "In the function 'parse_one_cookie' of the file 'libsoup/cookies/soup-cookie.c', what was the previous handling of the 'expires' field before the fix?", "answer": "Previous handling: soup_cookie_set_expires (cookie, parse_date (&p));"}
+{"question": "In the function 'parse_one_cookie' of the file 'libsoup/cookies/soup-cookie.c', what was added to clear the 'expires' pointer before setting a new value?", "answer": "Added: g_clear_pointer (&cookie->expires, g_date_time_unref);"}
+{"question": "What changes were made to the NEWS file regarding the version 3.6.1 release?", "answer": "Added fixes and improvements for version 3.6.1 including bug fixes for soup_uri_copy, soup_uri_decode_data_uri, SoupContentSniffer, and headers parsing."}
+{"question": "In the NEWS file, what specific fix was made to soup_uri_copy() in version 3.6.1?", "answer": "Fixed reading port as a long instead of an int."}
+{"question": "In the NEWS file, what specific fix was made to soup_uri_decode_data_uri() in version 3.6.1?", "answer": "Fixed possible NULL deref and assertion on URLs with a path starting with //."}
+{"question": "In the NEWS file, what specific fix was made to SoupContentSniffer in version 3.6.1?", "answer": "Fixed possible overflow."}
+{"question": "In the NEWS file, what improvement was made to headers parsing in version 3.6.1?", "answer": "Made more robust against invalid input."}
+{"question": "In the NEWS file, what fix was made to websocket functionality in version 3.6.1?", "answer": "Fixed possibility of being stuck in a read loop."}
+{"question": "What change was made to the version number in meson.build?", "answer": "Version changed from 3.6.0 to 3.6.1."}
+{"question": "The hunk header in Patch is @@ -286,6 +286,7 @@ soup_uri_decode_data_uri (const char *uri, for the latest version, with filename = 'libsoup/soup-uri-utils.c'. Was the function signature changed? if yes, give the old function signature and the old hunk header.", "answer": "No, the function signature was not changed. The old function signature remains the same: 'soup_uri_decode_data_uri (const char *uri, char **content_type)'. The old hunk header is also the same: @@ -286,6 +286,7 @@ soup_uri_decode_data_uri (const char *uri,"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
+    gboolean base64 = FALSE;
+    char *uri_string;
+    GBytes *bytes;
++    const char *path;
+
+Was the line 'const char *path;' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'const char *path;' was added by a commit. In the older version, the hunk content should be:
+
+    gboolean base64 = FALSE;
+    char *uri_string;
+    GBytes *bytes;"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    /* g_uri_to_string() is picky about paths that start with `//` and will assert. */
++    path = g_uri_get_path (soup_uri);
++    if (path[0] == '/' && path[1] == '/') {
++            g_uri_unref (soup_uri);
++            return NULL;
++    }
+
+Were these lines added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, these lines were added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    if (!uri_string)
++            return NULL;
+
+Was this block of code added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, this block of code was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);
++    if (!uri_string)
++            return NULL;
+
+Was the line 'if (!uri_string) return NULL;' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'if (!uri_string) return NULL;' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    { "data:.///", NULL, NULL },
++    { "data:/.//", NULL, NULL },
+
+Were these lines added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, these lines were added by a commit. In the older version, the hunk content should be:
+
+    { "data:text/plain;base64,aGVsbG8=", "hello", "text/plain" },
+    { "data:text/plain;base64,invalid=", "", "text/plain" },
+    { "data:,", "", CONTENT_TYPE_DEFAULT },"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    /* g_uri_to_string() is picky about paths that start with `//` and will assert. */
++    path = g_uri_get_path (soup_uri);
++    if (path[0] == '/' && path[1] == '/') {
++            g_uri_unref (soup_uri);
++            return NULL;
++    }
+
+Was the comment 'g_uri_to_string() is picky about paths that start with `//` and will assert.' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the comment 'g_uri_to_string() is picky about paths that start with `//` and will assert.' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    path = g_uri_get_path (soup_uri);
++    if (path[0] == '/' && path[1] == '/') {
++            g_uri_unref (soup_uri);
++            return NULL;
++    }
+
+Was the line 'path = g_uri_get_path (soup_uri);' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'path = g_uri_get_path (soup_uri);' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    if (path[0] == '/' && path[1] == '/') {
++            g_uri_unref (soup_uri);
++            return NULL;
++    }
+
+Was this block of code added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, this block of code was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    if (path[0] == '/' && path[1] == '/') {
++            g_uri_unref (soup_uri);
++            return NULL;
++    }
+
+Was the condition 'if (path[0] == '/' && path[1] == '/')' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the condition 'if (path[0] == '/' && path[1] == '/')' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    g_uri_unref (soup_uri);
++    return NULL;
+
+Was this block of code added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, this block of code was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    g_uri_unref (soup_uri);
++    return NULL;
+
+Was the line 'g_uri_unref (soup_uri);' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'g_uri_unref (soup_uri);' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    return NULL;
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'return NULL;' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    { "data:.///", NULL, NULL },
++    { "data:/.//", NULL, NULL },
+
+Was the line '{ "data:.///", NULL, NULL },' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line '{ "data:.///", NULL, NULL },' was added by a commit. In the older version, the hunk content should be:
+
+    { "data:text/plain;base64,aGVsbG8=", "hello", "text/plain" },
+    { "data:text/plain;base64,invalid=", "", "text/plain" },
+    { "data:,", "", CONTENT_TYPE_DEFAULT },"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    { "data:/.//", NULL, NULL },
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line '{ "data:/.//", NULL, NULL },' was added by a commit. In the older version, the hunk content should be:
+
+    { "data:text/plain;base64,aGVsbG8=", "hello", "text/plain" },
+    { "data:text/plain;base64,invalid=", "", "text/plain" },
+    { "data:,", "", CONTENT_TYPE_DEFAULT },"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    if (!uri_string)
++            return NULL;
+
+Was the line 'if (!uri_string)' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'if (!uri_string)' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    return NULL;
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'return NULL;' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    const char *path;
+
+Was the line 'const char *path;' added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'const char *path;' was added by a commit. In the older version, the hunk content should be:
+
+    gboolean base64 = FALSE;
+    char *uri_string;
+    GBytes *bytes;"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    /* g_uri_to_string() is picky about paths that start with `//` and will assert. */
+
+Was this comment added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, this comment was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    path = g_uri_get_path (soup_uri);
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'path = g_uri_get_path (soup_uri);' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    if (path[0] == '/' && path[1] == '/') {
+
+Was this condition added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the condition 'if (path[0] == '/' && path[1] == '/') {' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++            g_uri_unref (soup_uri);
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'g_uri_unref (soup_uri);' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++            return NULL;
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line 'return NULL;' was added by a commit. In the older version, the hunk content should be:
+
+    uri_string = g_uri_to_string (soup_uri);
+    g_uri_unref (soup_uri);"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    { "data:.///", NULL, NULL },
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line '{ "data:.///", NULL, NULL },' was added by a commit. In the older version, the hunk content should be:
+
+    { "data:text/plain;base64,aGVsbG8=", "hello", "text/plain" },
+    { "data:text/plain;base64,invalid=", "", "text/plain" },
+    { "data:,", "", CONTENT_TYPE_DEFAULT },"}
+{"question": "The hunk content for function soup_uri_decode_data_uri in file libsoup/soup-uri-utils.c from the latest patch is:
+
++    { "data:/.//", NULL, NULL },
+
+Was this line added by any commit? If yes, what was the previous version of the hunk content?", "answer": "Yes, the line '{ "data:/.//", NULL, NULL },' was added by a commit. In the older version, the hunk content should be:
+
+    { "data:text/plain;base64,aGVsbG8=", "hello", "text/plain" },
+    { "data:text/plain;base64,invalid=", "", "text/plain" },
+    { "data:,", "", CONTENT_TYPE_DEFAULT },"}
+{"question": "What was the previous URL for the mailing list mentioned in the README file?", "answer": "Previous URL: http://mail.gnome.org/mailman/listinfo/libsoup-list"}
+{"question": "What is the new URL for the support forum mentioned in the README file?", "answer": "New URL: https://discourse.gnome.org/tag/libsoup"}
+{"question": "What new file was added for the Uzbek (Latin) translation in the po directory?", "answer": "New file: po/uz.po"}
+{"question": "What language code was added to the LINGUAS file to support Uzbek (Latin)?", "answer": "Added language code: uz"}
+{"question": "In the file 'libsoup/http1/soup-body-input-stream.c', what was the condition in the if statement at line 247 before the fix?", "answer": "Condition: strncmp (metabuf, "\r\n", nread) || strncmp (metabuf, "\n", nread)"}
+{"question": "In the file 'libsoup/http1/soup-body-input-stream.c', what is the new condition in the if statement at line 247 after the fix?", "answer": "Condition: (nread == 2 && strncmp (metabuf, "\r\n", nread) == 0) || (nread == 1 && strncmp (metabuf, "\n", nread) == 0)"}
+{"question": "The file 'po/el.po' has been updated. What was the old POT-Creation-Date in the file?", "answer": "Old POT-Creation-Date: 2020-09-17 06:36+0000"}
+{"question": "The file 'po/el.po' has been updated. What was the old Last-Translator in the file?", "answer": "Old Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Connection terminated unexpectedly'?", "answer": "Old Comment: #: libsoup/soup-body-input-stream.c:139 libsoup/soup-body-input-stream.c:170 libsoup/soup-body-input-stream.c:203 libsoup/soup-message-io.c:244"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Invalid seek request'?", "answer": "Old Comment: #: libsoup/soup-body-input-stream.c:459"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Cannot truncate SoupBodyInputStream'?", "answer": "Old Comment: #: libsoup/soup-body-input-stream.c:487"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Network stream unexpectedly closed'?", "answer": "Old Comment: #: libsoup/soup-cache-input-stream.c:76"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Failed to completely cache the resource'?", "answer": "Old Comment: #: libsoup/soup-cache-input-stream.c:291"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Name'?", "answer": "Old Comment: #: libsoup/soup-directory-input-stream.c:231"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Size'?", "answer": "Old Comment: #: libsoup/soup-directory-input-stream.c:232"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Date Modified'?", "answer": "Old Comment: #: libsoup/soup-directory-input-stream.c:233"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Output buffer is too small'?", "answer": "Old Comment: #: libsoup/soup-converter-wrapper.c:189"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Could not parse HTTP response'?", "answer": "Old Comment: #: libsoup/soup-message-client-io.c:39"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Unrecognized HTTP response encoding'?", "answer": "Old Comment: #: libsoup/soup-message-client-io.c:62"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Header too big'?", "answer": "Old Comment: #: libsoup/soup-message-io.c:269"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Operation would block'?", "answer": "Old Comment: #: libsoup/soup-message-io.c:401 libsoup/soup-message-io.c:1024"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Operation was cancelled'?", "answer": "Old Comment: #: libsoup/soup-message-io.c:976 libsoup/soup-message-io.c:1009"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Could not parse HTTP request'?", "answer": "Old Comment: #: libsoup/soup-message-server-io.c:63"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Operation was cancelled'?", "answer": "Old Comment: #: libsoup/soup-client-message-io-http1.c:463"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Could not parse HTTP response'?", "answer": "Old Comment: #: libsoup/soup-client-message-io-http1.c:734 libsoup/soup-client-message-io-http1.c:760"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Operation was cancelled'?", "answer": "Old Comment: #: libsoup/soup-client-message-io-http1.c:734 libsoup/soup-client-message-io-http1.c:760"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Header too big'?", "answer": "Old Comment: #: libsoup/soup-message-io-data.c:105"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Can’t import unconnected socket'?", "answer": "Old Comment: #: libsoup/soup-socket.c:175"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Server requested unsupported extension'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:479 libsoup/soup-websocket.c:523 libsoup/soup-websocket.c:539"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Incorrect WebSocket “%s” header'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:502 libsoup/soup-websocket.c:694"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Server returned incorrect “%s” key'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:503 libsoup/soup-websocket.c:1024"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Duplicated parameter in “%s” WebSocket extension header'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:566"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Server returned a duplicated parameter in “%s” WebSocket extension header'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:567"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'WebSocket handshake expected'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:658 libsoup/soup-websocket.c:667"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Unsupported WebSocket version'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:675"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Invalid WebSocket key'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:684"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Unsupported WebSocket subprotocol'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:703"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Server rejected WebSocket handshake'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:975"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Server ignored WebSocket handshake'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:983 libsoup/soup-websocket.c:992"}
+{"question": "The file 'po/el.po' has been updated. What was the old comment for the message 'Server requested unsupported protocol'?", "answer": "Old Comment: #: libsoup/soup-websocket.c:1004"}
+{"question": "What was the previous content of line 20 in the README file?", "answer": "Previous content: More information (including the libsoup To Do list) is available at"}
+{"question": "What dependency was changed in the meson.build file?", "answer": "Dependency changed from 'gmodule-2.0' to 'gmodule-no-export-2.0'"}
+{"question": "What was added to the soup_auth_digest_finalize function in the file libsoup/auth/soup-auth-digest.c?", "answer": "g_free (priv->opaque);"}
+{"question": "The hunk header in Patch is @@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object) for the latest version, with filename = 'libsoup/auth/soup-auth-digest.c'. Was there an addition of a line in the function soup_auth_digest_finalize? If yes, give the old hunk header.", "answer": "Yes, a line was added in the function soup_auth_digest_finalize.
+New Hunk Header: @@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+Old Hunk Header: @@ -72,6 +72,6 @@ soup_auth_digest_finalize (GObject *object)"}
+{"question": "The hunk content for function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+Were some lines added in this hunk content by any commit? What was the previous version of the hunk content?", "answer": "Yes,
+1 Extra Line:
+    g_free (priv->opaque);
+was added in the function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c.
+So, in the older version the hunk content should be:
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));"}
+{"question": "The hunk for function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'g_free (priv->nonce);' is 72. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed above line 72 in the file libsoup/auth/soup-auth-digest.c.
+So line number for 'g_free (priv->nonce);' should be 72 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'g_free (priv->domain);' is 73. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed above line 73 in the file libsoup/auth/soup-auth-digest.c.
+So line number for 'g_free (priv->domain);' should be 73 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'g_free (priv->cnonce);' is 74. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed above line 74 in the file libsoup/auth/soup-auth-digest.c.
+So line number for 'g_free (priv->cnonce);' should be 74 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'memset (priv->hex_urp, 0, sizeof (priv->hex_urp));' is 76. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "1 Line:
+    g_free (priv->opaque);
+was added above line 76 in the file libsoup/auth/soup-auth-digest.c.
+So line number for 'memset (priv->hex_urp, 0, sizeof (priv->hex_urp));' should be 75 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'memset (priv->hex_a1, 0, sizeof (priv->hex_a1));' is 77. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "1 Line:
+    g_free (priv->opaque);
+was added above line 77 in the file libsoup/auth/soup-auth-digest.c.
+So line number for 'memset (priv->hex_a1, 0, sizeof (priv->hex_a1));' should be 76 in the patch for older version."}

@@ -63,7 +63,8 @@ COMMIT_DETAILS_USER_PROMPT = """
     Note that All questions asked are specific - they contain proper information about the variable / function / file etc.
     Answers are brief and to the point, containing only the change, but they contain Proper Information about the change.
     The question-answer pair will be used to train an LLM model, so make sure they contain full context about the change. 
-    Vague questions / answers are NOT allowed.
+    Vague questions / answers are NOT allowed. I want the question-answer pairs to give proper context about the change.
+    do NOT mention commit hash or author name or date in the questions or answers. Give proper description of the change, and its location instead.
 
     Do NOT generate generic questions that do not depend on the commit details or questions that have NO_CHANGE or SAME_AS_BEFORE as answer.
     In case of no significant changes in the commit, return an empty array [].
@@ -105,6 +106,9 @@ COMMIT_TO_HUNK_CHANGES_USER_PROMPT = """
         3. Addition or removal of lines of codes in the hunk content, and what lines of codes should be in the hunk for the older version?
         4. Changes to variable names or variable datatypes in commit that affect lines in patch hunk.
 
+    Make Sure that CHANGES OF COMMIT that affect the Patch are asked about in the questions.
+    DO NOT ask about / make chages based on the PATCH.
+
     Example format:
     [
     {{ "question": "The hunk header in Patch is @@ -10,7 +10,8 @@ soup_select(self, selector, dict) for the latest version, with filename = 'a/b.c'. Was the function signature changed? if yes, give the old function signature and the old hunk header.",
@@ -117,11 +121,11 @@ COMMIT_TO_HUNK_CHANGES_USER_PROMPT = """
     {{"question": "The hunk content 
                     for function fetch_data(url) in file utils/network.py from the latest patch is:
                         int x = get_value();
-                        x += foo();
-                        x -= bar();
-                    +   if (x > 0) {
-                    +       return x;
-                    +   }
+                        x += foo();         // [for reference] - this was the line added in COMMIT. Hence, old version hunk will not have this. Remove effect of commit.
+                        x -= bar();         // [for reference] - this was the line added in the COMMIT. Remove effect of commit in the answer.
+                    +   if (x > 0) {        // [for reference] - this line was added in the PATCH. Only effect of commit needs to be removed in the answer.
+                    +       return x;       // [for reference] - this line was added in the PATCH. do NOT remove this in the answer.
+                    +   }                   // [for reference] - this line was added in the PATCH.
 
                         return x+1
                     
@@ -149,27 +153,31 @@ COMMIT_TO_HUNK_CHANGES_USER_PROMPT = """
                     indicates that line number for 'long_response = requests.get(url, timeout=10)' is 257. 
                     How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?",
         "answer": "3 Lines:
-                    +    foo = bar()
-                    +    if foo:
-                    +        return None
+                    +    foo = bar()            // [For reference] - line added in the COMMIT, not PATCH. Hence, old patch = remove effect of this line.
+                    +    if foo:                // [For reference] - line added in the COMMIT, not PATCH.
+                    +        return None        // [For reference] - line added in the COMMIT, not PATCH.
                     were added above line 257 in the file utils/network.py. 
                 So line number for 'long_response = requests.get(url, timeout=10)' should be 254 in the patch for older version."
     }}
     ...
     ]
 
+    The [for reference] comments in the questions are just for your understanding, do NOT include them in the output.
+
     Generate only high quality training-dataset that are very specific to the commit details provided.
     You are allowed to generate multiple questions about the same change, but the questions must be VERY SPECIFIC and DIFFERENT.
 
     Ensure that the questions are VERY SPECIFIC - they contain proper information about the linenumber and content / variable / function / filename or path etc.
     The answers will be used to train a LLM model, so make sure they contain full context about the change. 
-    Vague questions / answers are NOT allowed.
+    do NOT mention commit hash or author name or date in the questions or answers. Give proper description of the change, and its location instead.
+    Vague questions / answers are NOT allowed, I want the question-answer pairs to give proper context about the change.
 
     Generate atmost 30 question-answer pairs.
     If the Commit did NOT affect the same file / lines of codes as the Patch Hunk,
     Return ONLY an empty array [].
 
     ONLY OUTPUT valid JSON.
+    Make sure that any {{}} or quotes "" in the output JSON is properly escaped to not interfere with JSON formatting.
     DO NOT include any formatting tokens like ```json ... ```.
 
     OUTPUT:
@@ -235,6 +243,7 @@ PATCH_BACKPORT_USER_PROMPT = """
                     for example, if a line (+   x += foo();) was made (+   x += bar();) in the commit, give the old line (+   x += foo();) as the first changed line content.
         HUNK_LINES: Look at the lines of the patch hunk that were modified by the commit. Give the hunk lines for the older version, before the commit was made.
                     If some lines, in the hunk content were added / removed, give old lines as per the older version before the commit.
+                    Note that, Lines Added / removed by the PATCH are NOT to be removed / added. The patch content stays as it is, with the effect of the COMMIT removed.
 
     If any of the above keys was NOT affected by the commit, its value is same as in ORIGINAL_HUNK_DATA.
 
@@ -254,10 +263,10 @@ PATCH_BACKPORT_USER_PROMPT = """
                 FIRST_CHANGED_LINE_CONTENT:     x *= baz();
                 HUNK_LINES:
                     int x = 200;
-                    x -= foo();             // [for reference] - this was the line added in commit. Hence, old version hunk will not have this.
+                    x -= foo();             // [for reference] - this was the line added in commit. Hence, old version hunk will not have this. Remove effect of commit. 
                     if (x > 100) {
                         x += bar();
-                +       x *= baz();
+                +       x *= baz();         // [for reference] - this line was added in the PATCH. DO NOT remove it. only effect of commit needs to be removed in the answer.
                     }
                     return x;",
         "answer": "
@@ -276,14 +285,22 @@ PATCH_BACKPORT_USER_PROMPT = """
                     }
                     return x;",
     }},
-    {{  "question": "..."
-        "answer": "..."
+    {{  "question": "
+                ORIGINAL_HUNK_DATA:
+                ..."
+        "answer": "
+                BACKPORTED_HUNK_DATA:
+                ..."
     }},
     ]
     
+    Note that for each HUNK, the question-answer pair are separate JSON objects in the array.
+    The [for reference] comments in the questions are just for your understanding, do NOT include them in the output.
+    Make sure that any {{}} or quotes "" in the output JSON is properly escaped to not interfere with JSON formatting.
+
     Ensure that hunk lines do not change the logic of the patch hunk. Only change the lines that were modified by the commit.
     The question-answer pairs should be very specific, they will be used to train a LLM model, so make sure they contain full context about the change as asked.
-    Vague questions / answers are NOT allowed.
+    Vague questions / answers are NOT allowed. I want the question-answer pairs to give proper context about the change.
     
     If the commit did NOT affect the same file / lines of codes as the Patch Hunk, return ONLY an empty array [].
 
@@ -296,14 +313,23 @@ PATCH_BACKPORT_USER_PROMPT = """
 
 ############################################ JSON ERROR PROMPT ############################################
 
-json_error_prompt = """
+JSON_ERROR_SYSTEM_PROMPT = """
 
     The previous output was not a valid JSON.
-    Previous Error = {error}
     Do NOT include any formatting tokens like ```json ... ```. 
     If the output contains Quotes, Curly Braces etc, ensure they are escaped, to NOT interfere with JSON output.
     Please correct the mistakes and output a valid JSON array of objects with "question" and "answer" keys only.
 
+"""
+
+JSON_ERROR_USER_PROMPT = """
+
+    The output for above prompt was not a valid JSON.
+    Previous Output: {output}
+
+    Previous Error = {error}
+    Fix the output to not have any JSON errors.
+    
 """
 
 ############################################ UTILITY CLASS ############################################
@@ -313,7 +339,9 @@ class FinetuningPrompts:
             prompt_type,
             package_name=PACKAGE_NAME,
             commit_data=None,
-            patch_hunk=None
+            patch_hunk=None,
+            error=None,
+            output=None
         ):
 
             def get_commit_details_prompts():
@@ -356,10 +384,16 @@ class FinetuningPrompts:
                     ),
                 )
             
-            def get_json_error_prompt(error):
-                tpl = Template(json_error_prompt.replace("{error}", "$error"))
+            def get_json_error_prompt():
+                tpl = Template(JSON_ERROR_USER_PROMPT.replace("{output}", "$OUTPUT")
+                                                     .replace("{error}", "$ERROR")
+                    )
                 return (
-                    tpl.substitute(error=error)
+                    JSON_ERROR_SYSTEM_PROMPT,
+                    tpl.substitute(
+                        OUTPUT=output,
+                        ERROR=error
+                    ),
                 )
 
             prompt_map = {

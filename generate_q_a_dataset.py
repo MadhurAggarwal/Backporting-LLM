@@ -18,7 +18,10 @@ class Generate_Q_A_Dataset:
         self.logger.log_info("Starting Q&A Dataset Generation Process")
 
         timestamp = datetime.now().strftime("%d-%b-%Y_%H-%M").upper()
-        self.QnA_file = os.path.join(QnA_DATA_DIR, f"qna_{timestamp}.jsonl")
+
+        self.QnA_dir = os.path.join(QnA_DATA_DIR, f"{FINETUNE_MODEL_NAME}")
+        os.makedirs(self.QnA_dir, exist_ok=True)
+        self.QnA_file = os.path.join(self.QnA_dir, f"qna_{timestamp}.jsonl")
 
     def fetch_cve_patches(self):
         self.logger.log_info("Fetching CVE List and Corresponding Patches")
@@ -91,19 +94,19 @@ class Generate_Q_A_Dataset:
                 self.logger.log_info(f"❌ ERROR: Failed to generate valid Q&A pairs after multiple attempts for {prompt_type}. Skipping...")
                 print(f"❌ ERROR: Failed to generate valid Q&A pairs after multiple attempts for {prompt_type}. Skipping...")
                 return retry_count
+
+            json_error_system_prompt, json_error_user_prompt = self.prompts.getPrompts("JSON_ERROR", error=str(e), output=output)
+            user_prompt += json_error_user_prompt
             
-            self.logger.log_info("Retrying with JSON error correction prompt")
-            print("Retrying with JSON error correction prompt...")
+            self.logger.log_info("Retrying with JSON error correction prompts")
             if retry_count == 1:
                 self.logger.log_info(f"First retry attempt for {prompt_type} due to error: {e}")
-                json_error_prompt = self.prompts.getPrompts("JSON_ERROR", error=str(e))
-                system_prompt += json_error_prompt
-                self.handle_llm_output(system_prompt, user_prompt, prompt_type, commitfile, cve, retry_count)
+                print(f"First retry attempt for {prompt_type} due to error: {e}")
+                system_prompt += json_error_system_prompt
             else:
                 self.logger.log_info(f"Second retry attempt for {prompt_type} due to error: {e}")
-                json_error_prompt = self.prompts.getPrompts("JSON_ERROR", error=str(e))
-                user_prompt += json_error_prompt
-                self.handle_llm_output(system_prompt, user_prompt, prompt_type, commitfile, cve, retry_count)
+                print(f"Second retry attempt for {prompt_type} due to error: {e}")
+            self.handle_llm_output(system_prompt, user_prompt, prompt_type, commitfile, cve, retry_count)
         
         return retry_count
     
@@ -234,10 +237,10 @@ index abc1234..def5678 100644
 GitLab
     """
 
-    hunks = split_git_patch(test_patch)
-    for i, hunk in enumerate(hunks):
-        print(f"\n--- HUNK {i} ---\n")
-        print(hunk)
+    # hunks = split_git_patch(test_patch)
+    # for i, hunk in enumerate(hunks):
+    #     print(f"\n--- HUNK {i} ---\n")
+    #     print(hunk)
 
 if __name__ == "__main__":
     main()

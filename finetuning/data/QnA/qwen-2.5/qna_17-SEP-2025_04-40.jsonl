@@ -1,0 +1,1351 @@
+{"question": "In the function 'parse_one_cookie' of the file 'libsoup/cookies/soup-cookie.c', what was the previous handling of the 'expires' field before the fix?", "answer": "Previous handling: soup_cookie_set_expires (cookie, parse_date (&p));"}
+{"question": "In the function 'parse_one_cookie' of the file 'libsoup/cookies/soup-cookie.c', what was added to handle the 'expires' field correctly?", "answer": "Added: g_clear_pointer (&cookie->expires, g_date_time_unref);"}
+{"question": "What changes were made to the NEWS file regarding the version 3.6.1 release?", "answer": "Added fixes and improvements for version 3.6.1 including bug fixes for soup_uri_copy, soup_uri_decode_data_uri, SoupContentSniffer, and headers parsing."}
+{"question": "In the NEWS file, what specific fix was made to soup_uri_copy() in version 3.6.1?", "answer": "Fixed reading port as a long instead of an int."}
+{"question": "In the NEWS file, what specific fix was made to soup_uri_decode_data_uri() in version 3.6.1?", "answer": "Fixed possible NULL deref and assertion on URLs with a path starting with //."}
+{"question": "In the NEWS file, what specific fix was made to SoupContentSniffer in version 3.6.1?", "answer": "Fixed possible overflow."}
+{"question": "In the NEWS file, what improvement was made to headers parsing in version 3.6.1?", "answer": "Made more robust against invalid input when parsing params."}
+{"question": "In the NEWS file, what fix was made to websocket functionality in version 3.6.1?", "answer": "Fixed possibility of being stuck in a read loop."}
+{"question": "What change was made to the version number in meson.build?", "answer": "Version changed from 3.6.0 to 3.6.1."}
+{"question": "What was the previous URL for the mailing list mentioned in the README file?", "answer": "Previous URL: http://mail.gnome.org/mailman/listinfo/libsoup-list"}
+{"question": "What is the new URL for the support forum mentioned in the README file?", "answer": "New URL: https://discourse.gnome.org/tag/libsoup"}
+{"question": "What new file was added for the Uzbek (Latin) translation in the po directory?", "answer": "New file: po/uz.po"}
+{"question": "What language code was added to the LINGUAS file to support Uzbek (Latin)?", "answer": "Added language code: uz"}
+{"question": "In the file 'libsoup/http1/soup-body-input-stream.c', what was the condition in the if statement at line 247 before the fix?", "answer": "Condition: strncmp (metabuf, "\r\n", nread) || strncmp (metabuf, "\n", nread)"}
+{"question": "In the file 'libsoup/http1/soup-body-input-stream.c', what is the new condition in the if statement at line 247 after the fix?", "answer": "Condition: (nread == 2 && strncmp (metabuf, "\r\n", nread) == 0) || (nread == 1 && strncmp (metabuf, "\n", nread) == 0)"}
+{"question": "The file 'po/el.po' has been updated. What was the old POT-Creation-Date in the file?", "answer": "Old POT-Creation-Date: 2020-09-17 06:36+0000"}
+{"question": "The file 'po/el.po' has been updated. What was the old Last-Translator in the file?", "answer": "Old Last-Translator: Efstathios Iosifidis <eiosifidis@gnome.org>"}
+{"question": "The file 'libsoup/cache/soup-cache-input-stream.c' has been updated. What was the old line number for the message 'Network stream unexpectedly closed'?", "answer": "Old Line Number: 76"}
+{"question": "The file 'libsoup/cache/soup-cache-input-stream.c' has been updated. What was the old line number for the message 'Failed to completely cache the resource'?", "answer": "Old Line Number: 291"}
+{"question": "The file 'libsoup/content-decoder/soup-converter-wrapper.c' has been updated. What was the old line number for the message 'Output buffer is too small'?", "answer": "Old Line Number: 189"}
+{"question": "The file 'libsoup/http1/soup-body-input-stream.c' has been updated. What was the old line number for the message 'Connection terminated unexpectedly'?", "answer": "Old Line Numbers: 139, 170, 203"}
+{"question": "The file 'libsoup/http1/soup-body-input-stream.c' has been updated. What was the old line number for the message 'Invalid seek request'?", "answer": "Old Line Number: 459"}
+{"question": "The file 'libsoup/http1/soup-body-input-stream.c' has been updated. What was the old line number for the message 'Cannot truncate SoupBodyInputStream'?", "answer": "Old Line Number: 487"}
+{"question": "The file 'libsoup/http1/soup-client-message-io-http1.c' has been updated. What was the old line number for the message 'Could not parse HTTP response'?", "answer": "Old Line Number: 39"}
+{"question": "The file 'libsoup/http1/soup-client-message-io-http1.c' has been updated. What was the old line number for the message 'Unrecognized HTTP response encoding'?", "answer": "Old Line Number: 62"}
+{"question": "The file 'libsoup/http1/soup-client-message-io-http1.c' has been updated. What was the old line number for the message 'Operation was cancelled'?", "answer": "Old Line Number: 463"}
+{"question": "The file 'libsoup/http1/soup-message-io-data.c' has been updated. What was the old line number for the message 'Operation would block'?", "answer": "Old Line Number: 269"}
+{"question": "The file 'libsoup/http1/soup-message-io-data.c' has been updated. What was the old line number for the message 'Operation was cancelled'?", "answer": "Old Line Numbers: 976, 1009"}
+{"question": "The file 'libsoup/http2/soup-client-message-io-http2.c' has been updated. What was the old line number for the message 'Connection terminated unexpectedly'?", "answer": "Old Line Number: 408"}
+{"question": "The file 'libsoup/http2/soup-client-message-io-http2.c' has been updated. What was the old line number for the message 'Operation was cancelled'?", "answer": "Old Line Numbers: 1640, 1666"}
+{"question": "The file 'libsoup/server/http1/soup-server-message-io-http1.c' has been updated. What was the old line number for the message 'Connection terminated unexpectedly'?", "answer": "Old Line Number: 417"}
+{"question": "The file 'libsoup/server/http1/soup-server-message-io-http1.c' has been updated. What was the old line number for the message 'Operation was cancelled'?", "answer": "Old Line Numbers: 890"}
+{"question": "The file 'libsoup/server/http2/soup-server-message-io-http2.c' has been updated. What was the old line number for the message 'Connection terminated unexpectedly'?", "answer": "Old Line Number: 431"}
+{"question": "The file 'libsoup/server/soup-listener.c' has been updated. What was the old line number for the message 'Could not import existing socket:'?", "answer": "Old Line Number: 261"}
+{"question": "The file 'libsoup/server/soup-listener.c' has been updated. What was the old line number for the message 'Can’t import unconnected socket'?", "answer": "Old Line Number: 267"}
+{"question": "The file 'libsoup/server/soup-server.c' has been updated. What was the old line number for the message 'Can’t create a TLS server without a TLS certificate'?", "answer": "Old Line Number: 1810"}
+{"question": "The file 'libsoup/soup-session.c' has been updated. What was the old line number for the message 'Location header is missing or empty in response headers'?", "answer": "Old Line Number: 1133"}
+{"question": "The file 'libsoup/soup-session.c' has been updated. What was the old line number for the message 'Invalid URI “%s” in Location response header'?", "answer": "Old Line Number: 1147"}
+{"question": "The file 'libsoup/soup-session.c' has been updated. What was the old line number for the message 'Too many redirects'?", "answer": "Old Line Number: 1167"}
+{"question": "The file 'libsoup/soup-session.c' has been updated. What was the old line number for the message 'Message was restarted too many times'?", "answer": "Old Line Number: 1172"}
+{"question": "The file 'libsoup/soup-session.c' has been updated. What was the old line number for the message 'Message is already in session queue'?", "answer": "Old Line Numbers: 3038, 3186"}
+{"question": "The file 'libsoup/soup-session.c' has been updated. What was the old line number for the message 'The server did not accept the WebSocket handshake.'?", "answer": "Old Line Number: 3662"}
+{"question": "The file 'libsoup/soup-tld.c' has been updated. What was the old line number for the message 'No public-suffix list available.'?", "answer": "Old Line Number: 129"}
+{"question": "The file 'libsoup/soup-tld.c' has been updated. What was the old line number for the message 'Invalid hostname'?", "answer": "Old Line Numbers: 139, 155"}
+{"question": "The file 'libsoup/soup-tld.c' has been updated. What was the old line number for the message 'Hostname is an IP address'?", "answer": "Old Line Number: 146"}
+{"question": "The file 'libsoup/soup-tld.c' has been updated. What was the old line number for the message 'Hostname has no base domain'?", "answer": "Old Line Number: 155"}
+{"question": "The file 'libsoup/soup-tld.c' has been updated. What was the old line number for the message 'Not enough domains'?", "answer": "Old Line Number: 167"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Server requested unsupported extension'?", "answer": "Old Line Numbers: 479, 523, 539"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Incorrect WebSocket “%s” header'?", "answer": "Old Line Numbers: 502, 1024"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Duplicated parameter in “%s” WebSocket extension header'?", "answer": "Old Line Number: 566"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Server returned a duplicated parameter in “%s” WebSocket extension header'?", "answer": "Old Line Number: 567"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'WebSocket handshake expected'?", "answer": "Old Line Numbers: 658, 667"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Unsupported WebSocket version'?", "answer": "Old Line Number: 675"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Invalid WebSocket key'?", "answer": "Old Line Number: 684"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Unsupported WebSocket subprotocol'?", "answer": "Old Line Number: 703"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Server rejected WebSocket handshake'?", "answer": "Old Line Number: 975"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Server ignored WebSocket handshake'?", "answer": "Old Line Numbers: 983, 992"}
+{"question": "The file 'libsoup/websocket/soup-websocket.c' has been updated. What was the old line number for the message 'Server requested unsupported protocol'?", "answer": "Old Line Number: 1004"}
+{"question": "What was the previous content of line 20 in the README file?", "answer": "Previous content: More information (including the libsoup To Do list) is available at"}
+{"question": "What was the previous dependency used for gmodule in meson.build?", "answer": "Previous Dependency: gmodule-2.0"}
+{"question": "What is the new dependency used for gmodule in meson.build?", "answer": "New Dependency: gmodule-no-export-2.0"}
+{"question": "What variable was added to the soup_auth_digest_finalize function in the file libsoup/auth/soup-auth-digest.c?", "answer": "Variable: priv->opaque"}
+{"question": "The hunk header in Patch is @@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object) for the latest version, with filename = 'libsoup/auth/soup-auth-digest.c'. Was there an addition of a line in this hunk content by any commit? If yes, give the old hunk header and the old hunk content.", "answer": "Yes, one line was added in the function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c. The old hunk header was @@ -72,6 +72,6 @@ soup_auth_digest_finalize (GObject *object). The old hunk content should be:
+
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));"}
+{"question": "The hunk content for function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+Were some lines added in this hunk content by any commit? What was the previous version of the hunk content?", "answer": "Yes, one extra line: g_free (priv->opaque); was added in the function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c. So, in the older version the hunk content should be:
+
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));"}
+{"question": "The hunk for function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'g_free (priv->nonce);' is 72. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "One line was added above line 72 in the file libsoup/auth/soup-auth-digest.c. So line number for 'g_free (priv->nonce);' should be 71 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'g_free (priv->domain);' is 73. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "One line was added above line 73 in the file libsoup/auth/soup-auth-digest.c. So line number for 'g_free (priv->domain);' should be 72 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'g_free (priv->cnonce);' is 74. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "One line was added above line 74 in the file libsoup/auth/soup-auth-digest.c. So line number for 'g_free (priv->cnonce);' should be 73 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'memset (priv->hex_urp, 0, sizeof (priv->hex_urp));' is 76. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "One line was added above line 76 in the file libsoup/auth/soup-auth-digest.c. So line number for 'memset (priv->hex_urp, 0, sizeof (priv->hex_urp));' should be 75 in the patch for older version."}
+{"question": "The hunk for function soup_auth_digest_finalize (GObject *object) in file libsoup/auth/soup-auth-digest.c from the latest patch is:
+@@ -72,6 +72,7 @@ soup_auth_digest_finalize (GObject *object)
+    g_free (priv->nonce);
+    g_free (priv->domain);
+    g_free (priv->cnonce);
++   g_free (priv->opaque);
+
+    memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+    memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+indicates that line number for 'memset (priv->hex_a1, 0, sizeof (priv->hex_a1));' is 77. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "One line was added above line 77 in the file libsoup/auth/soup-auth-digest.c. So line number for 'memset (priv->hex_a1, 0, sizeof (priv->hex_a1));' should be 76 in the patch for older version."}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 148
+    FUNCTION_SIGNATURE: soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+    HUNK_START_LINE_CONTENT:     guint qop_options;
+    FIRST_CHANGED_LINE_NUMBER: 149
+    FIRST_CHANGED_LINE_CONTENT:     if (!soup_auth_get_realm (auth))
+    HUNK_LINES:
+        guint qop_options;
+        gboolean ok = TRUE;
+
++        if (!soup_auth_get_realm (auth))
++                return FALSE;
++
+        g_free (priv->domain);
+        g_free (priv->nonce);
+        g_free (priv->opaque);", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 148
+    FUNCTION_SIGNATURE: soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+    HUNK_START_LINE_CONTENT:     guint qop_options;
+    FIRST_CHANGED_LINE_NUMBER: 149
+    FIRST_CHANGED_LINE_CONTENT:     if (!soup_auth_get_realm (auth))
+    HUNK_LINES:
+        guint qop_options;
+        gboolean ok = TRUE;
+
++        if (!soup_auth_get_realm (auth))
++                return FALSE;
++
+        g_free (priv->domain);
+        g_free (priv->nonce);
+        g_free (priv->opaque);"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: tests/auth-test.c
+    HUNK_START_LINE_NUMBER: 1866
+    FUNCTION_SIGNATURE: 
+    HUNK_START_LINE_CONTENT: do_multiple_digest_algorithms (void)
+    FIRST_CHANGED_LINE_NUMBER: 1867
+    FIRST_CHANGED_LINE_CONTENT: {
+    HUNK_LINES:
+    do_multiple_digest_algorithms (void)
+    {
+        SoupTestServer *server;
+        SoupURI *uri;
+
++static void
++on_request_read_for_missing_realm (SoupServer        *server,
++                                   SoupServerMessage *msg,
++                                   gpointer           user_data)
++{
++        SoupMessageHeaders *response_headers = soup_server_message_get_response_headers (msg);
++        soup_message_headers_replace (response_headers, "WWW-Authenticate", "Digest qop=\"auth\"");
++}
++
++static void
++do_missing_realm_test (void)
++{
++        SoupSession *session;
++        SoupMessage *msg;
++        SoupServer *server;
++        SoupAuthDomain *digest_auth_domain;
++        gint status;
++        GUri *uri;
++
++        server = soup_test_server_new (SOUP_TEST_SERVER_IN_THREAD);
++	soup_server_add_handler (server, NULL,
++				 server_callback, NULL, NULL);
++	uri = soup_test_server_get_uri (server, "http", NULL);
++
++	digest_auth_domain = soup_auth_domain_digest_new (
++		"realm", "auth-test",
++		"auth-callback", server_digest_auth_callback,
++		NULL);
++        soup_auth_domain_add_path (digest_auth_domain, "/");
++	soup_server_add_auth_domain (server, digest_auth_domain);
++        g_object_unref (digest_auth_domain);
++
++        g_signal_connect (server, "request-read",
++                          G_CALLBACK (on_request_read_for_missing_realm),
++                          NULL);
++
++        session = soup_test_session_new (NULL);
++        msg = soup_message_new_from_uri ("GET", uri);
++        g_signal_connect (msg, "authenticate",
++                          G_CALLBACK (on_digest_authenticate),
++                          NULL);
++
++        status = soup_test_session_send_message (session, msg);
++
++        g_assert_cmpint (status, ==, SOUP_STATUS_UNAUTHORIZED);
++	g_uri_unref (uri);
++	soup_test_server_quit_unref (server);
++}
++
+int
+main (int argc, char **argv)
+{
+@@ -1899,6 +1948,7 @@ main (int argc, char **argv)
+    g_test_add_func ("/auth/auth-uri", do_auth_uri_test);
+        g_test_add_func ("/auth/cancel-request-on-authenticate", do_cancel_request_on_authenticate);
+        g_test_add_func ("/auth/multiple-algorithms", do_multiple_digest_algorithms);
++        g_test_add_func ("/auth/missing-realm", do_missing_realm_test);
+
+    ret = g_test_run ();", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: tests/auth-test.c
+    HUNK_START_LINE_NUMBER: 1866
+    FUNCTION_SIGNATURE: 
+    HUNK_START_LINE_CONTENT: do_multiple_digest_algorithms (void)
+    FIRST_CHANGED_LINE_NUMBER: 1867
+    FIRST_CHANGED_LINE_CONTENT: {
+    HUNK_LINES:
+    do_multiple_digest_algorithms (void)
+    {
+        SoupTestServer *server;
+        SoupURI *uri;
+
++static void
++on_request_read_for_missing_realm (SoupServer        *server,
++                                   SoupServerMessage *msg,
++                                   gpointer           user_data)
++{
++        SoupMessageHeaders *response_headers = soup_server_message_get_response_headers (msg);
++        soup_message_headers_replace (response_headers, "WWW-Authenticate", "Digest qop=\"auth\"");
++}
++
++static void
++do_missing_realm_test (void)
++{
++        SoupSession *session;
++        SoupMessage *msg;
++        SoupServer *server;
++        SoupAuthDomain *digest_auth_domain;
++        gint status;
++        GUri *uri;
++
++        server = soup_test_server_new (SOUP_TEST_SERVER_IN_THREAD);
++	soup_server_add_handler (server, NULL,
++				 server_callback, NULL, NULL);
++	uri = soup_test_server_get_uri (server, "http", NULL);
++
++	digest_auth_domain = soup_auth_domain_digest_new (
++		"realm", "auth-test",
++		"auth-callback", server_digest_auth_callback,
++		NULL);
++        soup_auth_domain_add_path (digest_auth_domain, "/");
++	soup_server_add_auth_domain (server, digest_auth_domain);
++        g_object_unref (digest_auth_domain);
++
++        g_signal_connect (server, "request-read",
++                          G_CALLBACK (on_request_read_for_missing_realm),
++                          NULL);
++
++        session = soup_test_session_new (NULL);
++        msg = soup_message_new_from_uri ("GET", uri);
++        g_signal_connect (msg, "authenticate",
++                          G_CALLBACK (on_digest_authenticate),
++                          NULL);
++
++        status = soup_test_session_send_message (session, msg);
++
++        g_assert_cmpint (status, ==, SOUP_STATUS_UNAUTHORIZED);
++	g_uri_unref (uri);
++	soup_test_server_quit_unref (server);
++}
++
+int
+main (int argc, char **argv)
+{
+@@ -1899,6 +1948,7 @@ main (int argc, char **argv)
+    g_test_add_func ("/auth/auth-uri", do_auth_uri_test);
+        g_test_add_func ("/auth/cancel-request-on-authenticate", do_cancel_request_on_authenticate);
+        g_test_add_func ("/auth/multiple-algorithms", do_multiple_digest_algorithms);
++        g_test_add_func ("/auth/missing-realm", do_missing_realm_test);
+
+    ret = g_test_run ();"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 138
+    FUNCTION_SIGNATURE: soup_auth_digest_get_qop (SoupAuthDigestQop qop)
+    HUNK_START_LINE_CONTENT:     return g_string_free (out, FALSE);
+    FIRST_CHANGED_LINE_NUMBER: 149
+    FIRST_CHANGED_LINE_CONTENT: static gboolean
+    HUNK_LINES:
+    soup_auth_digest_get_qop (SoupAuthDigestQop qop)
+    {
+        GString *out = g_string_new (NULL);
+        if (qop & SOUP_AUTH_DIGEST_QOP_AUTH)
+            g_string_append (out, "auth");
+        if (qop & SOUP_AUTH_DIGEST_QOP_AUTH_INT)
+            g_string_append_printf (out, "%sauth-int", out->len ? "," : "");
+        return g_string_free (out, FALSE);
+    }
+
++static gboolean
++validate_params (SoupAuthDigest *auth_digest)
++{
++        SoupAuthDigestPrivate *priv = soup_auth_digest_get_instance_private (auth_digest);
++
++        if (priv->qop || priv->algorithm == SOUP_AUTH_DIGEST_ALGORITHM_MD5_SESS) {
++                if (!priv->nonce)
++                        return FALSE;
++        }
++
++        return TRUE;
++}
++
+static gboolean
+soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+        GHashTable *auth_params)", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 138
+    FUNCTION_SIGNATURE: soup_auth_digest_get_qop (SoupAuthDigestQop qop)
+    HUNK_START_LINE_CONTENT:     return g_string_free (out, FALSE);
+    FIRST_CHANGED_LINE_NUMBER: 149
+    FIRST_CHANGED_LINE_CONTENT: static gboolean
+    HUNK_LINES:
+    soup_auth_digest_get_qop (SoupAuthDigestQop qop)
+    {
+        GString *out = g_string_new (NULL);
+        if (qop & SOUP_AUTH_DIGEST_QOP_AUTH)
+            g_string_append (out, "auth");
+        if (qop & SOUP_AUTH_DIGEST_QOP_AUTH_INT)
+            g_string_append_printf (out, "%sauth-int", out->len ? "," : "");
+        return g_string_free (out, FALSE);
+    }
+
++static gboolean
++validate_params (SoupAuthDigest *auth_digest)
++{
++        SoupAuthDigestPrivate *priv = soup_auth_digest_get_instance_private (auth_digest);
++
++        if (priv->qop || priv->algorithm == SOUP_AUTH_DIGEST_ALGORITHM_MD5_SESS) {
++                if (!priv->nonce)
++                        return FALSE;
++        }
++
++        return TRUE;
++}
++
+static gboolean
+soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+        GHashTable *auth_params)"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 175
+    FUNCTION_SIGNATURE: soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+    HUNK_START_LINE_CONTENT:     if (priv->algorithm == -1)
+    FIRST_CHANGED_LINE_NUMBER: 188
+    FIRST_CHANGED_LINE_CONTENT:         if (!validate_params (auth_digest))
+    HUNK_LINES:
+    if (priv->algorithm == -1)
+        ok = FALSE;
+
+-       stale = g_hash_table_lookup (auth_params, "stale");
+-       if (stale && !g_ascii_strcasecmp (stale, "TRUE") && *priv->hex_urp)
+-               recompute_hex_a1 (priv);
+-       else {
+-               g_free (priv->user);
+-               priv->user = NULL;
+-               g_free (priv->cnonce);
+-               priv->cnonce = NULL;
+-               memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+-               memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+-       }
++       if (!validate_params (auth_digest))
++               ok = FALSE;
++
++       if (ok) {
++               stale = g_hash_table_lookup (auth_params, "stale");
++               if (stale && !g_ascii_strcasecmp (stale, "TRUE") && *priv->hex_urp)
++                       recompute_hex_a1 (priv);
++               else {
++                       g_free (priv->user);
++                       priv->user = NULL;
++                       g_free (priv->cnonce);
++                       priv->cnonce = NULL;
++                       memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
++                       memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
++               }
++       }", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 175
+    FUNCTION_SIGNATURE: soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+    HUNK_START_LINE_CONTENT:     if (priv->algorithm == -1)
+    FIRST_CHANGED_LINE_NUMBER: 188
+    FIRST_CHANGED_LINE_CONTENT:         if (!validate_params (auth_digest))
+    HUNK_LINES:
+    if (priv->algorithm == -1)
+        ok = FALSE;
+
+-       stale = g_hash_table_lookup (auth_params, "stale");
+-       if (stale && !g_ascii_strcasecmp (stale, "TRUE") && *priv->hex_urp)
+-               recompute_hex_a1 (priv);
+-       else {
+-               g_free (priv->user);
+-               priv->user = NULL;
+-               g_free (priv->cnonce);
+-               priv->cnonce = NULL;
+-               memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
+-               memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
+-       }
++       if (!validate_params (auth_digest))
++               ok = FALSE;
++
++       if (ok) {
++               stale = g_hash_table_lookup (auth_params, "stale");
++               if (stale && !g_ascii_strcasecmp (stale, "TRUE") && *priv->hex_urp)
++                       recompute_hex_a1 (priv);
++               else {
++                       g_free (priv->user);
++                       priv->user = NULL;
++                       g_free (priv->cnonce);
++                       priv->cnonce = NULL;
++                       memset (priv->hex_urp, 0, sizeof (priv->hex_urp));
++                       memset (priv->hex_a1, 0, sizeof (priv->hex_a1));
++               }
++       }"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 276
+    FUNCTION_SIGNATURE: soup_auth_digest_compute_hex_a1 (const char              *hex_urp,
+    HUNK_START_LINE_CONTENT: 
+    FIRST_CHANGED_LINE_NUMBER: 294
+    FIRST_CHANGED_LINE_CONTENT:                 g_assert (nonce && cnonce);
+    HUNK_LINES:
+
+            /* In MD5-sess, A1 is hex_urp:nonce:cnonce */
+
++               g_assert (nonce && cnonce);
++
+            checksum = g_checksum_new (G_CHECKSUM_MD5);
+            g_checksum_update (checksum, (guchar *)hex_urp, strlen (hex_urp));
+            g_checksum_update (checksum, (guchar *)":", 1);", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 276
+    FUNCTION_SIGNATURE: soup_auth_digest_compute_hex_a1 (const char              *hex_urp,
+    HUNK_START_LINE_CONTENT: 
+    FIRST_CHANGED_LINE_NUMBER: 294
+    FIRST_CHANGED_LINE_CONTENT:                 g_assert (nonce && cnonce);
+    HUNK_LINES:
+
+            /* In MD5-sess, A1 is hex_urp:nonce:cnonce */
+
++               g_assert (nonce && cnonce);
++
+            checksum = g_checksum_new (G_CHECKSUM_MD5);
+            g_checksum_update (checksum, (guchar *)hex_urp, strlen (hex_urp));
+            g_checksum_update (checksum, (guchar *)":", 1);"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 366
+    FUNCTION_SIGNATURE: soup_auth_digest_compute_response (const char        *method,
+    HUNK_START_LINE_CONTENT:     if (qop) {
+    FIRST_CHANGED_LINE_NUMBER: 386
+    FIRST_CHANGED_LINE_CONTENT:                 g_assert (cnonce);
+    HUNK_LINES:
+    if (qop) {
+        char tmp[9];
+
++               g_assert (cnonce);
++
+        g_snprintf (tmp, 9, "%.8x", nc);
+        g_checksum_update (checksum, (guchar *)tmp, strlen (tmp));
+        g_checksum_update (checksum, (guchar *)":", 1);", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 366
+    FUNCTION_SIGNATURE: soup_auth_digest_compute_response (const char        *method,
+    HUNK_START_LINE_CONTENT:     if (qop) {
+    FIRST_CHANGED_LINE_NUMBER: 386
+    FIRST_CHANGED_LINE_CONTENT:                 g_assert (cnonce);
+    HUNK_LINES:
+    if (qop) {
+        char tmp[9];
+
++               g_assert (cnonce);
++
+        g_snprintf (tmp, 9, "%.8x", nc);
+        g_checksum_update (checksum, (guchar *)tmp, strlen (tmp));
+        g_checksum_update (checksum, (guchar *)":", 1);"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 429
+    FUNCTION_SIGNATURE: soup_auth_digest_get_authorization (SoupAuth *auth, SoupMessage *msg)
+    HUNK_START_LINE_CONTENT:     g_return_val_if_fail (uri != NULL, NULL);
+    FIRST_CHANGED_LINE_NUMBER: 451
+    FIRST_CHANGED_LINE_CONTENT:                 g_assert (priv->nonce);
+    HUNK_LINES:
+    g_return_val_if_fail (uri != NULL, NULL);
+    url = soup_uri_get_path_and_query (uri);
+
++       g_assert (priv->nonce);
++       g_assert (!priv->qop || priv->cnonce);
++
+    soup_auth_digest_compute_response (soup_message_get_method (msg), url, priv->hex_a1,
+                    priv->qop, priv->nonce,
+                    priv->cnonce, priv->nc,
+                    priv->cnonce ? priv->qop : NULL,
+                    priv->cnonce ? priv->cnonce : NULL,
+                    priv->cnonce ? priv->nc : 0);", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/auth/soup-auth-digest.c
+    HUNK_START_LINE_NUMBER: 429
+    FUNCTION_SIGNATURE: soup_auth_digest_get_authorization (SoupAuth *auth, SoupMessage *msg)
+    HUNK_START_LINE_CONTENT:     g_return_val_if_fail (uri != NULL, NULL);
+    FIRST_CHANGED_LINE_NUMBER: 451
+    FIRST_CHANGED_LINE_CONTENT:                 g_assert (priv->nonce);
+    HUNK_LINES:
+    g_return_val_if_fail (uri != NULL, NULL);
+    url = soup_uri_get_path_and_query (uri);
+
++       g_assert (priv->nonce);
++       g_assert (!priv->qop || priv->cnonce);
++
+    soup_auth_digest_compute_response (soup_message_get_method (msg), url, priv->hex_a1,
+                    priv->qop, priv->nonce,
+                    priv->cnonce, priv->nc,
+                    priv->cnonce ? priv->qop : NULL,
+                    priv->cnonce ? priv->cnonce : NULL,
+                    priv->cnonce ? priv->nc : 0);"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: tests/auth-test.c
+    HUNK_START_LINE_NUMBER: 1867
+    FUNCTION_SIGNATURE: 
+    HUNK_START_LINE_CONTENT: do_multiple_digest_algorithms (void)
+    FIRST_CHANGED_LINE_NUMBER: 1868
+    FIRST_CHANGED_LINE_CONTENT: {
+    HUNK_LINES:
+    do_multiple_digest_algorithms (void)
+    {
+        SoupTestServer *server;
+        SoupURI *uri;
+
++static void
++on_request_read_for_missing_params (SoupServer        *server,
++                                      SoupServerMessage *msg,
++                                      gpointer           user_data)
++{
++        const char *auth_header = user_data;
++        SoupMessageHeaders *response_headers = soup_server_message_get_response_headers (msg);
++        soup_message_headers_replace (response_headers, "WWW-Authenticate", auth_header);
++}
++
++static void
++do_missing_params_test (gconstpointer auth_header)
++{
++        SoupSession *session;
++        SoupMessage *msg;
++        SoupServer *server;
++        SoupAuthDomain *digest_auth_domain;
++        gint status;
++        GUri *uri;
++
++        server = soup_test_server_new (SOUP_TEST_SERVER_IN_THREAD);
++	soup_server_add_handler (server, NULL,
++				 server_callback, NULL, NULL);
++	uri = soup_test_server_get_uri (server, "http", NULL);
++
++	digest_auth_domain = soup_auth_domain_digest_new (
++		"realm", "auth-test",
++		"auth-callback", server_digest_auth_callback,
++		NULL);
++        soup_auth_domain_add_path (digest_auth_domain, "/");
++	soup_server_add_auth_domain (server, digest_auth_domain);
++        g_object_unref (digest_auth_domain);
++
++        g_signal_connect (server, "request-read",
++                          G_CALLBACK (on_request_read_for_missing_params),
++                          (gpointer)auth_header);
++
++        session = soup_test_session_new (NULL);
++        msg = soup_message_new_from_uri ("GET", uri);
++        g_signal_connect (msg, "authenticate",
++                          G_CALLBACK (on_digest_authenticate),
++                          NULL);
++
++        status = soup_test_session_send_message (session, msg);
++
++        g_assert_cmpint (status, ==, SOUP_STATUS_UNAUTHORIZED);
++	g_uri_unref (uri);
++	soup_test_server_quit_unref (server);
++}
++
+int
+main (int argc, char **argv)
+{
+@@ -1899,8 +1900,8 @@ main (int argc, char **argv)
+    g_test_add_func ("/auth/auth-uri", do_auth_uri_test);
+        g_test_add_func ("/auth/cancel-request-on-authenticate", do_cancel_request_on_authenticate);
+        g_test_add_func ("/auth/multiple-algorithms", do_multiple_digest_algorithms);
+-        g_test_add_func ("/auth/missing-realm", do_missing_realm_test);
++        g_test_add_data_func ("/auth/missing-params/realm", "Digest qop=\"auth\"", do_missing_params_test);
++        g_test_add_data_func ("/auth/missing-params/nonce", "Digest realm=\"auth-test\", qop=\"auth,auth-int\", opaque=\"5ccc069c403ebaf9f0171e9517f40e41\"", do_missing_params_test);
++        g_test_add_data_func ("/auth/missing-params/nonce-md5-sess", "Digest realm=\"auth-test\", qop=\"auth,auth-int\", opaque=\"5ccc069c403ebaf9f0171e9517f40e41\" algorithm=\"MD5-sess\"", do_missing_params_test);
+
+    ret = g_test_run ();", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: tests/auth-test.c
+    HUNK_START_LINE_NUMBER: 1867
+    FUNCTION_SIGNATURE: 
+    HUNK_START_LINE_CONTENT: do_multiple_digest_algorithms (void)
+    FIRST_CHANGED_LINE_NUMBER: 1868
+    FIRST_CHANGED_LINE_CONTENT: {
+    HUNK_LINES:
+    do_multiple_digest_algorithms (void)
+    {
+        SoupTestServer *server;
+        SoupURI *uri;
+
++static void
++on_request_read_for_missing_realm (SoupServer        *server,
++                                   SoupServerMessage *msg,
++                                   gpointer           user_data)
++{
++        SoupMessageHeaders *response_headers = soup_server_message_get_response_headers (msg);
++        soup_message_headers_replace (response_headers, "WWW-Authenticate", "Digest qop=\"auth\"");
++}
++
++static void
++do_missing_realm_test (void)
++{
++        SoupSession *session;
++        SoupMessage *msg;
++        SoupServer *server;
++        SoupAuthDomain *digest_auth_domain;
++        gint status;
++        GUri *uri;
++
++        server = soup_test_server_new (SOUP_TEST_SERVER_IN_THREAD);
++	soup_server_add_handler (server, NULL,
++				 server_callback, NULL, NULL);
++	uri = soup_test_server_get_uri (server, "http", NULL);
++
++	digest_auth_domain = soup_auth_domain_digest_new (
++		"realm", "auth-test",
++		"auth-callback", server_digest_auth_callback,
++		NULL);
++        soup_auth_domain_add_path (digest_auth_domain, "/");
++	soup_server_add_auth_domain (server, digest_auth_domain);
++        g_object_unref (digest_auth_domain);
++
++        g_signal_connect (server, "request-read",
++                          G_CALLBACK (on_request_read_for_missing_realm),
++                          NULL);
++
++        session = soup_test_session_new (NULL);
++        msg = soup_message_new_from_uri ("GET", uri);
++        g_signal_connect (msg, "authenticate",
++                          G_CALLBACK (on_digest_authenticate),
++                          NULL);
++
++        status = soup_test_session_send_message (session, msg);
++
++        g_assert_cmpint (status, ==, SOUP_STATUS_UNAUTHORIZED);
++	g_uri_unref (uri);
++	soup_test_server_quit_unref (server);
++}
++
+int
+main (int argc, char **argv)
+{
+@@ -1899,8 +1900,8 @@ main (int argc, char **argv)
+    g_test_add_func ("/auth/auth-uri", do_auth_uri_test);
+        g_test_add_func ("/auth/cancel-request-on-authenticate", do_cancel_request_on_authenticate);
+        g_test_add_func ("/auth/multiple-algorithms", do_multiple_digest_algorithms);
+-        g_test_add_func ("/auth/missing-realm", do_missing_realm_test);
++        g_test_add_func ("/auth/missing-realm", do_missing_realm_test);
+
+    ret = g_test_run ();"}
+{"question": "What check was added to the function 'parse_one_cookie' in file 'libsoup/cookies/soup-cookie.c' to limit the size of cookie name and value?", "answer": "Added check: if (strlen (cookie->name) + strlen (cookie->value) > 4096) { soup_cookie_free (cookie); return NULL; }"}
+{"question": "What new test function was added to 'tests/cookies-test.c' to test parsing of cookies with name and value exceeding maximum size?", "answer": "New function: do_cookies_parsing_name_value_max_size()"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what string is used to represent a value longer than the maximum allowed size?", "answer": "String: too_long_value"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', how is the cookie parsed with a value longer than the maximum allowed size?", "answer": "Parsed with: cookie = soup_cookie_parse(too_long_value, NULL)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what assertion checks that the parsed cookie is null when the value exceeds the maximum allowed size?", "answer": "Assertion: g_assert_null (cookie)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', how is the cookie parsed with a value just below the maximum allowed size?", "answer": "Parsed with: cookie = soup_cookie_parse(longest_alone_value, NULL)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what assertion checks that the parsed cookie is non-null when the value is just below the maximum allowed size?", "answer": "Assertion: g_assert_nonnull (cookie)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', how is the cookie parsed with a name and a value exceeding the maximum allowed size?", "answer": "Parsed with: cookie = soup_cookie_parse(name_and_value, NULL)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what assertion checks that the parsed cookie is null when the name and value exceed the maximum allowed size?", "answer": "Assertion: g_assert_null (cookie)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', how is the cookie parsed with a name and a value just below the maximum allowed size?", "answer": "Parsed with: cookie = soup_cookie_parse(name_and_value, NULL)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what assertion checks that the parsed cookie is non-null when the name and value are just below the maximum allowed size?", "answer": "Assertion: g_assert_nonnull (cookie)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', how is the cookie parsed with a value exceeding the maximum allowed size and no name?", "answer": "Parsed with: cookie = soup_cookie_parse(name_and_value, NULL)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what assertion checks that the parsed cookie is non-null when the value exceeds the maximum allowed size and there is no name?", "answer": "Assertion: g_assert_nonnull (cookie)"}
+{"question": "In the new test function 'do_cookies_parsing_name_value_max_size' in 'tests/cookies-test.c', what new test case is added to the main function?", "answer": "Test case: g_test_add_func (/cookies/parsing/name-value-max-size, do_cookies_parsing_name_value_max_size)"}
+{"question": "In the function 'do_host_big_header' of the file 'tests/misc-test.c', what was added after the assertion 'g_assert_error (error, G_IO_ERROR, G_IO_ERROR_CONNECTION_CLOSED);'?", "answer": "g_clear_error (&error);"}
+{"question": "In the function 'redirect_handler' of the file 'tests/misc-test.c', what was added after the assertion 'g_assert_cmpstr (g_bytes_get_data (body, NULL), ==, "index");'?", "answer": "g_bytes_unref (body);"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous condition checking for the validity of the constructed connection URI?", "answer": "Previous Condition: if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', how was the URI string constructed before the change?", "answer": "Previous URI String Construction: uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path)"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous handling of the 'io->in_callback' variable in the early returns?", "answer": "No previous handling of 'io->in_callback' in early returns"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous check for the 'uri' variable after parsing?", "answer": "Previous Check: if (uri == NULL) return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous decrement of 'io->in_callback' in the early returns?", "answer": "No previous decrement of 'io->in_callback' in early returns"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous comment regarding the construction of the URI string?", "answer": "No previous comment regarding the construction of the URI string"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous handling of the 'path' variable in the URI string construction?", "answer": "Previous Handling: msg_io->path"}
+{"question": "In the function 'on_frame_recv_callback' of the file 'libsoup/server/http2/soup-server-message-io-http2.c', what was the previous decrement of 'io->in_callback' when the URI is invalid?", "answer": "No previous decrement of 'io->in_callback' when the URI is invalid"}
+{"question": "The hunk header in Patch is @@ -771,9 +771,13 @@ on_frame_recv_callback (nghttp2_session *session, for the latest version, with filename = 'libsoup/server/http2/soup-server-message-io-http2.c'. Were there any changes to the function signature or function name that affect the hunk header?", "answer": "No, the function signature and function name remain unchanged. The hunk header for the older version should be the same: @@ -771,9 +771,13 @@ on_frame_recv_callback (nghttp2_session *session,"}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);
+
+Were some lines added in this hunk content by any commit? What was the previous version of the hunk content?", "answer": "Yes, the line:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+
+was added in the function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c.
+So, in the older version the hunk content should be:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);"}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);
+
+Was there any change to the way uri_string is constructed? What was the previous version of the hunk content?", "answer": "Yes, the construction of uri_string was changed. In the older version, the hunk content was:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);"}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+Were some lines added in this hunk content by any commit? What was the previous version of the hunk content?", "answer": "Yes, the lines:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+were added in the function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c.
+So, in the older version the hunk content should be:
+
+                if (uri == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;"}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+Were some lines added in this hunk content by any commit? What was the previous version of the hunk content?", "answer": "Yes, the lines:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+were added in the function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c.
+So, in the older version the hunk content should be:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;"}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+How many lines were added above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "3 Lines:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);
+
+were added above line 771 in the file libsoup/server/http2/soup-server-message-io-http2.c.
+So line number for 'if (msg_io->authority == NULL) {' should be 774 in the patch for older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+How many lines were added above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "1 Line:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);
+
+was added above line 775 in the file libsoup/server/http2/soup-server-message-io-http2.c.
+So line number for 'if (uri == NULL) {' should be 776 in the patch for older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);
+
+How many lines were added above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "1 Line:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+was added above line 772 in the file libsoup/server/http2/soup-server-message-io-http2.c.
+So line number for 'uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);' should be 775 in the patch for older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+What was the purpose of adding these lines in the commit?", "answer": "These lines were added to handle cases where the authority is NULL, ensuring that the callback failure is handled properly and the `io->in_callback` counter is decremented to avoid incorrect state."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+What was the purpose of adding these lines in the commit?", "answer": "These lines were added to handle cases where the URI is invalid (NULL), ensuring that the callback failure is handled properly and the `io->in_callback` counter is decremented to avoid incorrect state."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);
+
+What was the purpose of changing the construction of uri_string in the commit?", "answer": "The construction of uri_string was changed to handle cases where the path is NULL by substituting it with an empty string, ensuring that the URI construction does not fail due to a missing path component."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+
+What was the purpose of adding these lines in the commit?", "answer": "These lines were added to check for NULL values in scheme, authority, and path, returning an error if any of these components are missing, to prevent further processing with an incomplete URI."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+
+How many lines were added above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added above this line in the commit. The line numbers remain the same in the older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);
+
+How many lines were added above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "3 Lines:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+were added above line 772 in the file libsoup/server/http2/soup-server-message-io-http2.c.
+So line number for 'uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);' should be 775 in the patch for older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+How many lines were added below this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "1 Line:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);
+
+was added below line 774 in the file libsoup/server/http2/soup-server-message-io-http2.c.
+So line number for 'if (msg_io->authority == NULL) {' should be 773 in the patch for older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+How many lines were added below this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added below this line in the commit. The line numbers remain the same in the older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);
+
+How many lines were added below this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "1 Line:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+was added below line 775 in the file libsoup/server/http2/soup-server-message-io-http2.c.
+So line number for 'uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);' should be 774 in the patch for older version."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+
+What was the impact of adding these lines in the commit?", "answer": "Adding these lines ensures that the function returns an error if any of the URI components (scheme, authority, or path) are NULL, preventing further processing with an incomplete URI and avoiding potential crashes or incorrect behavior."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (msg_io->authority == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+What was the impact of adding these lines in the commit?", "answer": "Adding these lines ensures that the function handles cases where the authority is NULL by decrementing the `io->in_callback` counter and returning an error, preventing incorrect state and potential crashes."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                if (uri == NULL) {
+                        io->in_callback--;
+                        return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+                }
+
+What was the impact of adding these lines in the commit?", "answer": "Adding these lines ensures that the function handles cases where the URI is invalid (NULL) by decrementing the `io->in_callback` counter and returning an error, preventing incorrect state and potential crashes."}
+{"question": "The hunk content for function on_frame_recv_callback in file libsoup/server/http2/soup-server-message-io-http2.c from the latest patch is:
+
+                uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path == NULL ? "" : msg_io->path);
+
+What was the impact of changing the construction of uri_string in the commit?", "answer": "Changing the construction of uri_string to handle cases where the path is NULL by substituting it with an empty string ensures that the URI construction does not fail due to a missing path component, allowing the function to proceed correctly."}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: libsoup/server/http2/soup-server-message-io-http2.c
+    HUNK_START_LINE_NUMBER: 771
+    FUNCTION_SIGNATURE: on_frame_recv_callback (nghttp2_session *session,
+    HUNK_START_LINE_CONTENT:     char *uri_string;
+    FIRST_CHANGED_LINE_NUMBER: 773
+    FIRST_CHANGED_LINE_CONTENT: 		if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+    HUNK_LINES:
+        char *uri_string;
+        GUri *uri;
+
+		if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+			return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+        uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);
+        uri = g_uri_parse (uri_string, SOUP_HTTP_URI_FLAGS, NULL);
+        g_free (uri_string);
+		if (uri == NULL)
+			return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+        soup_server_message_set_uri (msg_io->msg, uri);
+        g_uri_unref (uri);", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: libsoup/server/http2/soup-server-message-io-http2.c
+    HUNK_START_LINE_NUMBER: 771
+    FUNCTION_SIGNATURE: on_frame_recv_callback (nghttp2_session *session,
+    HUNK_START_LINE_CONTENT:     char *uri_string;
+    FIRST_CHANGED_LINE_NUMBER: 773
+    FIRST_CHANGED_LINE_CONTENT: 		if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+    HUNK_LINES:
+        char *uri_string;
+        GUri *uri;
+
+		if (msg_io->scheme == NULL || msg_io->authority == NULL || msg_io->path == NULL)
+			return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+        uri_string = g_strdup_printf ("%s://%s%s", msg_io->scheme, msg_io->authority, msg_io->path);
+        uri = g_uri_parse (uri_string, SOUP_HTTP_URI_FLAGS, NULL);
+        g_free (uri_string);
+		if (uri == NULL)
+			return NGHTTP2_ERR_TEMPORAL_CALLBACK_FAILURE;
+        soup_server_message_set_uri (msg_io->msg, uri);
+        g_uri_unref (uri);"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: tests/http2-test.c
+    HUNK_START_LINE_NUMBER: 1341
+    FUNCTION_SIGNATURE: do_connection_closed_test (Test *test, gconstpointer data)
+    HUNK_START_LINE_CONTENT: }
+    FIRST_CHANGED_LINE_NUMBER: 1343
+    FIRST_CHANGED_LINE_CONTENT: +static void
+    HUNK_LINES:
+    }
+
++static void
++do_broken_pseudo_header_test (Test *test, gconstpointer data)
++{
++	char *path;
++	SoupMessage *msg;
++	GUri *uri;
++	GBytes *body = NULL;
++	GError *error = NULL;
++
++	uri = g_uri_parse_relative (base_uri, "/ag", SOUP_HTTP_URI_FLAGS, NULL);
++
++	/* an ugly cheat to construct a broken URI, which can be sent from other libs */
++	path = (char *) g_uri_get_path (uri);
++	path[1] = '%';
++
++	msg = soup_message_new_from_uri (SOUP_METHOD_GET, uri);
++	body = soup_test_session_async_send (test->session, msg, NULL, &error);
++	g_assert_error (error, G_IO_ERROR, G_IO_ERROR_PARTIAL_INPUT);
++	g_assert_null (body);
++	g_clear_error (&error);
++	g_object_unref (msg);
++	g_uri_unref (uri);
++}", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: tests/http2-test.c
+    HUNK_START_LINE_NUMBER: 1341
+    FUNCTION_SIGNATURE: do_connection_closed_test (Test *test, gconstpointer data)
+    HUNK_START_LINE_CONTENT: }
+    FIRST_CHANGED_LINE_NUMBER: 1343
+    FIRST_CHANGED_LINE_CONTENT: +static void
+    HUNK_LINES:
+    }
+
++static void
++do_broken_pseudo_header_test (Test *test, gconstpointer data)
++{
++	char *path;
++	SoupMessage *msg;
++	GUri *uri;
++	GBytes *body = NULL;
++	GError *error = NULL;
++
++	uri = g_uri_parse_relative (base_uri, "/ag", SOUP_HTTP_URI_FLAGS, NULL);
++
++	/* an ugly cheat to construct a broken URI, which can be sent from other libs */
++	path = (char *) g_uri_get_path (uri);
++	path[1] = '%';
++
++	msg = soup_message_new_from_uri (SOUP_METHOD_GET, uri);
++	body = soup_test_session_async_send (test->session, msg, NULL, &error);
++	g_assert_error (error, G_IO_ERROR, G_IO_ERROR_PARTIAL_INPUT);
++	g_assert_null (body);
++	g_clear_error (&error);
++	g_object_unref (msg);
++	g_uri_unref (uri);
++}"}
+{"question": "ORIGINAL_HUNK_DATA:
+    FILE_PATH: tests/http2-test.c
+    HUNK_START_LINE_NUMBER: 1662
+    FUNCTION_SIGNATURE: main (int argc, char **argv)
+    HUNK_START_LINE_CONTENT:         g_test_add ("/http2/connection-closed", Test, NULL,
+    FIRST_CHANGED_LINE_NUMBER: 1664
+    FIRST_CHANGED_LINE_CONTENT: +        g_test_add ("/http2/broken-pseudo-header", Test, NULL,
+    HUNK_LINES:
+        g_test_add ("/http2/connection-closed", Test, NULL,
+                setup_session,
+                do_connection_closed_test,
+                teardown_session);
++        g_test_add ("/http2/broken-pseudo-header", Test, NULL,
++                setup_session,
++                do_broken_pseudo_header_test,
++                teardown_session);
+
+        ret = g_test_run ();", "answer": "BACKPORTED_HUNK_DATA:
+    FILE_PATH: tests/http2-test.c
+    HUNK_START_LINE_NUMBER: 1662
+    FUNCTION_SIGNATURE: main (int argc, char **argv)
+    HUNK_START_LINE_CONTENT:         g_test_add ("/http2/connection-closed", Test, NULL,
+    FIRST_CHANGED_LINE_NUMBER: 1664
+    FIRST_CHANGED_LINE_CONTENT: +        g_test_add ("/http2/broken-pseudo-header", Test, NULL,
+    HUNK_LINES:
+        g_test_add ("/http2/connection-closed", Test, NULL,
+                setup_session,
+                do_connection_closed_test,
+                teardown_session);
++        g_test_add ("/http2/broken-pseudo-header", Test, NULL,
++                setup_session,
++                do_broken_pseudo_header_test,
++                teardown_session);
+
+        ret = g_test_run ();"}
+{"question": "What lines were added to handle cookies with empty name and value in the function 'parse_one_cookie' of file 'libsoup/cookies/soup-cookie.c'?", "answer": "Lines added: if (!*cookie->name && !*cookie->value) { soup_cookie_free (cookie); return NULL; }"}
+{"question": "In the function 'parse_one_cookie' of file 'libsoup/cookies/soup-cookie.c', what condition was added to free the cookie if both name and value are empty?", "answer": "Condition added: if (!*cookie->name && !*cookie->value)"}
+{"question": "What action is taken in the function 'parse_one_cookie' of file 'libsoup/cookies/soup-cookie.c' if the cookie's name and value are both empty?", "answer": "Action: soup_cookie_free (cookie); return NULL;"}
+{"question": "In the file 'libsoup/soup-message-headers.c', the line 'g_array_remove_index (array, i);' is followed by 'i--;'. Was there a change in the line after this addition?", "answer": "Line added: i--;"}
+{"question": "What new test was added to the 'tests/meson.build' file?", "answer": "New test added: {'name': 'server-mem-limit'}"}
+{"question": "What new file was created in the 'tests/' directory?", "answer": "New file created: server-mem-limit-test.c"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'server_setup_nohandler' function?", "answer": "Function sets up server without handler"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'server_add_handler' function?", "answer": "Function adds handler to server"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'server_setup' function?", "answer": "Function sets up server"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'server_teardown' function?", "answer": "Function tears down server"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'server_file_callback' function?", "answer": "Function handles server file request"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'do_ranges_overlaps_test' function?", "answer": "Function performs ranges overlap test"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'main' function?", "answer": "Function initializes tests and runs them"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'test_init' and 'test_cleanup' functions?", "answer": "Functions initialize and clean up tests"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'setrlimit' call?", "answer": "Call limits memory usage"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_test_add' call?", "answer": "Call adds test case"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_test_run' call?", "answer": "Call runs tests"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_test_session_new' call?", "answer": "Call creates new test session"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'soup_test_session_send_message' call?", "answer": "Call sends message in test session"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'soup_test_assert_message_status' call?", "answer": "Call asserts message status"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'soup_test_session_abort_unref' call?", "answer": "Call aborts and unrefs test session"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_uri_parse_relative' call?", "answer": "Call parses relative URI"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'soup_message_new_from_uri' call?", "answer": "Call creates new message from URI"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'soup_message_headers_append' call?", "answer": "Call appends header to message"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_string_sized_new' call?", "answer": "Call creates new sized string"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_string_append' calls?", "answer": "Calls append strings"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_assert_cmpint' call?", "answer": "Call compares integers"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_assert_cmpstr' calls?", "answer": "Calls compare strings"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_clear_pointer' calls?", "answer": "Calls clear pointers"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_free' calls?", "answer": "Calls free memory"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_slist_prepend' call?", "answer": "Call prepends to list"}
+{"question": "In the new file 'tests/server-mem-limit-test.c', what is the purpose of the 'g_slist_free_full' call?", "answer": "Call frees list fully"}
+{"question": "What new file was added to the tests directory?", "answer": "File: tests/ws-test-helper.c"}
+{"question": "In the file tests/meson.build, what new executable was added?", "answer": "Executable: ws-test-helper"}
+{"question": "In the file tests/meson.build, what new dependency was added for the ws-test-helper executable?", "answer": "Dependency: unix_socket_dep"}
+{"question": "In the file tests/meson.build, what condition was added for building the ws-test-helper executable?", "answer": "Condition: if unix_socket_dep.found()"}
+{"question": "In the file tests/ws-test-helper.c, what is the purpose of the new file?", "answer": "Purpose: To make it somewhat easy to test SoupWebsocketConnection with valgrind."}
+{"question": "In the file tests/ws-test-helper.c, what is the first step mentioned in the usage instructions?", "answer": "Step: Start a ws server in a separate terminal using docker run command."}
+{"question": "In the file tests/ws-test-helper.c, what is the second step mentioned in the usage instructions?", "answer": "Step: Build this helper using meson setup and meson compile commands."}
+{"question": "In the file tests/ws-test-helper.c, what is the third step mentioned in the usage instructions?", "answer": "Step: Run this helper with valgrind in another terminal."}
+{"question": "In the file tests/ws-test-helper.c, what is the fourth step mentioned in the usage instructions?", "answer": "Step: Drop packets to and from the ws server using iptables commands."}
+{"question": "In the file tests/ws-test-helper.c, what is the fifth step mentioned in the usage instructions?", "answer": "Step: Wait a few seconds and observe the output."}
+{"question": "In the file tests/ws-test-helper.c, what header files are included at the beginning?", "answer": "Headers: glib-unix.h, libsoup/soup.h"}
+{"question": "In the file tests/ws-test-helper.c, what structure is defined?", "answer": "Structure: AppState"}
+{"question": "In the file tests/ws-test-helper.c, what function handles the SIGINT signal?", "answer": "Function: on_sigint"}
+{"question": "In the file tests/ws-test-helper.c, what function handles errors in the websocket connection?", "answer": "Function: on_error"}
+{"question": "In the file tests/ws-test-helper.c, what function handles the closure of the websocket connection?", "answer": "Function: on_closed"}
+{"question": "In the file tests/ws-test-helper.c, what function handles the asynchronous connection to the websocket server?", "answer": "Function: on_connect"}
+{"question": "In the file tests/ws-test-helper.c, what is the URI used for connecting to the websocket server?", "answer": "URI: ws://127.0.0.1:9001"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to create a new SoupSession?", "answer": "Method: soup_session_new"}
+{"question": "In the file tests/ws-test-helper.c, what feature is added to the SoupSession?", "answer": "Feature: SOUP_TYPE_WEBSOCKET_EXTENSION_MANAGER"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to create a new SoupMessage?", "answer": "Method: soup_message_new"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to initiate the asynchronous connection to the websocket server?", "answer": "Method: soup_session_websocket_connect_async"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to set the keepalive interval for the websocket connection?", "answer": "Method: soup_websocket_connection_set_keepalive_interval"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to set the keepalive pong timeout for the websocket connection?", "answer": "Method: soup_websocket_connection_set_keepalive_pong_timeout"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to close the websocket connection?", "answer": "Method: soup_websocket_connection_close"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to reference the thread default main context?", "answer": "Method: g_main_context_ref_thread_default"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to create a new UNIX signal source?", "answer": "Method: g_unix_signal_source_new"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to set the callback for the UNIX signal source?", "answer": "Method: g_source_set_callback"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to attach the UNIX signal source to the main context?", "answer": "Method: g_source_attach"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to iterate the main context?", "answer": "Method: g_main_context_iteration"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to destroy the UNIX signal source?", "answer": "Method: g_source_destroy"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to unreference the UNIX signal source?", "answer": "Method: g_source_unref"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to unreference the main context?", "answer": "Method: g_main_context_unref"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to disconnect signal handlers from the websocket connection?", "answer": "Method: g_signal_handlers_disconnect_by_func"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to unreference the websocket connection?", "answer": "Method: g_object_unref"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to unreference the SoupMessage?", "answer": "Method: g_object_unref"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to unreference the SoupSession?", "answer": "Method: g_object_unref"}
+{"question": "In the file tests/ws-test-helper.c, what method is used to free the AppState structure?", "answer": "Method: g_free"}
+{"question": "What new macro definition was added in the file 'libsoup/cookies/soup-cookie.c'?", "answer": "MAX_AGE_CAP_IN_SECONDS 31536000  // 1 year"}
+{"question": "In the function 'parse_one_cookie' of file 'libsoup/cookies/soup-cookie.c', what condition was added to limit the 'max_age' value?", "answer": "if (max_age > MAX_AGE_CAP_IN_SECONDS) max_age = MAX_AGE_CAP_IN_SECONDS;"}
+{"question": "What new test function 'do_cookies_parsing_max_age_int32_overflow' was added in the file 'tests/cookies-test.c'?", "answer": "static void do_cookies_parsing_max_age_int32_overflow (void)"}
+{"question": "What new test function 'do_cookies_parsing_max_age_long_overflow' was added in the file 'tests/cookies-test.c'?", "answer": "static void do_cookies_parsing_max_age_long_overflow (void)"}
+{"question": "In the file 'tests/cookies-test.c', what new test cases were added to the 'main' function?", "answer": "g_test_add_func (/cookies/parsing/max-age-int32-overflow, do_cookies_parsing_max_age_int32_overflow); g_test_add_func (/cookies/parsing/max-age-long-overflow, do_cookies_parsing_max_age_long_overflow);"}
+{"question": "In the file 'meson.build', what was the previous fallback condition for the 'gio-unix' dependency?", "answer": "Previous fallback condition: ['glib', 'libgiounix_dep']"}
+{"question": "In the file 'meson.build', what is the new fallback condition for the 'gio-unix' dependency on Windows?", "answer": "New fallback condition: []"}
+{"question": "In the function 'skip_insignificant_space' of the file 'libsoup/content-sniffer/soup-content-sniffer.c', what was the condition in the if statement at line 644 before the fix?", "answer": "Condition: *pos > resource_length"}
+{"question": "In the function 'sniff_feed_or_html' of the file 'libsoup/content-sniffer/soup-content-sniffer.c', what was the condition in the if statement at line 707 before the fix?", "answer": "Condition: pos > resource_length"}
+{"question": "The hunk header in Patch is @@ -669,7 +669,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer) for the latest version, with filename = 'libsoup/content-sniffer/soup-content-sniffer.c'. Was the function signature changed? If yes, give the old function signature and the old hunk header.", "answer": "No, the function signature was not changed. The old function signature remains the same: 'sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer)'. The old hunk header is also the same: @@ -669,7 +669,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer)"}
+{"question": "The hunk content for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (pos >= resource_length)
+        goto text_html;
+
+Was there any change in this hunk content by any commit? What was the previous version of the hunk content?", "answer": "Yes, the condition in the hunk content was changed. In the older version, the hunk content should be:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed above line 641 in the file libsoup/content-sniffer/soup-content-sniffer.c. So, the line number for 'if (*pos >= resource_length)' should remain 641 in the patch for the older version."}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. How many lines were added or removed below this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed below line 641 in the file libsoup/content-sniffer/soup-content-sniffer.c. So, the line number for 'if (*pos >= resource_length)' should remain 641 in the patch for the older version."}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. How many lines were added or removed above this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed above line 704 in the file libsoup/content-sniffer/soup-content-sniffer.c. So, the line number for 'if ((pos + 1) > resource_length)' should remain 704 in the patch for the older version."}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. How many lines were added or removed below this line in the commit, and what should be the line number for this line in the patch for older version?", "answer": "No lines were added or removed below line 704 in the file libsoup/content-sniffer/soup-content-sniffer.c. So, the line number for 'if ((pos + 1) > resource_length)' should remain 704 in the patch for the older version."}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+What was the previous version of this hunk content?", "answer": "Yes, the condition in the hunk content was changed. In the older version, the hunk content should be:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+What was the previous version of this hunk content?", "answer": "Yes, the condition in the hunk content was changed. In the older version, the hunk content should be:
+
+    if (*pos > resource_length)
+        return TRUE;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the variable datatype or name in this hunk content by any commit? If yes, give the old variable datatype or name and the old hunk content.", "answer": "No, the variable datatype or name was not changed. The old hunk content remains the same:
+
+    if (*pos >= resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the variable datatype or name in this hunk content by any commit? If yes, give the old variable datatype or name and the old hunk content.", "answer": "No, the variable datatype or name was not changed. The old hunk content remains the same:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the function body structure in this hunk content by any commit? If yes, give the old function body structure and the old hunk content.", "answer": "No, the function body structure was not changed. The old hunk content remains the same:
+
+    if (*pos >= resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the function body structure in this hunk content by any commit? If yes, give the old function body structure and the old hunk content.", "answer": "No, the function body structure was not changed. The old hunk content remains the same:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the logic of the function in this hunk content by any commit? If yes, give the old logic and the old hunk content.", "answer": "Yes, the logic of the function was changed. In the older version, the hunk content should be:
+
+    if (*pos > resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the logic of the function in this hunk content by any commit? If yes, give the old logic and the old hunk content.", "answer": "Yes, the logic of the function was changed. In the older version, the hunk content should be:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the comparison operator in this hunk content by any commit? If yes, give the old comparison operator and the old hunk content.", "answer": "Yes, the comparison operator was changed. In the older version, the hunk content should be:
+
+    if (*pos > resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the comparison operator in this hunk content by any commit? If yes, give the old comparison operator and the old hunk content.", "answer": "Yes, the comparison operator was changed. In the older version, the hunk content should be:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the variable 'pos' in this hunk content by any commit? If yes, give the old variable usage and the old hunk content.", "answer": "No, the variable 'pos' was not changed in its usage. The old hunk content remains the same:
+
+    if (*pos >= resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the variable 'pos' in this hunk content by any commit? If yes, give the old variable usage and the old hunk content.", "answer": "No, the variable 'pos' was not changed in its usage. The old hunk content remains the same:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the variable 'resource_length' in this hunk content by any commit? If yes, give the old variable usage and the old hunk content.", "answer": "No, the variable 'resource_length' was not changed in its usage. The old hunk content remains the same:
+
+    if (*pos >= resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the variable 'resource_length' in this hunk content by any commit? If yes, give the old variable usage and the old hunk content.", "answer": "No, the variable 'resource_length' was not changed in its usage. The old hunk content remains the same:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the function call in this hunk content by any commit? If yes, give the old function call and the old hunk content.", "answer": "No, the function call was not changed. The old hunk content remains the same:
+
+    if (*pos >= resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the function call in this hunk content by any commit? If yes, give the old function call and the old hunk content.", "answer": "No, the function call was not changed. The old hunk content remains the same:
+
+    if (pos > resource_length)
+        goto text_html;"}
+{"question": "The hunk for function skip_insignificant_space in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if (*pos >= resource_length)
+        return TRUE;
+
+Indicates that line number for 'if (*pos >= resource_length)' is 641. Was there any change in the loop structure in this hunk content by any commit? If yes, give the old loop structure and the old hunk content.", "answer": "No, the loop structure was not changed. The old hunk content remains the same:
+
+    if (*pos >= resource_length)
+        return TRUE;"}
+{"question": "The hunk for function sniff_feed_or_html in file libsoup/content-sniffer/soup-content-sniffer.c from the latest patch is:
+
+    if ((pos + 1) > resource_length)
+        goto text_html;
+
+Indicates that line number for 'if ((pos + 1) > resource_length)' is 704. Was there any change in the loop structure in this hunk content by any commit? If yes, give the old loop structure and the old hunk content.", "answer": "No, the loop structure was not changed. The old hunk content remains the same:
+
+    if (pos > resource_length)
+        goto text_html;"}

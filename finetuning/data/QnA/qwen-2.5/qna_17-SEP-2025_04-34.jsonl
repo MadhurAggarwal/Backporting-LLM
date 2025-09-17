@@ -1,0 +1,9 @@
+{"question": "In the function 'parse_one_cookie' of the file 'libsoup/cookies/soup-cookie.c', what was the previous handling of the 'expires' field before the fix?", "answer": "Previous handling: soup_cookie_set_expires (cookie, parse_date (&p));"}
+{"question": "In the function 'parse_one_cookie' of the file 'libsoup/cookies/soup-cookie.c', what was added to handle the 'expires' field correctly?", "answer": "Added: g_clear_pointer (&cookie->expires, g_date_time_unref);"}
+{"question": "What changes were made to the NEWS file regarding the version 3.6.1 release?", "answer": "Added fixes and improvements for version 3.6.1 including bug fixes for soup_uri_copy, soup_uri_decode_data_uri, SoupContentSniffer, and headers parsing."}
+{"question": "In the NEWS file, what specific fix was made to soup_uri_copy() in version 3.6.1?", "answer": "Fixed reading port as a long instead of an int."}
+{"question": "In the NEWS file, what specific fix was made to soup_uri_decode_data_uri() in version 3.6.1?", "answer": "Fixed possible NULL deref and assertion on URLs with a path starting with //."}
+{"question": "In the NEWS file, what specific fix was made to SoupContentSniffer in version 3.6.1?", "answer": "Fixed possible overflow."}
+{"question": "In the NEWS file, what improvement was made to headers parsing in version 3.6.1?", "answer": "Made more robust against invalid input when parsing params."}
+{"question": "In the NEWS file, what fix was made to websocket functionality in version 3.6.1?", "answer": "Fixed possibility of being stuck in a read loop."}
+{"question": "What change was made to the version number in meson.build?", "answer": "Version changed from 3.6.0 to 3.6.1."}

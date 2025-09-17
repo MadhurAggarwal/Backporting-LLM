@@ -1,0 +1,8 @@
+{"question": "In the function 'parse_one_cookie' of file 'libsoup/cookies/soup-cookie.c', what was the previous handling of the 'expires' field before the fix?", "answer": "Previous handling: soup_cookie_set_expires (cookie, parse_date (&p));"}
+{"question": "In the function 'parse_one_cookie' of file 'libsoup/cookies/soup-cookie.c', what was added to clear the 'expires' pointer before setting the new value?", "answer": "g_clear_pointer (&cookie->expires, g_date_time_unref);"}
+{"question": "What was the version number in the meson.build file before the commit 8b46a93bc1cbadb22dcdbb6844d9616723376535?", "answer": "Version: 3.6.0"}
+{"question": "What changes were made to the NEWS file regarding the soup_uri_copy() function in commit 8b46a93bc1cbadb22dcdbb6844d9616723376535?", "answer": "Fixed reading port as long instead of int"}
+{"question": "What changes were made to the NEWS file regarding the soup_uri_decode_data_uri() function in commit 8b46a93bc1cbadb22dcdbb6844d9616723376535?", "answer": "Fixed possible NULL deref and assertion on URLs with path starting with //"}
+{"question": "What changes were made to the NEWS file regarding the SoupContentSniffer in commit 8b46a93bc1cbadb22dcdbb6844d9616723376535?", "answer": "Fixed possible overflow"}
+{"question": "What changes were made to the NEWS file regarding the headers parsing in commit 8b46a93bc1cbadb22dcdbb6844d9616723376535?", "answer": "Be more robust against invalid input when parsing params"}
+{"question": "What changes were made to the NEWS file regarding the websocket functionality in commit 8b46a93bc1cbadb22dcdbb6844d9616723376535?", "answer": "Fixed possibility of being stuck in a read loop"}

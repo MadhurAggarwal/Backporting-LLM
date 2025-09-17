@@ -1,6 +1,7 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
+import json
 
 class AzureLLMHandler:
     def __init__(self):
@@ -47,17 +48,62 @@ class AzureLLMHandler:
             
         except Exception as e:
             print(f"Error calling Azure OpenAI: {e}")
-            return None
+            return ""
+
+    def call_azure_openai_for_qna_schema(self, system_prompt, user_prompt, temperature=0.7, max_tokens=4000, top_p=0.9):
+        try:
+            response = self.client.chat.completions.create(
+                model=self.azure_deployment,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens,
+                top_p=top_p,
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "qa_array",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "qa_pairs": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "question": {"type": "string"},
+                                            "answer": {"type": "string"}
+                                        },
+                                        "required": ["question", "answer"]
+                                    }
+                                }
+                            },
+                            "required": ["qa_pairs"]
+                        }
+                    }
+                }
+            )
+            raw_content = response.choices[0].message.content
+            parsed = json.loads(raw_content)
+            output = parsed.get("qa_pairs", [])
+        except Exception as e:
+            print(f"Error calling Azure OpenAI with JSON schema: {e}")
+            output = []
+
+        return output
 
 def main():
     system_prompt = """
     You are an expert software developer. Answer the questions about DSA.
+    DO NOT Give explanations, only code.
     """
 
-    user_prompt = "Give code for quick sort in python."
+    user_prompt = "question-1: Give code for quick sort in python. question-2: give code for binary search in python"
 
     azure_handler = AzureLLMHandler()
-    response = azure_handler.call_azure_openai(system_prompt, user_prompt)
+    response = azure_handler.call_azure_openai_for_qna_schema(system_prompt, user_prompt)
     print(response)
 
 if __name__ == "__main__":
