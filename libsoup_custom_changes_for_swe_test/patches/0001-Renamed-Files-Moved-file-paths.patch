@@ -1,0 +1,72 @@
+From 4db1a79d99f57005ddb8db43c53b6bbb2db1805d Mon Sep 17 00:00:00 2001
+From: Ubuntu
+ <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date: Wed, 17 Sep 2025 14:46:27 +0000
+Subject: [PATCH 1/6] Renamed Files, Moved file paths
+
+---
+ libsoup/{http1 => http-1/input-stream}/soup-body-input-stream.c   | 0
+ libsoup/{http1 => http-1/input-stream}/soup-body-input-stream.h   | 0
+ .../soup-body-output-stream.c => http-1/sb-output-stream.c}       | 0
+ .../soup-body-output-stream.h => http-1/sb-output-stream.h}       | 0
+ libsoup/{http1 => http-1}/soup-client-message-io-http1.c          | 0
+ libsoup/{http1 => http-1}/soup-client-message-io-http1.h          | 0
+ libsoup/{http1 => http-1}/soup-message-io-data.c                  | 0
+ libsoup/{http1 => http-1}/soup-message-io-data.h                  | 0
+ libsoup/{http1 => http-1}/soup-message-io-source.c                | 0
+ libsoup/{http1 => http-1}/soup-message-io-source.h                | 0
+ 10 files changed, 0 insertions(+), 0 deletions(-)
+ rename libsoup/{http1 => http-1/input-stream}/soup-body-input-stream.c (100%)
+ rename libsoup/{http1 => http-1/input-stream}/soup-body-input-stream.h (100%)
+ rename libsoup/{http1/soup-body-output-stream.c => http-1/sb-output-stream.c} (100%)
+ rename libsoup/{http1/soup-body-output-stream.h => http-1/sb-output-stream.h} (100%)
+ rename libsoup/{http1 => http-1}/soup-client-message-io-http1.c (100%)
+ rename libsoup/{http1 => http-1}/soup-client-message-io-http1.h (100%)
+ rename libsoup/{http1 => http-1}/soup-message-io-data.c (100%)
+ rename libsoup/{http1 => http-1}/soup-message-io-data.h (100%)
+ rename libsoup/{http1 => http-1}/soup-message-io-source.c (100%)
+ rename libsoup/{http1 => http-1}/soup-message-io-source.h (100%)
+
+diff --git a/libsoup/http1/soup-body-input-stream.c b/libsoup/http-1/input-stream/soup-body-input-stream.c
+similarity index 100%
+rename from libsoup/http1/soup-body-input-stream.c
+rename to libsoup/http-1/input-stream/soup-body-input-stream.c
+diff --git a/libsoup/http1/soup-body-input-stream.h b/libsoup/http-1/input-stream/soup-body-input-stream.h
+similarity index 100%
+rename from libsoup/http1/soup-body-input-stream.h
+rename to libsoup/http-1/input-stream/soup-body-input-stream.h
+diff --git a/libsoup/http1/soup-body-output-stream.c b/libsoup/http-1/sb-output-stream.c
+similarity index 100%
+rename from libsoup/http1/soup-body-output-stream.c
+rename to libsoup/http-1/sb-output-stream.c
+diff --git a/libsoup/http1/soup-body-output-stream.h b/libsoup/http-1/sb-output-stream.h
+similarity index 100%
+rename from libsoup/http1/soup-body-output-stream.h
+rename to libsoup/http-1/sb-output-stream.h
+diff --git a/libsoup/http1/soup-client-message-io-http1.c b/libsoup/http-1/soup-client-message-io-http1.c
+similarity index 100%
+rename from libsoup/http1/soup-client-message-io-http1.c
+rename to libsoup/http-1/soup-client-message-io-http1.c
+diff --git a/libsoup/http1/soup-client-message-io-http1.h b/libsoup/http-1/soup-client-message-io-http1.h
+similarity index 100%
+rename from libsoup/http1/soup-client-message-io-http1.h
+rename to libsoup/http-1/soup-client-message-io-http1.h
+diff --git a/libsoup/http1/soup-message-io-data.c b/libsoup/http-1/soup-message-io-data.c
+similarity index 100%
+rename from libsoup/http1/soup-message-io-data.c
+rename to libsoup/http-1/soup-message-io-data.c
+diff --git a/libsoup/http1/soup-message-io-data.h b/libsoup/http-1/soup-message-io-data.h
+similarity index 100%
+rename from libsoup/http1/soup-message-io-data.h
+rename to libsoup/http-1/soup-message-io-data.h
+diff --git a/libsoup/http1/soup-message-io-source.c b/libsoup/http-1/soup-message-io-source.c
+similarity index 100%
+rename from libsoup/http1/soup-message-io-source.c
+rename to libsoup/http-1/soup-message-io-source.c
+diff --git a/libsoup/http1/soup-message-io-source.h b/libsoup/http-1/soup-message-io-source.h
+similarity index 100%
+rename from libsoup/http1/soup-message-io-source.h
+rename to libsoup/http-1/soup-message-io-source.h
+-- 
+2.43.0
+

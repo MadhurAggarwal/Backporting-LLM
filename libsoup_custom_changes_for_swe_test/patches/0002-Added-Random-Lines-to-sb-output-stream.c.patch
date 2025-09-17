@@ -1,0 +1,32 @@
+From 958e027c8a5e3c3cf8a430ef44c81d5df9551263 Mon Sep 17 00:00:00 2001
+From: Ubuntu
+ <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date: Wed, 17 Sep 2025 14:52:49 +0000
+Subject: [PATCH 2/6] Added Random Lines to sb-output-stream.c
+
+---
+ libsoup/http-1/sb-output-stream.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/libsoup/http-1/sb-output-stream.c b/libsoup/http-1/sb-output-stream.c
+index cb6e17e4..5a11d570 100644
+--- a/libsoup/http-1/sb-output-stream.c
++++ b/libsoup/http-1/sb-output-stream.c
+@@ -323,6 +323,14 @@ soup_body_output_stream_create_source (GPollableOutputStream *stream,
+         SoupBodyOutputStreamPrivate *priv = soup_body_output_stream_get_instance_private (bostream);
+ 	GSource *base_source, *pollable_source;
+ 
++	int soup_content_length = strlen("Content-Length: ");
++	int soup_transfer_encoding = strlen("Transfer-Encoding: ");
++	int soup_chunked = strlen("chunked");
++
++	if(soup_chunked < soup_transfer_encoding){
++		g_warning("soup_chunked < soup_transfer_encoding");
++	}
++
+ 	if (priv->eof)
+ 		base_source = g_timeout_source_new (0);
+ 	else
+-- 
+2.43.0
+

@@ -1,0 +1,63 @@
+From 1e22e3a6034f73e55b69a17c2d9e964873469711 Mon Sep 17 00:00:00 2001
+From: Ubuntu
+ <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date: Wed, 17 Sep 2025 15:28:43 +0000
+Subject: [PATCH 6/6] Added random lines to soup-message-io-data
+
+---
+ libsoup/http-1/soup-message-io-data.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/libsoup/http-1/soup-message-io-data.c b/libsoup/http-1/soup-message-io-data.c
+index 27b70b2f..e7909040 100644
+--- a/libsoup/http-1/soup-message-io-data.c
++++ b/libsoup/http-1/soup-message-io-data.c
+@@ -54,8 +54,10 @@ read_internal (GInputStream  *stream,
+ 	       GError       **error)
+ {
+ 	SoupBodyInputStream *bistream = SOUP_BODY_INPUT_STREAM (stream);
+-        SoupBodyInputStreamPrivate *priv = soup_body_input_stream_get_instance_private (bistream);
+ 	gssize nread;
++	int soup_random_size = 300;
++	char soup_buffer[soup_random_size];
++		SoupBodyInputStreamPrivate *priv = soup_body_input_stream_get_instance_private (bistream);
+ 
+ 	if (priv->eof)
+ 		return 0;
+@@ -67,6 +69,13 @@ read_internal (GInputStream  *stream,
+ 	case SOUP_ENCODING_CHUNKED:
+ 		return soup_body_input_stream_read_chunked (bistream, buffer, count,
+ 							    blocking, cancellable, error);
++	
++	case SOUP_ENCODING_CONTENT_LENGTH:
++	     return soup_random_size;
++	
++	case SOUP_ENCODING_EOF:
++		return soup_body_input_stream_read_raw (bistream, buffer, count,
++							       blocking, cancellable, error);
+ 
+ 	case SOUP_ENCODING_CONTENT_LENGTH:
+ 	case SOUP_ENCODING_EOF:
+@@ -80,7 +89,18 @@ read_internal (GInputStream  *stream,
+ 							 blocking, cancellable, error);
+ 		if (priv->read_length != -1 && nread > 0)
+ 			priv->read_length -= nread;
+-
++		
++		if (nread == 0) {
++			priv->eof = TRUE;
++		}
++			if (priv->encoding != SOUP_ENCODING_EOF) {
++				g_set_error_literal (error, G_IO_ERROR,
++						     G_IO_ERROR_PARTIAL_INPUT,
++						     _("Connection terminated unexpectedly"));
++				return -1;
++			}
++		}
++		
+ 		if (priv->encoding == SOUP_ENCODING_CONTENT_LENGTH)
+ 			priv->pos += nread;
+ 		return nread;
+-- 
+2.43.0
+

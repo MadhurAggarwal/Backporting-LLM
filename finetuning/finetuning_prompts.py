@@ -103,6 +103,67 @@ COMMIT_DETAILS_USER_PROMPT = """
     <valid JSON array of objects with "question" and "answer" keys only.>
 """
 
+FOCUSED_COMMIT_DETAILS_SYSTEM_PROMPT = """
+    You are an expert software developer. 
+    Analyze Git Commit History of a Codebase and generate a high-quality question-answer dataset about the changes made in the commits.
+    Output a valid JSON array of objects with "question" and "answer" keys only.
+"""
+
+FOCUSED_COMMIT_DETAILS_USER_PROMPT = """
+    Commit Details for the {PACKAGE_NAME} Package are:
+    <commit_start>
+{COMMIT_DATA}
+    <end>
+
+    From the above commit, extract information about what all was changed in the codebase.
+    Specifically, changes to File Names, File Paths, Function Names, Function Signatures are highly important.
+
+    These question-answers will be used to map code lines from new version to old version.
+    
+    DO NOT include questions that have NO_CHANGE or SAME_AS_BEFORE as answer.
+    DO NOT ask about plain text changes like comments or readme files or Metadata like changelog email-id and changelog timestamps.
+    DO NOT ask insignificant questions like change of build number, version number etc. ONLY ask about changes that affect location of code lines in a file or function.
+    If no significant change was made in the commit, or change that does not change location of codelines, return an empty array [].
+
+    Example Format:
+    [
+        {{
+            "question": "Has the path of file c.py changed? What was the old path of the file with current 'a/b/c.py'?",
+            "answer": "Yes, path of file was changed.
+                       Old Path: a_old/c.py
+                       New Path: a/b/c.py"
+        }},
+        {{
+            "question": "Was the location of function 'snoop_content(*unknown, **kwargs) from file 'a/b/c.py' changed?",
+            "answer": "No, Function location is same, but Function Signature was modified.
+                        Latest Name: snoop_content(*unknown, **kwargs)
+                        Latest Location: a/b/c.py
+
+                        Old Name: snoop_data(*unknown)
+                        Old Data: a/b/c.py"
+        }},
+    ]
+
+    DO NOT ASK QUESTIONS LIKE What new file was added in the commit? Was a new file added in the commit?
+    It is too generic. It does NOT contain complete information about the changes to file name location or function signatures.
+    The question asked should contain enough context to be answerable WITHOUT looking at the commit.
+
+    Ensure that Question Answers contain full context about the change, that is file name, function name, etc.
+    Keep Answers VERY Brief and to the point.
+
+    Important:
+    REDUCE plain text & English in the answers as much as possible.
+    Include CODE-BLOCKS, with proper context about the location of code block.
+    Include BOTH OLD and NEW version codeblocks & their locations in the answers.
+
+    The goal of Training is to make sure MODEL CAN MAP THE POSITIONS & CONTENT of code lines from new version to old version.
+    Given the new version details, answer should give the old version details.
+
+    Generate 5-10 High-Quality question-answer pairs. 
+    Output
+    <valid JSON array of objects with "question" and "answer" keys only.>
+"""
+
 ############################################ HUNK CHANGES PROMPTS ############################################
 
 COMMIT_TO_HUNK_CHANGES_SYSTEM_PROMPT = """
@@ -437,11 +498,24 @@ class FinetuningPrompts:
                     ),
                 )
 
+            def get_focused_commit_details_prompts():
+                tpl = Template(FOCUSED_COMMIT_DETAILS_USER_PROMPT.replace("{PACKAGE_NAME}", "$PACKAGE_NAME")
+                                                                .replace("{COMMIT_DATA}", "$COMMIT_DATA")
+                        )
+                return (
+                    FOCUSED_COMMIT_DETAILS_SYSTEM_PROMPT,
+                    tpl.substitute(
+                        PACKAGE_NAME=package_name,
+                        COMMIT_DATA=commit_data
+                    ),
+                )
+
             prompt_map = {
                 "COMMIT_DETAILS"        : get_commit_details_prompts,
                 "COMMIT_TO_HUNK_CHANGES": get_commit_to_hunk_changes_prompts,
                 "PATCH_BACKPORT"        : get_patch_backport_prompts,
                 "JSON_ERROR"            : get_json_error_prompt,
+                "FOCUSED_COMMIT_DETAILS": get_focused_commit_details_prompts,
             }
 
             try:

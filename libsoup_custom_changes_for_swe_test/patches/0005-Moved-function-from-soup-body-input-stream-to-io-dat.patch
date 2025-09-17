@@ -1,0 +1,127 @@
+From 21579c61a9b3ce5ee1618acdfcb214ca249520bb Mon Sep 17 00:00:00 2001
+From: Ubuntu
+ <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date: Wed, 17 Sep 2025 15:08:03 +0000
+Subject: [PATCH 5/6] Moved function from soup-body-input-stream to io-data
+
+---
+ .../input-stream/soup-body-input-stream.c     | 45 ------------------
+ libsoup/http-1/soup-message-io-data.c         | 46 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 45 deletions(-)
+
+diff --git a/libsoup/http-1/input-stream/soup-body-input-stream.c b/libsoup/http-1/input-stream/soup-body-input-stream.c
+index 64d6f509..ef12157d 100644
+--- a/libsoup/http-1/input-stream/soup-body-input-stream.c
++++ b/libsoup/http-1/input-stream/soup-body-input-stream.c
+@@ -257,51 +257,6 @@ again:
+ 	goto again;
+ }
+ 
+-static gssize
+-read_internal (GInputStream  *stream,
+-	       void          *buffer,
+-	       gsize          count,
+-	       gboolean       blocking,
+-	       GCancellable  *cancellable,
+-	       GError       **error)
+-{
+-	SoupBodyInputStream *bistream = SOUP_BODY_INPUT_STREAM (stream);
+-        SoupBodyInputStreamPrivate *priv = soup_body_input_stream_get_instance_private (bistream);
+-	gssize nread;
+-
+-	if (priv->eof)
+-		return 0;
+-
+-	switch (priv->encoding) {
+-	case SOUP_ENCODING_NONE:
+-		return 0;
+-
+-	case SOUP_ENCODING_CHUNKED:
+-		return soup_body_input_stream_read_chunked (bistream, buffer, count,
+-							    blocking, cancellable, error);
+-
+-	case SOUP_ENCODING_CONTENT_LENGTH:
+-	case SOUP_ENCODING_EOF:
+-		if (priv->read_length != -1) {
+-			count = MIN (count, priv->read_length);
+-			if (count == 0)
+-				return 0;
+-		}
+-
+-		nread = soup_body_input_stream_read_raw (bistream, buffer, count,
+-							 blocking, cancellable, error);
+-		if (priv->read_length != -1 && nread > 0)
+-			priv->read_length -= nread;
+-
+-		if (priv->encoding == SOUP_ENCODING_CONTENT_LENGTH)
+-			priv->pos += nread;
+-		return nread;
+-
+-	default:
+-		g_return_val_if_reached (-1);
+-	}
+-}
+-
+ static gssize
+ soup_body_input_stream_skip (GInputStream *stream,
+ 			     gsize         count,
+diff --git a/libsoup/http-1/soup-message-io-data.c b/libsoup/http-1/soup-message-io-data.c
+index 9b5d076f..27b70b2f 100644
+--- a/libsoup/http-1/soup-message-io-data.c
++++ b/libsoup/http-1/soup-message-io-data.c
+@@ -44,6 +44,52 @@ soup_message_io_data_cleanup (SoupMessageIOData *io)
+ 	g_clear_error (&io->async_error);
+ }
+ 
++
++static gssize
++read_internal (GInputStream  *stream,
++	       void          *buffer,
++	       gsize          count,
++	       gboolean       blocking,
++	       GCancellable  *cancellable,
++	       GError       **error)
++{
++	SoupBodyInputStream *bistream = SOUP_BODY_INPUT_STREAM (stream);
++        SoupBodyInputStreamPrivate *priv = soup_body_input_stream_get_instance_private (bistream);
++	gssize nread;
++
++	if (priv->eof)
++		return 0;
++
++	switch (priv->encoding) {
++	case SOUP_ENCODING_NONE:
++		return 0;
++
++	case SOUP_ENCODING_CHUNKED:
++		return soup_body_input_stream_read_chunked (bistream, buffer, count,
++							    blocking, cancellable, error);
++
++	case SOUP_ENCODING_CONTENT_LENGTH:
++	case SOUP_ENCODING_EOF:
++		if (priv->read_length != -1) {
++			count = MIN (count, priv->read_length);
++			if (count == 0)
++				return 0;
++		}
++
++		nread = soup_body_input_stream_read_raw (bistream, buffer, count,
++							 blocking, cancellable, error);
++		if (priv->read_length != -1 && nread > 0)
++			priv->read_length -= nread;
++
++		if (priv->encoding == SOUP_ENCODING_CONTENT_LENGTH)
++			priv->pos += nread;
++		return nread;
++
++	default:
++		g_return_val_if_reached (-1);
++	}
++}
++
+ gboolean
+ soup_message_io_data_read_headers (SoupMessageIOData     *io,
+                                    SoupFilterInputStream *istream,
+-- 
+2.43.0
+

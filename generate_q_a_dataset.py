@@ -140,29 +140,30 @@ class Generate_Q_A_Dataset:
             self.logger.log_info(f"Commit data read from {commitfile}")
             self.logger.log_input("commit_data", commit_data, commit=commitfile)
 
-            prompt_type = "COMMIT_DETAILS"
+            # prompt_type = "COMMIT_DETAILS"
+            prompt_type = "FOCUSED_COMMIT_DETAILS"
             system_prompts, user_prompts = self.getPrompts(prompt_type, commit_data=commit_data, commitfile=commitfile)
             self.handle_llm_output(system_prompts, user_prompts, prompt_type, commitfile)
 
             self.logger.log_info("Processing patch hunks for the commit")
             print("Processing patch hunks for the commit...")
-            for cve in self.all_cves:
-                hunk = self.patch_data.get(cve, "")
-                self.logger.log_info(f"Processing CVE {cve} with its patch data")
-                self.logger.log_input("CVE_PATCH", hunk, commit=commitfile, cve_number=cve)
-                # print(patch)
-                # hunks = split_git_patch(patch)
-                # print(hunks)
-                # self.logger.log_info(f"Total hunks found for CVE {cve}: {len(hunks)}")
-                # for hunk in hunks:
-                prompt_types = ["COMMIT_TO_HUNK_CHANGES", "PATCH_BACKPORT"]
-                for p_type in prompt_types:
-                    print(p_type)
-                    system_prompts, user_prompts = self.getPrompts(p_type, commit_data=commit_data, commitfile=commitfile, cve_hunk=hunk, cve=cve)
-                    self.handle_llm_output(system_prompts, user_prompts, p_type, commitfile, cve)
+            # for cve in self.all_cves:
+            #     hunk = self.patch_data.get(cve, "")
+            #     self.logger.log_info(f"Processing CVE {cve} with its patch data")
+            #     self.logger.log_input("CVE_PATCH", hunk, commit=commitfile, cve_number=cve)
+            #     # print(patch)
+            #     # hunks = split_git_patch(patch)
+            #     # print(hunks)
+            #     # self.logger.log_info(f"Total hunks found for CVE {cve}: {len(hunks)}")
+            #     # for hunk in hunks:
+            #     prompt_types = ["COMMIT_TO_HUNK_CHANGES", "PATCH_BACKPORT"]
+            #     for p_type in prompt_types:
+            #         print(p_type)
+            #         system_prompts, user_prompts = self.getPrompts(p_type, commit_data=commit_data, commitfile=commitfile, cve_hunk=hunk, cve=cve)
+            #         self.handle_llm_output(system_prompts, user_prompts, p_type, commitfile, cve)
 
-                self.logger.log_info(f"Completed processing for CVE {cve}")
-                print(f"Completed processing for CVE {cve}")
+            #     self.logger.log_info(f"Completed processing for CVE {cve}")
+            #     print(f"Completed processing for CVE {cve}")
             
             self.logger.log_info(f"Completed processing for commit file: {commitfile}")
             print(f"Completed processing for commit file: {commitfile}")

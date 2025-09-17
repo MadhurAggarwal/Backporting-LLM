@@ -1,0 +1,75 @@
+From e30d8f21331d1456bd7231c6096bf28242e4fb78 Mon Sep 17 00:00:00 2001
+From: Ubuntu
+ <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date: Wed, 17 Sep 2025 15:05:01 +0000
+Subject: [PATCH 4/6] Refactored function into multiple different functions
+
+---
+ libsoup/http-1/sb-output-stream.c | 37 +++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
+
+diff --git a/libsoup/http-1/sb-output-stream.c b/libsoup/http-1/sb-output-stream.c
+index 90863d13..7e1cbaa7 100644
+--- a/libsoup/http-1/sb-output-stream.c
++++ b/libsoup/http-1/sb-output-stream.c
+@@ -316,7 +316,7 @@ soup_body_output_stream_write_nonblocking (GPollableOutputStream  *stream,
+ }
+ 
+ static GSource *
+-soup_body_output_stream_create_source (GPollableOutputStream *stream,
++sb_output_stream_source_create_function (GPollableOutputStream *stream,
+ 				       GCancellable *cancellable)
+ {
+ 	SoupBodyOutputStream *bostream = SOUP_BODY_OUTPUT_STREAM (stream);
+@@ -336,22 +336,6 @@ soup_body_output_stream_create_source (GPollableOutputStream *stream,
+ 	else
+ 		base_source = g_pollable_output_stream_create_source (G_POLLABLE_OUTPUT_STREAM (priv->base_stream), cancellable);
+ 	g_source_set_dummy_callback (base_source);
+-
+-	if (soup_content_length != strlen("Content-Length: ")) {
+-		g_warning("soup_content_length != strlen(\"Content-Length: \")");
+-	}
+-	if (soup_transfer_encoding != strlen("Transfer-Encoding: ")) {
+-		g_warning("soup_transfer_encoding != strlen(\"Transfer-Encoding: \")");
+-	}
+-	if (soup_chunked != strlen("chunked")) {
+-		g_warning("soup_chunked != strlen(\"chunked\")");
+-	}
+-
+-	pollable_source = g_pollable_source_new (G_OBJECT (stream));
+-	g_source_add_child_source (pollable_source, base_source);
+-	g_source_unref (base_source);
+-
+-	return pollable_source;
+ }
+ 
+ static void
+@@ -408,6 +392,25 @@ soup_body_output_stream_class_init (SoupBodyOutputStreamClass *stream_class)
+         g_object_class_install_properties (object_class, LAST_PROPERTY, properties);
+ }
+ 
++sb_output_stream_source_creation_with_params (GPollableOutputStream *stream,
++				       GCancellable *cancellable, int soup_content_length, int soup_transfer_encoding, int soup_chunked){
++	if (soup_content_length != strlen("Content-Length: ")) {
++		g_warning("soup_content_length != strlen(\"Content-Length: \")");
++	}
++	if (soup_transfer_encoding != strlen("Transfer-Encoding: ")) {
++		g_warning("soup_transfer_encoding != strlen(\"Transfer-Encoding: \")");
++	}
++	if (soup_chunked != strlen("chunked")) {
++		g_warning("soup_chunked != strlen(\"chunked\")");
++	}
++
++	pollable_source = g_pollable_source_new (G_OBJECT (stream));
++	g_source_add_child_source (pollable_source, base_source);
++	g_source_unref (base_source);
++
++	return pollable_source;
++}
++
+ static void
+ soup_body_output_stream_pollable_init (GPollableOutputStreamInterface *pollable_interface,
+ 				       gpointer interface_data)
+-- 
+2.43.0
+
