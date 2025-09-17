@@ -115,8 +115,19 @@ FOCUSED_COMMIT_DETAILS_USER_PROMPT = """
 {COMMIT_DATA}
     <end>
 
-    From the above commit, extract information about what all was changed in the codebase.
-    Specifically, changes to File Names, File Paths, Function Names, Function Signatures are highly important.
+    From the above commit, extract question-answer pairs about the following.
+    Extract ALL questions possible of the forms:
+    1. What was the old File Names, File Paths, of file 'x'?
+    2. What was the old Function Names, Function Signatures of a function 'y' in file 'x'?
+    3. What was old file path of a function 'a', which is now in file 'b'?
+    4. Has the function signature of function 'f' changed? If yes, what was the old function signature?
+    5. Has a function 'f' been renamed? If yes, what was the old function name?
+    6. Was function 'f' split into multiple functions? If yes, what were the old function names and signatures?
+    7. Was a function 'f' removed and instead functions 'g' and 'h' were added with partial lines from 'f'? 
+        If yes, what were the old function names and signatures, and what lines were taken from 'f' into 'g' and what lines were taken into 'h'?
+    8. Has a function 'f' been merged with function 'g' to form a new function 'h'?
+    9. Have the lines above a code-hunk <codelines> changed? If yes, what were the old lines? What are the new lines? 
+    10. Have the lines below a code-hunk <codelines> changed? If yes, what were the old lines? What are the new lines?
 
     These question-answers will be used to map code lines from new version to old version.
     
@@ -144,22 +155,15 @@ FOCUSED_COMMIT_DETAILS_USER_PROMPT = """
         }},
     ]
 
-    DO NOT ASK QUESTIONS LIKE What new file was added in the commit? Was a new file added in the commit?
-    It is too generic. It does NOT contain complete information about the changes to file name location or function signatures.
-    The question asked should contain enough context to be answerable WITHOUT looking at the commit.
-
-    Ensure that Question Answers contain full context about the change, that is file name, function name, etc.
+    Make Sure Questions are very specific - They should be answerable WITHOUT any context of the commit data.
     Keep Answers VERY Brief and to the point.
 
     Important:
     REDUCE plain text & English in the answers as much as possible.
-    Include CODE-BLOCKS, with proper context about the location of code block.
-    Include BOTH OLD and NEW version codeblocks & their locations in the answers.
+    Include CODE-BLOCKS, with Context = (Function Name, Function Signature And File Path)
+    Include BOTH OLD and NEW version codeblocks & their Context in the answers.
 
-    The goal of Training is to make sure MODEL CAN MAP THE POSITIONS & CONTENT of code lines from new version to old version.
-    Given the new version details, answer should give the old version details.
-
-    Generate 5-10 High-Quality question-answer pairs. 
+    Generate 10 High-Quality question-answer pairs. 
     Output
     <valid JSON array of objects with "question" and "answer" keys only.>
 """

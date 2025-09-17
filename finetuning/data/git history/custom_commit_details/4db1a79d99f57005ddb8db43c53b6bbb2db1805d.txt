@@ -1,0 +1,46 @@
+commit 4db1a79d99f57005ddb8db43c53b6bbb2db1805d
+Author: Ubuntu <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date:   Wed Sep 17 14:46:27 2025 +0000
+
+    Renamed Files, Moved file paths
+
+diff --git a/libsoup/http1/soup-body-input-stream.c b/libsoup/http-1/input-stream/soup-body-input-stream.c
+similarity index 100%
+rename from libsoup/http1/soup-body-input-stream.c
+rename to libsoup/http-1/input-stream/soup-body-input-stream.c
+diff --git a/libsoup/http1/soup-body-input-stream.h b/libsoup/http-1/input-stream/soup-body-input-stream.h
+similarity index 100%
+rename from libsoup/http1/soup-body-input-stream.h
+rename to libsoup/http-1/input-stream/soup-body-input-stream.h
+diff --git a/libsoup/http1/soup-body-output-stream.c b/libsoup/http-1/sb-output-stream.c
+similarity index 100%
+rename from libsoup/http1/soup-body-output-stream.c
+rename to libsoup/http-1/sb-output-stream.c
+diff --git a/libsoup/http1/soup-body-output-stream.h b/libsoup/http-1/sb-output-stream.h
+similarity index 100%
+rename from libsoup/http1/soup-body-output-stream.h
+rename to libsoup/http-1/sb-output-stream.h
+diff --git a/libsoup/http1/soup-client-message-io-http1.c b/libsoup/http-1/soup-client-message-io-http1.c
+similarity index 100%
+rename from libsoup/http1/soup-client-message-io-http1.c
+rename to libsoup/http-1/soup-client-message-io-http1.c
+diff --git a/libsoup/http1/soup-client-message-io-http1.h b/libsoup/http-1/soup-client-message-io-http1.h
+similarity index 100%
+rename from libsoup/http1/soup-client-message-io-http1.h
+rename to libsoup/http-1/soup-client-message-io-http1.h
+diff --git a/libsoup/http1/soup-message-io-data.c b/libsoup/http-1/soup-message-io-data.c
+similarity index 100%
+rename from libsoup/http1/soup-message-io-data.c
+rename to libsoup/http-1/soup-message-io-data.c
+diff --git a/libsoup/http1/soup-message-io-data.h b/libsoup/http-1/soup-message-io-data.h
+similarity index 100%
+rename from libsoup/http1/soup-message-io-data.h
+rename to libsoup/http-1/soup-message-io-data.h
+diff --git a/libsoup/http1/soup-message-io-source.c b/libsoup/http-1/soup-message-io-source.c
+similarity index 100%
+rename from libsoup/http1/soup-message-io-source.c
+rename to libsoup/http-1/soup-message-io-source.c
+diff --git a/libsoup/http1/soup-message-io-source.h b/libsoup/http-1/soup-message-io-source.h
+similarity index 100%
+rename from libsoup/http1/soup-message-io-source.h
+rename to libsoup/http-1/soup-message-io-source.h

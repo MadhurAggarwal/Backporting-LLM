@@ -1,0 +1,27 @@
+commit aabf5527e028a5a7f41a728e1b1667a906148172
+Author: Ubuntu <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date:   Wed Sep 17 14:56:05 2025 +0000
+
+    Added More Random Lines to sb-output-stream.c
+
+diff --git a/libsoup/http-1/sb-output-stream.c b/libsoup/http-1/sb-output-stream.c
+index 5a11d570..90863d13 100644
+--- a/libsoup/http-1/sb-output-stream.c
++++ b/libsoup/http-1/sb-output-stream.c
+@@ -337,6 +337,16 @@ soup_body_output_stream_create_source (GPollableOutputStream *stream,
+ 		base_source = g_pollable_output_stream_create_source (G_POLLABLE_OUTPUT_STREAM (priv->base_stream), cancellable);
+ 	g_source_set_dummy_callback (base_source);
+ 
++	if (soup_content_length != strlen("Content-Length: ")) {
++		g_warning("soup_content_length != strlen(\"Content-Length: \")");
++	}
++	if (soup_transfer_encoding != strlen("Transfer-Encoding: ")) {
++		g_warning("soup_transfer_encoding != strlen(\"Transfer-Encoding: \")");
++	}
++	if (soup_chunked != strlen("chunked")) {
++		g_warning("soup_chunked != strlen(\"chunked\")");
++	}
++
+ 	pollable_source = g_pollable_source_new (G_OBJECT (stream));
+ 	g_source_add_child_source (pollable_source, base_source);
+ 	g_source_unref (base_source);

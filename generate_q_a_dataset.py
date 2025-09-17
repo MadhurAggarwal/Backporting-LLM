@@ -2,7 +2,7 @@ import json
 from finetuning.finetuning_prompts import FinetuningPrompts
 from backporting_handler import BackportingHandler
 from logger_refactored import FinetuneLogger
-from finetuning.constants import COMMITS_DETAILS, FINETUNE_MODEL_NAME, QnA_DATA_DIR
+from finetuning.constants import COMMITS_DETAILS, FINETUNE_MODEL_NAME, QnA_DATA_DIR, CUSTOM_COMMIT_DETAILS_DIR, TRAINING_DATA_DIR, PACKAGE_NAME, PACKAGE_LANGUAGE
 from llm_handler import RunLLM
 from finetuning.azureLLM_handler import AzureLLMHandler
 import os
@@ -129,41 +129,44 @@ class Generate_Q_A_Dataset:
     
     def generate_dataset(self):
         self.fetch_cve_patches()
+        commit_dir = COMMITS_DETAILS              # full commit history since PACKAGE_VERSION
+        # commit_dir = CUSTOM_COMMIT_DETAILS_DIR      # custom commits, made on top of origin/master HEAD
 
-        for commitfile in os.listdir(COMMITS_DETAILS):
+        for commitfile in os.listdir(commit_dir):
             self.logger.log_info(f"\nProcessing commit file: {commitfile}")
 
-            filepath = os.path.join(COMMITS_DETAILS, commitfile)
+            filepath = os.path.join(commit_dir, commitfile)
             with open(filepath, 'r') as f:
                 commit_data = f.read()
             
             self.logger.log_info(f"Commit data read from {commitfile}")
             self.logger.log_input("commit_data", commit_data, commit=commitfile)
 
-            # prompt_type = "COMMIT_DETAILS"
-            prompt_type = "FOCUSED_COMMIT_DETAILS"
-            system_prompts, user_prompts = self.getPrompts(prompt_type, commit_data=commit_data, commitfile=commitfile)
-            self.handle_llm_output(system_prompts, user_prompts, prompt_type, commitfile)
+            prompt_types = ["COMMIT_DETAILS", "FOCUSED_COMMIT_DETAILS"]
+            # prompt_types = ["FOCUSED_COMMIT_DETAILS"]
+            for prompt_type in prompt_types:
+                system_prompts, user_prompts = self.getPrompts(prompt_type, commit_data=commit_data, commitfile=commitfile)
+                self.handle_llm_output(system_prompts, user_prompts, prompt_type, commitfile)
 
             self.logger.log_info("Processing patch hunks for the commit")
             print("Processing patch hunks for the commit...")
-            # for cve in self.all_cves:
-            #     hunk = self.patch_data.get(cve, "")
-            #     self.logger.log_info(f"Processing CVE {cve} with its patch data")
-            #     self.logger.log_input("CVE_PATCH", hunk, commit=commitfile, cve_number=cve)
-            #     # print(patch)
-            #     # hunks = split_git_patch(patch)
-            #     # print(hunks)
-            #     # self.logger.log_info(f"Total hunks found for CVE {cve}: {len(hunks)}")
-            #     # for hunk in hunks:
-            #     prompt_types = ["COMMIT_TO_HUNK_CHANGES", "PATCH_BACKPORT"]
-            #     for p_type in prompt_types:
-            #         print(p_type)
-            #         system_prompts, user_prompts = self.getPrompts(p_type, commit_data=commit_data, commitfile=commitfile, cve_hunk=hunk, cve=cve)
-            #         self.handle_llm_output(system_prompts, user_prompts, p_type, commitfile, cve)
+            for cve in self.all_cves:
+                hunk = self.patch_data.get(cve, "")
+                self.logger.log_info(f"Processing CVE {cve} with its patch data")
+                self.logger.log_input("CVE_PATCH", hunk, commit=commitfile, cve_number=cve)
+                # print(patch)
+                # hunks = split_git_patch(patch)
+                # print(hunks)
+                # self.logger.log_info(f"Total hunks found for CVE {cve}: {len(hunks)}")
+                # for hunk in hunks:
+                prompt_types = ["COMMIT_TO_HUNK_CHANGES", "PATCH_BACKPORT"]
+                for p_type in prompt_types:
+                    print(p_type)
+                    system_prompts, user_prompts = self.getPrompts(p_type, commit_data=commit_data, commitfile=commitfile, cve_hunk=hunk, cve=cve)
+                    self.handle_llm_output(system_prompts, user_prompts, p_type, commitfile, cve)
 
-            #     self.logger.log_info(f"Completed processing for CVE {cve}")
-            #     print(f"Completed processing for CVE {cve}")
+                self.logger.log_info(f"Completed processing for CVE {cve}")
+                print(f"Completed processing for CVE {cve}")
             
             self.logger.log_info(f"Completed processing for commit file: {commitfile}")
             print(f"Completed processing for commit file: {commitfile}")
@@ -196,6 +199,53 @@ class Generate_Q_A_Dataset:
 #             hunks.append(full_hunk.strip("\n"))
 
 #     return hunks
+
+def prepare_dataset_in_proper_format():
+    training_QnAs = [
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/gpt-4o/qna_17-SEP-2025_07-15.jsonl',
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/gpt-4o/qna_17-SEP-2025_14-08.jsonl',
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/gpt-4o/qna_17-SEP-2025_17-06.jsonl',
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/gpt-4o/qna_17-SEP-2025_17-06.jsonl',
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/gpt-4o/qna_17-SEP-2025_17-30.jsonl',
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/gpt-4o/qna_17-SEP-2025_17-31.jsonl',
+    ]
+
+    validation_QnAs = [
+        '/home/sumsharma/madhur/backporting-llm/training_llm/finetuning/data/QnA/manual-validation/validation_qna.jsonl',
+    ]
+
+    system_content = f"""
+        You are an expert software developer with deep knowlege of {PACKAGE_LANGUAGE} programming language.
+        You have in-depth knowlege about the commit history of {PACKAGE_NAME} package.
+        Answer questions about how the files, functions and lines of code were changed over range of commits.
+    """
+
+    all_chats = []
+    # for file_path in training_QnAs:
+    for file_path in validation_QnAs:
+        with open(file_path, "r", encoding="utf-8") as infile:
+            for line in infile:
+                if not line.strip():
+                    continue
+                qa = json.loads(line)
+                chat_format = {
+                    "messages": [
+                        {"role": "system", "content": system_content},
+                        {"role": "user", "content": qa["question"]},
+                        {"role": "assistant", "content": qa["answer"]}
+                    ]
+                }
+                all_chats.append(chat_format)
+
+    training_data_file = os.path.join(TRAINING_DATA_DIR, f"{FINETUNE_MODEL_NAME}_training_data.jsonl")
+    os.makedirs(TRAINING_DATA_DIR, exist_ok=True)
+
+    validation_training_data_file = os.path.join(TRAINING_DATA_DIR, f"{FINETUNE_MODEL_NAME}_validation_data.jsonl")
+
+    # with open(training_data_file, "w", encoding="utf-8") as outfile:
+    with open(validation_training_data_file, "w", encoding="utf-8") as outfile:
+        for chat in all_chats:
+            outfile.write(json.dumps(chat, ensure_ascii=False) + "\n")
 
 def main():
     generator = Generate_Q_A_Dataset()
@@ -261,5 +311,6 @@ GitLab
     #     print(hunk)
 
 if __name__ == "__main__":
-    main()
+    # main()
     # test_git_patch_split()
+    prepare_dataset_in_proper_format()

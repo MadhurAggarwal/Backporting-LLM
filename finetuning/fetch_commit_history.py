@@ -1,6 +1,6 @@
 import subprocess
 import os
-from constants import PACKAGE_REPO_WITH_GIT_HISTORY, PACKAGE_VERSION, COMMITS_LIST, COMMITS_DETAILS
+from constants import PACKAGE_REPO_WITH_GIT_HISTORY, PACKAGE_VERSION, COMMITS_LIST, COMMITS_DETAILS, ORIGIN_MASTER_HEAD, CUSTOM_COMMIT_DETAILS_DIR
 
 def run_git_command(repo_path, args):
     result = subprocess.run(
@@ -14,7 +14,7 @@ def run_git_command(repo_path, args):
         raise Exception(f"Git command failed: {result.stderr}")
     return result.stdout.strip()
 
-def get_commits_since_tag(repo_path, tag=PACKAGE_VERSION):
+def get_commits_since_id(repo_path, tag=PACKAGE_VERSION):
     commits = run_git_command(repo_path, ["log", f"{tag}..HEAD", "--pretty=format:%H"])
     return commits.splitlines()
 
@@ -22,9 +22,9 @@ def get_commit_details(repo_path, commit_id):
     details = run_git_command(repo_path, ["show", commit_id])
     return details
 
-def main():
+def fetch_entire_commit_history():
     repo_path = PACKAGE_REPO_WITH_GIT_HISTORY
-    commit_ids = get_commits_since_tag(repo_path, PACKAGE_VERSION)
+    commit_ids = get_commits_since_id(repo_path, PACKAGE_VERSION)
     print(f"Found {len(commit_ids)} commits since {PACKAGE_VERSION}")
 
     with open(COMMITS_LIST, "w") as f:
@@ -41,7 +41,19 @@ def main():
 
     print(f"✅ Commit details written to {COMMITS_DETAILS}")
 
-if __name__ == "__main__":
-    main()
+def fetch_custom_commit_history():
+    repo_path = PACKAGE_REPO_WITH_GIT_HISTORY
+    commit_ids = get_commits_since_id(repo_path, ORIGIN_MASTER_HEAD)
+    print(f"Found {len(commit_ids)} custom commits since {ORIGIN_MASTER_HEAD}")
 
-# HEAD: b3df7199959e8661d6cf9d65ffbfb94692982b3a
+    os.makedirs(CUSTOM_COMMIT_DETAILS_DIR, exist_ok=True)
+    for commit_id in commit_ids:
+        details = get_commit_details(repo_path, commit_id)
+        commit_file = os.path.join(CUSTOM_COMMIT_DETAILS_DIR, f"{commit_id}.txt")
+        with open(commit_file, "w", encoding="utf-8") as f:
+            f.write(details)
+    print(f"✅ Custom commit details written to {CUSTOM_COMMIT_DETAILS_DIR}")
+
+if __name__ == "__main__":
+    # fetch_entire_commit_history()     # fetch full history since PACKAGE_VERSION
+    fetch_custom_commit_history()       # fetch custom commits since ORIGIN/MASTER:HEAD
