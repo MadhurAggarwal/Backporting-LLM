@@ -51,27 +51,53 @@ COMMIT_DETAILS_USER_PROMPT = """
         {{
             "question": "Has the path of file c.py changed? What was the old path of the file 'a/b/c.py'?",
             "answer": "Yes, path of file was changed.
-                       Old Path: a/b_old/c.py"
+                       Old Path: a_old/c.py
+                       New Path: a/b/c.py"
         }},
-        {{  "question": "The linenumber 125 is 'foo = bar()' in function 'baz()' of the file 'a/b/c.py'.
+        {{  "question": "The linenumber 125 is 'foo = bar()' in function 'baz(str, *sniff)' of the file 'a/b/c.py'.
                          What was the previous function name to which this line belonged before refactoring?",
-            "answer": "The Line 'foo = bar()' was at linenumber 120, in Function qux of Signature qux(), in the file a/b/c.py"
+            "answer": "5 Lines were added above foo = bar() of function 'baz(str, *sniff)' in the file a/b/c.py.
+                        The lines added (in the commit), above line 125 were:
+                            x += 10
+                            if foo:
+                                foo += 1
+                            else:
+                                foo = 0
+                        Before the commit, The Line 'foo = bar()' was at linenumber 120, in Function baz of Signature baz(str, *sniff). in the file a/b/c.py"
         }},
         ...
         ]
     
-    Note that All questions asked are specific - they contain proper information about the variable / function / file etc.
-    Answers are brief and to the point, containing only the change, but they contain Proper Information about the change.
-    The question-answer pair will be used to train an LLM model, so make sure they contain full context about the change. 
-    Vague questions / answers are NOT allowed. I want the question-answer pairs to give proper context about the change.
+    Keep Answers to the point.
+    MAKE SURE:
+    Generate ATLEAST 10 question-answer pairs, upto a maximum of 25 pairs.
+
+    The question-answer pair will be used to train an LLM model, so make sure they contain full context about the change.
+    The goal of Training is to make sure MODEL CAN MAP THE POSITIONS & CONTENT of code lines from new version to old version. 
+    GENERATE DATASET ACCORDINGLY.
+    Questions like given new path or location, give the old path or location are very important.
+    Make sure questions are given new version -> answer the old version, NOT the other way round.
+
+    Vague questions / answers are NOT allowed.
     do NOT mention commit hash or author name or date in the questions or answers. Give proper description of the change, and its location instead.
 
     Do NOT generate generic questions that do not depend on the commit details or questions that have NO_CHANGE or SAME_AS_BEFORE as answer.
     In case of no significant changes in the commit, return an empty array [].
-    Generate atmost 30 question-answer pairs.
 
     ONLY OUTPUT valid JSON.
     DO NOT include any formatting tokens like ```json ... ```.
+
+    DO NOT ASK questions about plain text, like comments or readme files or Metadata like changelog email-id and changelog timestamps.
+
+    IMPORTANT:
+    MAKE SURE that changes to FILE PATHS, FILE NAMES, FUNCTION NAMES, are ALWAYS INCLUDED, since they are important for mapping code lines from new version to old version.
+    For the question-answers, focus less on english grammar / sentences, and more on CODE and CODE CONTEXT (location, filename, functionname, line numbers etc). The answers will train a code-search / code-map model from new version to old version.
+    
+    Focus more on name changes (like file paths, function names etc) and less on simple line number changes.
+    IF adding a linenumber change, try to include function-signature, file names to give proper context about the line number change.
+    
+    Give PROPER CODE-BLOCKS in the answers wherever possible, containing complete line content, and CONTEXT about the location of code block, instead of just plain text.
+    For the code-blocks, give both old and new version codeblocks, highlighting the difference.
 
     OUTPUT:
     <valid JSON array of objects with "question" and "answer" keys only.>
@@ -169,16 +195,27 @@ COMMIT_TO_HUNK_CHANGES_USER_PROMPT = """
 
     Ensure that the questions are VERY SPECIFIC - they contain proper information about the linenumber and content / variable / function / filename or path etc.
     The answers will be used to train a LLM model, so make sure they contain full context about the change. 
-    do NOT mention commit hash or author name or date in the questions or answers. Give proper description of the change, and its location instead.
-    Vague questions / answers are NOT allowed, I want the question-answer pairs to give proper context about the change.
 
-    Generate atmost 30 question-answer pairs.
+    The goal of Training is to make sure MODEL CAN MAP THE POSITIONS & CONTENT of code lines from new version to old version. GENERATE DATASET ACCORDINGLY.
+
+    do NOT mention commit hash or author name or date in the questions or answers. Give proper description of the change, and its location instead.
+    Vague questions / answers are NOT allowed.
+
     If the Commit did NOT affect the same file / lines of codes as the Patch Hunk,
     Return ONLY an empty array [].
 
     ONLY OUTPUT valid JSON.
     Make sure that any {{}} or quotes "" in the output JSON is properly escaped to not interfere with JSON formatting.
     DO NOT include any formatting tokens like ```json ... ```.
+    
+    MAKE SURE:
+    if the commit DOES affect the patch files, hunk and lines, generate ATLEAST 10 question-answer pairs, and maximum 20 pairs.
+
+    IMPORTANT:
+    The answers will train a backporting model to port Patch from new version to old version, help the model find out where the code lines are in older version and what content they have.
+    For the question-answers, focus less on english grammar / sentences, and more on CODE and CODE CONTEXT (location, filename, functionname etc). 
+    Try to give code-blocks in the answers wherever possible, with proper context about the location of code block.
+    For the code-blocks, try to give both old and new version codeblocks, highlighting the difference.
 
     OUTPUT:
     <valid JSON array of objects with "question" and "answer" keys only.>
@@ -300,15 +337,19 @@ PATCH_BACKPORT_USER_PROMPT = """
 
     Ensure that hunk lines do not change the logic of the patch hunk. Only change the lines that were modified by the commit.
     The question-answer pairs should be very specific, they will be used to train a LLM model, so make sure they contain full context about the change as asked.
+
+    The goal of Training is to make sure MODEL CAN MAP THE POSITIONS & CONTENT of code lines from new version to old version. GENERATE DATASET ACCORDINGLY.
+
     Vague questions / answers are NOT allowed. I want the question-answer pairs to give proper context about the change.
     
     If the commit did NOT affect the same file / lines of codes as the Patch Hunk, return ONLY an empty array [].
+    DO NOT return anything if the ORIGINAL_HUNK_DATA and the BACKPORTED_HUNK_DATA are EXACTLY same. if there is atleast one difference, only then return the question-answer pair for that hunk.
 
     ONLY OUTPUT valid JSON.
     DO NOT include any formatting tokens like ```json ... ```.
 
     Output
-    <valid JSON array of objects with "question" and "answer" keys only, for EACH hunk in the Patch.>
+    <valid JSON array of objects with "question" and "answer" keys only, for EACH hunk in the Patch with changes between ORIGINAL AND BACKPORTED data.>
 """
 
 ############################################ JSON ERROR PROMPT ############################################

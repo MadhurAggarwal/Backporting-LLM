@@ -10,7 +10,8 @@ PATCH_TEST_FILE            = "/home/sumsharma/madhur/backporting-llm/training_ll
 # LLM_PATH                = "/mnt/codellama/CodeLlama-13b-Instruct-hf"
 LLM_PATH = "/llm_mount/Qwen2.5-Coder-32B-Instruct"
 FINETUNED_LLM_WEIGHTS = "/home/sumsharma/madhur/backporting-llm/training_llm/finetuned_weights"
-FINETUNE_MODEL_NAME = "Qwen2.5"
+# FINETUNE_MODEL_NAME = "Qwen2.5"
+FINETUNE_MODEL_NAME = "gpt-4o"
 # FINETUNED_LLM_WEIGHTS   = "/home/sumsharma/madhur/codellama-setup/finetune-2/test-output"
 
 OUTPUT_RESULT_PATH = "/home/sumsharma/madhur/backporting-llm/training_llm/test-environment/test-result.json"
