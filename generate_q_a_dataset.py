@@ -1,19 +1,24 @@
-from logger_refactored import Logger
+import json
 from finetuning.finetuning_prompts import FinetuningPrompts
 from backporting_handler import BackportingHandler
-from finetuning.constants import COMMITS_DETAILS
-from finetuning.logger import FinetuneLogger
-from finetuning.constants import MODEL_NAME, QnA_DATA_FILE
+from logger_refactored import FinetuneLogger
+from finetuning.constants import COMMITS_DETAILS, FINETUNE_MODEL_NAME, QnA_DATA_DIR
+from llm_handler import RunLLM
 import os
 import re
+from datetime import datetime
 
 class Generate_Q_A_Dataset:
     def __init__(self):
         self.prompts = FinetuningPrompts()
         self.logger  = FinetuneLogger()
+        self.llm     = RunLLM()
 
         print("Starting Q&A Dataset Generation Process")
         self.logger.log_info("Starting Q&A Dataset Generation Process")
+
+        timestamp = datetime.now().strftime("%d-%b-%Y_%H-%M").upper()
+        self.QnA_file = os.path.join(QnA_DATA_DIR, f"qna_{timestamp}.jsonl")
 
     def fetch_cve_patches(self):
         self.logger.log_info("Fetching CVE List and Corresponding Patches")
@@ -33,28 +38,22 @@ class Generate_Q_A_Dataset:
         self.logger.log_info(f"{statement}...")
         print(statement + "...")
 
-        if MODEL_NAME.startswith("gpt-"):
+        if FINETUNE_MODEL_NAME.startswith("gpt-"):
             pass 
         else:
-            pass
+            # temperature=0.0, top_p=1.0, top_k=0
+            output = self.llm.generate_base_output_with_separate_prompts(system_prompt, user_prompt, max_new_tokens=8000, temperature = 0.1)
 
         print(f"Q&A pairs for {prompt_type} generated from LLM")
         self.logger.log_info(f"Q&A pairs for {prompt_type} generated from LLM")
         self.logger.log_generated_output(prompt_type, output, commit=commitfile, cve_number=cve)
 
-        output = """
-        [
-        {  "question": "This is a test question.", 
-            "answer": "This is a test answer."
-        }
-        ]
-        """ 
         return output
 
     def getPrompts(self, prompt_type, commit_data, commitfile, cve=None, cve_hunk=None):
         self.logger.log_info(f"Generating prompts for {prompt_type}")
 
-        system_prompt, user_prompt = self.prompts.getPrompts(prompt_type, PATCH_HUNK=cve_hunk, COMMIT_DATA=commit_data)
+        system_prompt, user_prompt = self.prompts.getPrompts(prompt_type, patch_hunk=cve_hunk, commit_data=commit_data)
 
         self.logger.log_info(f"Prompts generated for {prompt_type}")
         self.logger.log_prompt(f"{prompt_type}_system", system_prompt, commit=commitfile, cve_number=cve)
@@ -62,16 +61,52 @@ class Generate_Q_A_Dataset:
         return system_prompt, user_prompt
 
     def store_qna_pairs(self, qna_pairs, prompt_type):
-        self.logger.log_info(f"Storing Q&A pairs for {prompt_type}...")
-        for qna in eval(qna_pairs):
+        self.logger.log_info(f"Converting Q&A pairs to JSON lines format and appending to {self.QnA_file}")
+        try:
+            data = json.loads(qna_pairs)
+        except json.JSONDecodeError as e:
+            print(qna_pairs)
+            self.logger.log_info(f"❌ ERROR: Failed to parse Q&A pairs from LLM output.: {e}")
+            print("❌ ERROR: Failed to parse Q&A pairs from LLM output.")
+            raise e
+        
+        self.logger.log_info("Q&A pairs converted to JSON format")
+        for qna in data:
             question = qna.get("question", "").strip()
             answer = qna.get("answer", "").strip()
-            with open(QnA_DATA_FILE, "a") as qna_file:
+            with open(self.QnA_file, "a") as qna_file:
                 qna_file.write(f'{{"question": "{question}", "answer": "{answer}"}}\n')
         
-        print(f"Q&A pairs for {prompt_type} appended to {QnA_DATA_FILE}")
-        self.logger.log_info(f"Q&A pairs for {prompt_type} appended to {QnA_DATA_FILE}")
+        print(f"Q&A pairs for {prompt_type} appended to {self.QnA_file}")
+        self.logger.log_info(f"✅ Q&A pairs for {prompt_type} appended to {self.QnA_file}")
 
+    def handle_llm_output(self, system_prompt, user_prompt, prompt_type, commitfile, cve=None, retry_count=0):
+        try:
+            output = self.generate_from_llm(system_prompt, user_prompt, prompt_type, commitfile, cve)
+            self.store_qna_pairs(output, prompt_type)
+        except Exception as e:
+            # append json error prompt to the output and retry
+            retry_count += 1
+            if retry_count > 2:
+                self.logger.log_info(f"❌ ERROR: Failed to generate valid Q&A pairs after multiple attempts for {prompt_type}. Skipping...")
+                print(f"❌ ERROR: Failed to generate valid Q&A pairs after multiple attempts for {prompt_type}. Skipping...")
+                return retry_count
+            
+            self.logger.log_info("Retrying with JSON error correction prompt")
+            print("Retrying with JSON error correction prompt...")
+            if retry_count == 1:
+                self.logger.log_info(f"First retry attempt for {prompt_type} due to error: {e}")
+                json_error_prompt = self.prompts.getPrompts("JSON_ERROR", error=str(e))
+                system_prompt += json_error_prompt
+                self.handle_llm_output(system_prompt, user_prompt, prompt_type, commitfile, cve, retry_count)
+            else:
+                self.logger.log_info(f"Second retry attempt for {prompt_type} due to error: {e}")
+                json_error_prompt = self.prompts.getPrompts("JSON_ERROR", error=str(e))
+                user_prompt += json_error_prompt
+                self.handle_llm_output(system_prompt, user_prompt, prompt_type, commitfile, cve, retry_count)
+        
+        return retry_count
+    
     def generate_dataset(self):
         self.fetch_cve_patches()
 
@@ -85,24 +120,27 @@ class Generate_Q_A_Dataset:
             self.logger.log_info(f"Commit data read from {commitfile}")
             self.logger.log_input("commit_data", commit_data, commit=commitfile)
 
-            system_prompts, user_prompts = self.getPrompts("COMMIT_DETAILS", commit_data=commit_data, commitfile=commitfile)
-            output = self.generate_from_llm(system_prompts, user_prompts, "COMMIT_DETAILS", commitfile)
-            self.store_qna_pairs(output)
+            prompt_type = "COMMIT_DETAILS"
+            system_prompts, user_prompts = self.getPrompts(prompt_type, commit_data=commit_data, commitfile=commitfile)
+            self.handle_llm_output(system_prompts, user_prompts, prompt_type, commitfile)
 
             self.logger.log_info("Processing patch hunks for the commit")
             print("Processing patch hunks for the commit...")
             for cve in self.all_cves:
-                patch = self.patch_data.get(cve, "")
-                hunks = split_git_patch(patch)
+                hunk = self.patch_data.get(cve, "")
+                self.logger.log_info(f"Processing CVE {cve} with its patch data")
+                self.logger.log_input("CVE_PATCH", hunk, commit=commitfile, cve_number=cve)
+                # print(patch)
+                # hunks = split_git_patch(patch)
+                # print(hunks)
+                # self.logger.log_info(f"Total hunks found for CVE {cve}: {len(hunks)}")
+                # for hunk in hunks:
+                prompt_types = ["COMMIT_TO_HUNK_CHANGES", "PATCH_BACKPORT"]
+                for p_type in prompt_types:
+                    print(p_type)
+                    system_prompts, user_prompts = self.getPrompts(p_type, commit_data=commit_data, commitfile=commitfile, cve_hunk=hunk, cve=cve)
+                    self.handle_llm_output(system_prompts, user_prompts, p_type, commitfile, cve)
 
-                self.logger.log_info(f"Total hunks found for CVE {cve}: {len(hunks)}")
-                for hunk in hunks:
-                    prompt_types = ["COMMIT_TO_HUNK_CHANGES", "PATCH_BACKPORT"]
-                    for prompt_type in prompt_types:
-                        system_prompts, user_prompts = self.getPrompts(prompt_type, commit_data=commit_data, commitfile=commitfile, cve_hunk=hunk, cve=cve)
-                        output = self.generate_from_llm(system_prompts, user_prompts, prompt_type, commitfile, cve)
-                        self.store_qna_pairs(output, prompt_type)
-                
                 self.logger.log_info(f"Completed processing for CVE {cve}")
                 print(f"Completed processing for CVE {cve}")
             
@@ -112,23 +150,31 @@ class Generate_Q_A_Dataset:
         self.logger.log_info("✅ Q&A Dataset Generation Process Completed")
         print("✅ Q&A Dataset Generation Process Completed")
 
-def split_git_patch(patch_text):
-    file_splits = re.split(r'(?=^diff --git )', patch_text, flags=re.MULTILINE)
-    hunks = []
+# def split_git_patch(patch_text):
+#     print("Called this split function")
+#     file_splits = re.split(r'(?=^diff --git )', patch_text, flags=re.MULTILINE)
+#     hunks = []
 
-    for file_block in file_splits:
-        if not file_block.strip():
-            continue
-        hunk_matches = list(re.finditer(r'(^@@.*?@@.*?(?=^@@|\Z))', file_block, flags=re.MULTILINE | re.DOTALL))
-        file_header_match = re.split(r'^@@', file_block, 1, flags=re.MULTILINE)
-        file_header = file_header_match[0] if len(file_header_match) > 1 else ""
+#     for file_block in file_splits:
+#         if not file_block.strip():
+#             continue
 
-        for match in hunk_matches:
-            hunk_content = match.group(0)
-            full_hunk = file_header + hunk_content
-            hunks.append(full_hunk.strip("\n"))
+#         # find all hunks inside this file block
+#         hunk_matches = re.finditer(
+#             r'(^@@.*?$(?:\n.*?)*?)(?=^@@|\Z)',
+#             file_block,
+#             flags=re.MULTILINE
+#         )
 
-    return hunks
+#         file_header_match = re.split(r'^@@', file_block, 1, flags=re.MULTILINE)
+#         file_header = file_header_match[0] if len(file_header_match) > 1 else ""
+
+#         for match in hunk_matches:
+#             hunk_content = match.group(1)
+#             full_hunk = file_header + hunk_content
+#             hunks.append(full_hunk.strip("\n"))
+
+#     return hunks
 
 def main():
     generator = Generate_Q_A_Dataset()
@@ -194,4 +240,5 @@ GitLab
         print(hunk)
 
 if __name__ == "__main__":
-    test_git_patch_split()
+    main()
+    # test_git_patch_split()

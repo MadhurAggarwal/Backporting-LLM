@@ -147,7 +147,7 @@ class RunLLM:
     #     output = self.base_pipeline(prompt, max_new_tokens=max_new_tokens, do_sample=True, return_full_text=False)[0]['generated_text']
     #     return output
 
-    def generate_base_output(self, prompt, max_new_tokens=512):
+    def generate_base_output(self, prompt, max_new_tokens=512, temperature=0.0, top_p=1.0, top_k=0):
         print('Calling Base LLM To Generate Output...')
 
         inputs = self.base_tokenizer(prompt, return_tensors="pt").to(self.base_model.device)
@@ -156,9 +156,9 @@ class RunLLM:
             **inputs,
             max_new_tokens=max_new_tokens,
             do_sample=False,
-            temperature=0.0,
-            top_p=1.0,
-            top_k=0,
+            temperature=temperature,
+            top_p=top_p,
+            top_k=top_k,
             repetition_penalty=1.05,
             pad_token_id=self.base_tokenizer.eos_token_id,
             eos_token_id=self.base_tokenizer.eos_token_id,
@@ -209,14 +209,14 @@ class RunLLM:
         #     print('TOKENS IS NONE, RETURNING GENERATED TEXT INSTEAD')
         #     return outputs[0]['generated_text']
 
-    def generate_base_output_with_separate_prompts(self, system_prompt, user_prompt, max_new_tokens=512):
+    def generate_base_output_with_separate_prompts(self, system_prompt, user_prompt, max_new_tokens=512, temperature=0.0, top_p=1.0, top_k=0):
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
         prompt = self.base_tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
-        return self.generate_base_output(prompt, max_new_tokens=max_new_tokens)
+        return self.generate_base_output(prompt, max_new_tokens=max_new_tokens, temperature=temperature, top_p=top_p, top_k=top_k)
 
     def finetuned_llm_pipeline(self):
         bnb_config = BitsAndBytesConfig(

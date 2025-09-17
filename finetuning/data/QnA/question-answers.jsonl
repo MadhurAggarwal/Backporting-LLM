@@ -1,1 +1,60 @@
-[]
+{"question": "In the function 'parse_one_cookie', how was the 'cookie->expires' variable handled before the fix?", "answer": "soup_cookie_set_expires (cookie, parse_date (&p))"}
+{"question": "What was added before setting the 'cookie->expires' variable in the function 'parse_one_cookie'?", "answer": "g_clear_pointer (&cookie->expires, g_date_time_unref)"}
+{"question": "What was the old version number in meson.build?", "answer": "3.6.0"}
+{"question": "What changes were made to soup_uri_copy() regarding the port variable?", "answer": "Read port as int instead of long"}
+{"question": "What issue did soup_uri_decode_data_uri() fix related to NULL dereference?", "answer": "Possible NULL deref"}
+{"question": "What issue did soup_uri_decode_data_uri() fix related to URLs with a path starting with //?", "answer": "Assertion failure"}
+{"question": "What improvement was made to headers parsing in relation to invalid input?", "answer": "Be more robust"}
+{"question": "What issue did websocket fix related to read loops?", "answer": "Possibility of being stuck"}
+{"question": "The hunk header in Patch is @@ -669,7 +669,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer) for the latest version. What should be the backported hunk header for the older version, before the commit changed the condition?", "answer": "The hunk header for the older version should be @@ -669,7 +669,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer) with the condition unchanged."}
+{"question": "The hunk content from the latest patch is:
+if (pos >= resource_length)
+goto text_html;
+What were the lines in the hunk content for the older version, before the commit changed the condition?", "answer": "The hunk content for the older version should be:
+if (pos > resource_length)
+goto text_html;"}
+{"question": "The hunk header in Patch is @@ -103,7 +103,9 @@ tests = [ for the latest version. What should be the backported hunk header for the older version, before the commit added the depends field?", "answer": "The hunk header for the older version should be @@ -103,7 +103,7 @@ tests = [ without the additional depends field."}
+{"question": "The hunk content from the latest patch is:
+{'name': 'sniffing',
+'depends': [test_resources],
+},
+What were the lines in the hunk content for the older version, before the commit added the depends field?", "answer": "The hunk content for the older version should be:
+{'name': 'sniffing'},"}
+{"question": "The hunk header in Patch is @@ -512,6 +512,11 @@ main (int argc, char **argv) for the latest version. What should be the backported hunk header for the older version, before the commit added the whitespace test?", "answer": "The hunk header for the older version should be @@ -512,6 +512,6 @@ main (int argc, char **argv) without the additional whitespace test."}
+{"question": "The hunk content from the latest patch is:
+g_test_add_data_func ("/sniffing/whitespace",
+"type/text_html/whitespace.html => text/html",
+do_sniffing_test);
+What were the lines in the hunk content for the older version, before the commit added the whitespace test?", "answer": "The hunk content for the older version should not include the lines:
+g_test_add_data_func ("/sniffing/whitespace",
+"type/text_html/whitespace.html => text/html",
+do_sniffing_test);"}
+{"question": "The hunk header in Patch is @@ -25,5 +25,6 @@ for the latest version. What should be the backported hunk header for the older version, before the commit added the whitespace.html file?", "answer": "The hunk header for the older version should be @@ -25,5 +25,5 @@ without the additional whitespace.html file."}
+{"question": "The hunk content from the latest patch is:
+<file>resources/whitespace.html</file>
+What were the lines in the hunk content for the older version, before the commit added the whitespace.html file?", "answer": "The hunk content for the older version should not include the line:
+<file>resources/whitespace.html</file>"}
+{"question": "The hunk header in Patch is @@ -638,8 +638,11 @@ sniff_text_or_binary (SoupContentSniffer *sniffer, GBytes *buffer) for the latest version. What should be the backported hunk header for the older version, before the commit changed the function signature?", "answer": "The hunk header for the older version should be @@ -638,8 +638,8 @@ sniff_text_or_binary (SoupContentSniffer *sniffer, GBytes *buffer) with the original function signature."}
+{"question": "The hunk content from the latest patch is:
+static gboolean
+skip_insignificant_space (const char *resource, gsize *pos, gsize resource_length)
+What were the lines in the hunk content for the older version, before the commit changed the function signature?", "answer": "The hunk content for the older version should be:
+static gboolean
+skip_insignificant_space (const char *resource, int *pos, int resource_length)"}
+{"question": "The hunk content from the latest patch is:
+if (*pos >= resource_length)
+return TRUE;
+What were the lines in the hunk content for the older version, before the commit added the check for *pos >= resource_length?", "answer": "The hunk content for the older version should not include the lines:
+if (*pos >= resource_length)
+return TRUE;"}
+{"question": "The hunk header in Patch is @@ -659,7 +662,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer) for the latest version. What should be the backported hunk header for the older version, before the commit changed the variable type?", "answer": "The hunk header for the older version should be @@ -659,7 +659,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer) with the original variable type."}
+{"question": "The hunk content from the latest patch is:
+gsize pos = 0;
+What were the lines in the hunk content for the older version, before the commit changed the variable type?", "answer": "The hunk content for the older version should be:
+int pos = 0;"}
+{"question": "The hunk content from the latest patch is:
+if (pos >= resource_length)
+goto text_html;
+What were the lines in the hunk content for the older version, before the commit removed the check for pos >= resource_length?", "answer": "The hunk content for the older version should not include the lines:
+if (pos >= resource_length)
+goto text_html;"}
