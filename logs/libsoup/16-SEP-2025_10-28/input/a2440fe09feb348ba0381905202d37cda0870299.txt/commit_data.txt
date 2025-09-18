@@ -1,0 +1,23 @@
+commit a2440fe09feb348ba0381905202d37cda0870299
+Author: Corentin Noël <corentin.noel@collabora.com>
+Date:   Fri Jan 24 11:53:08 2025 +0100
+
+    cookie-jar: Annotate changed arguments as nullable
+    
+    old and new cookie can be null here.
+
+diff --git a/libsoup/cookies/soup-cookie-jar.c b/libsoup/cookies/soup-cookie-jar.c
+index aa4ff203..fac53a5f 100644
+--- a/libsoup/cookies/soup-cookie-jar.c
++++ b/libsoup/cookies/soup-cookie-jar.c
+@@ -168,8 +168,8 @@ soup_cookie_jar_class_init (SoupCookieJarClass *jar_class)
+ 	/**
+ 	 * SoupCookieJar::changed:
+ 	 * @jar: the #SoupCookieJar
+-	 * @old_cookie: the old #SoupCookie value
+-	 * @new_cookie: the new #SoupCookie value
++	 * @old_cookie: (nullable): the old #SoupCookie value
++	 * @new_cookie: (nullable): the new #SoupCookie value
+ 	 *
+ 	 * Emitted when @jar changes.
+ 	 *

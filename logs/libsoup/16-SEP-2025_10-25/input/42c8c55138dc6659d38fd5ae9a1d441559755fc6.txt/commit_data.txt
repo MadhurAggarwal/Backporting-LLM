@@ -1,0 +1,20 @@
+commit 42c8c55138dc6659d38fd5ae9a1d441559755fc6
+Author: Martin Nordholts <martn@axis.com>
+Date:   Mon Jan 22 08:23:00 2024 +0100
+
+    Bump version to 3.5.0
+    
+    To prepare for the new 'keepalive pong timeout'-feature. See
+    https://gitlab.gnome.org/GNOME/libsoup/-/merge_requests/389.
+
+diff --git a/meson.build b/meson.build
+index d773200b..c7553ed2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('libsoup', 'c',
+-        version: '3.4.4',
++        version: '3.5.0',
+         meson_version : '>= 0.54',
+         license : 'LGPL-2.0-or-later',
+         default_options : [

@@ -1,0 +1,29 @@
+commit cd1ac879e0234016377143756a83cf22aa23909d
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun Dec 22 16:41:56 2024 -0600
+
+    body-input-stream-http2: When we already have data return a timeout source
+    
+    Otherwise this GSource will never be resolved.
+
+diff --git a/libsoup/http2/soup-body-input-stream-http2.c b/libsoup/http2/soup-body-input-stream-http2.c
+index fd6296b2..ec7dd3c8 100644
+--- a/libsoup/http2/soup-body-input-stream-http2.c
++++ b/libsoup/http2/soup-body-input-stream-http2.c
+@@ -351,9 +351,13 @@ soup_body_input_stream_http2_create_source (GPollableInputStream *stream,
+         SoupBodyInputStreamHttp2Private *priv = soup_body_input_stream_http2_get_instance_private (SOUP_BODY_INPUT_STREAM_HTTP2 (stream));
+         GSource *base_source, *pollable_source;
+ 
+-        if (!priv->need_more_data_cancellable)
+-                priv->need_more_data_cancellable = g_cancellable_new ();
+-        base_source = g_cancellable_source_new (priv->need_more_data_cancellable);
++        if (priv->pos < priv->len) {
++                base_source = g_timeout_source_new (0);
++        } else {
++                if (!priv->need_more_data_cancellable)
++                        priv->need_more_data_cancellable = g_cancellable_new ();
++                base_source = g_cancellable_source_new (priv->need_more_data_cancellable);
++        }
+ 
+         pollable_source = g_pollable_source_new_full (stream, base_source, cancellable);
+         g_source_set_name (pollable_source, "SoupMemoryStreamSource");

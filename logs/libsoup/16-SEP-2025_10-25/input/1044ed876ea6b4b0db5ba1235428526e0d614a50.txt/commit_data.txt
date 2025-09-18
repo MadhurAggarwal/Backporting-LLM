@@ -1,0 +1,17 @@
+commit 1044ed876ea6b4b0db5ba1235428526e0d614a50
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun Apr 20 15:50:51 2025 -0500
+
+    3.7.0
+
+diff --git a/meson.build b/meson.build
+index 290d69df..a95d6839 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('libsoup', 'c',
+-        version: '3.6.4',
++        version: '3.7.0',
+         meson_version : '>= 0.54',
+         license : 'LGPL-2.0-or-later',
+         default_options : [

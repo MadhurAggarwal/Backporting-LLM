@@ -1,0 +1,166 @@
+commit 58d04f9a00ed52f62c3ea667652008fe0a60dcb0
+Author: Martin Nordholts <martn@axis.com>
+Date:   Mon Jan 22 17:01:32 2024 +0100
+
+    tests: Add test for websockets keepalive pong timeout
+
+diff --git a/libsoup/websocket/soup-websocket-connection-private.h b/libsoup/websocket/soup-websocket-connection-private.h
+new file mode 100644
+index 00000000..bf7a8eb5
+--- /dev/null
++++ b/libsoup/websocket/soup-websocket-connection-private.h
+@@ -0,0 +1,14 @@
++/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*- */
++/*
++ * Copyright (C) 2024 Axis Communications AB, SWEDEN.
++ */
++
++#ifndef __SOUP_WEBSOCKET_CONNECTION_PRIVATE_H__
++#define __SOUP_WEBSOCKET_CONNECTION_PRIVATE_H__ 1
++
++#include "soup-websocket-connection.h"
++
++void soup_websocket_connection_set_suppress_pongs_for_tests (SoupWebsocketConnection *self,
++                                                             gboolean suppress);
++
++#endif /* __SOUP_WEBSOCKET_CONNECTION_PRIVATE_H__ */
+diff --git a/libsoup/websocket/soup-websocket-connection.c b/libsoup/websocket/soup-websocket-connection.c
+index 3d4afd1f..a1a73047 100644
+--- a/libsoup/websocket/soup-websocket-connection.c
++++ b/libsoup/websocket/soup-websocket-connection.c
+@@ -23,6 +23,7 @@
+ #include <string.h>
+ 
+ #include "soup-websocket-connection.h"
++#include "soup-websocket-connection-private.h"
+ #include "soup-enum-types.h"
+ #include "soup-io-stream.h"
+ #include "soup-uri-utils-private.h"
+@@ -151,6 +152,12 @@ typedef struct {
+ 	guint8 message_opcode;
+ 	GByteArray *message_data;
+ 
++	/* Only for use by the libsoup test suite. Can be removed at any point.
++	 * Activating this violates RFC 6455 Section 5.5.2 which stipulates that
++	 * a ping MUST always be replied with a pong.
++	 */
++	gboolean suppress_pongs_for_tests;
++
+ 	GSource *keepalive_timeout;
+ 
+ 	GList *extensions;
+@@ -833,9 +840,13 @@ receive_ping (SoupWebsocketConnection *self,
+                       const guint8 *data,
+                       gsize len)
+ {
+-	/* Send back a pong with same data */
+-	g_debug ("received ping, responding");
+-	send_message (self, SOUP_WEBSOCKET_QUEUE_URGENT, 0x0A, data, len);
++        SoupWebsocketConnectionPrivate *priv = soup_websocket_connection_get_instance_private (self);
++
++        if (!priv->suppress_pongs_for_tests) {
++                /* Send back a pong with same data */
++                g_debug ("received ping, responding");
++                send_message (self, SOUP_WEBSOCKET_QUEUE_URGENT, 0x0A, data, len);
++        }
+ }
+ 
+ static void
+@@ -2363,3 +2374,12 @@ soup_websocket_connection_set_keepalive_pong_timeout (SoupWebsocketConnection *s
+                 keepalive_stop_outstanding_pongs (self);
+         }
+ }
++
++void
++soup_websocket_connection_set_suppress_pongs_for_tests (SoupWebsocketConnection *self,
++                                                        gboolean suppress)
++{
++        SoupWebsocketConnectionPrivate *priv = soup_websocket_connection_get_instance_private (self);
++
++        priv->suppress_pongs_for_tests = suppress;
++}
+diff --git a/tests/websocket-test.c b/tests/websocket-test.c
+index 1e56c6c7..06c443bb 100644
+--- a/tests/websocket-test.c
++++ b/tests/websocket-test.c
+@@ -21,6 +21,7 @@
+ #include "test-utils.h"
+ #include "soup-message-private.h"
+ #include "soup-server-message-private.h"
++#include "soup-websocket-connection-private.h"
+ #include <zlib.h>
+ 
+ typedef struct {
+@@ -380,6 +381,19 @@ on_binary_message (SoupWebsocketConnection *ws,
+ 	*receive = g_bytes_ref (message);
+ }
+ 
++static void
++on_pong_set_flag (SoupWebsocketConnection *ws,
++                  GBytes *message,
++                  gpointer user_data)
++{
++        gboolean *flag = user_data;
++
++        g_assert_false (*flag);
++        g_assert_nonnull (message);
++
++        *flag = TRUE;
++}
++
+ static void
+ on_close_set_flag (SoupWebsocketConnection *ws,
+                    gpointer user_data)
+@@ -506,6 +520,40 @@ test_send_client_to_server (Test *test,
+ 	g_clear_pointer (&received, g_bytes_unref);
+ }
+ 
++static void
++test_keepalive_pong_timeout (Test *test,
++                             gconstpointer data)
++{
++        gboolean pong_event = FALSE;
++        gboolean close_event = FALSE;
++        GError *error = NULL;
++
++        g_signal_connect (test->client, "pong", G_CALLBACK (on_pong_set_flag), &pong_event);
++        g_signal_connect (test->client, "error", G_CALLBACK (on_error_copy), &error);
++        g_signal_connect (test->client, "closed", G_CALLBACK (on_close_set_flag), &close_event);
++
++        /* First make sure we get a pong if we enable keepalive. */
++        soup_websocket_connection_set_keepalive_interval (test->client, 1);
++        WAIT_UNTIL (pong_event);
++        pong_event = FALSE;
++
++        /* Now enable pong timeout and make sure we still get a pong. */
++        soup_websocket_connection_set_keepalive_pong_timeout (test->client, 60);
++        WAIT_UNTIL (pong_event);
++        pong_event = FALSE;
++
++        /* Now disable pongs from the server. This should result in an error and
++         * close in the client. Set the pong timeout as low as possible so the test
++         * completes quickly.
++         */
++        soup_websocket_connection_set_keepalive_pong_timeout (test->client, 1);
++        soup_websocket_connection_set_suppress_pongs_for_tests (test->server, TRUE);
++        WAIT_UNTIL (error != NULL);
++        g_clear_error (&error);
++        WAIT_UNTIL (close_event);
++        close_event = FALSE;
++}
++
+ static void
+ test_send_server_to_client (Test *test,
+                             gconstpointer data)
+@@ -2120,6 +2168,11 @@ main (int argc,
+ 		    test_send_client_to_server,
+ 		    teardown_soup_connection);
+ 
++	g_test_add ("/websocket/direct/keepalive-pong-timeout", Test, NULL,
++		    setup_direct_connection,
++		    test_keepalive_pong_timeout,
++		    teardown_direct_connection);
++
+ 	g_test_add ("/websocket/direct/send-server-to-client", Test, NULL,
+ 		    setup_direct_connection,
+ 		    test_send_server_to_client,

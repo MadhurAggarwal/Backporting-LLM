@@ -1,0 +1,33 @@
+commit a6df31d7a89298fcdc6da0373f16ca222d052061
+Author: Milan Crha <mcrha@redhat.com>
+Date:   Thu May 22 10:32:30 2025 +0200
+
+    websocket-test: Fix two memory leaks
+    
+    The errors can be emitted also when joining the thread, in some cases,
+    thus disconnect the handlers to avoid memory leaks in such case.
+
+diff --git a/tests/websocket-test.c b/tests/websocket-test.c
+index c163d22b..758f73f9 100644
+--- a/tests/websocket-test.c
++++ b/tests/websocket-test.c
+@@ -1602,6 +1602,9 @@ test_client_receive_masked_frame (Test *test,
+ 	g_clear_error (&error);
+ 	g_assert_null (received);
+ 
++	/* it can emit more errors while joining the thread, thus disconnect, to avoid memory leak */
++	g_signal_handlers_disconnect_by_func (test->client, G_CALLBACK (on_error_copy), &error);
++
+         g_thread_join (thread);
+ 
+ 	WAIT_UNTIL (soup_websocket_connection_get_state (test->client) == SOUP_WEBSOCKET_STATE_CLOSED);
+@@ -2050,6 +2053,9 @@ test_deflate_receive_fragmented_error (Test *test,
+ 	g_clear_error (&error);
+ 	g_assert_null (received);
+ 
++	/* it can emit more errors while joining the thread, thus disconnect, to avoid memory leak */
++	g_signal_handlers_disconnect_by_func (test->client, G_CALLBACK (on_error_copy), &error);
++
+ 	g_thread_join (thread);
+ 
+ 	WAIT_UNTIL (soup_websocket_connection_get_state (test->client) == SOUP_WEBSOCKET_STATE_CLOSED);

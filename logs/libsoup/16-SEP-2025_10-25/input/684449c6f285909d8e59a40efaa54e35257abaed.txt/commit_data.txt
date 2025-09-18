@@ -1,0 +1,41 @@
+commit 684449c6f285909d8e59a40efaa54e35257abaed
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Mon Jul 29 08:49:43 2024 -0500
+
+    docs: Fix some type references
+
+diff --git a/libsoup/auth/soup-auth-manager.c b/libsoup/auth/soup-auth-manager.c
+index 402967d0..e3d35181 100644
+--- a/libsoup/auth/soup-auth-manager.c
++++ b/libsoup/auth/soup-auth-manager.c
+@@ -40,7 +40,7 @@
+  *
+  * (Although this type has only been publicly visible since libsoup 2.42, it has
+  * always existed in the background, and you can use `g_type_from_name
+- * ("SoupAuthManager")` to get its [alias@GLib.Type] in earlier releases.)
++ * ("SoupAuthManager")` to get its [alias@GObject.Type] in earlier releases.)
+  **/
+ static void soup_auth_manager_session_feature_init (SoupSessionFeatureInterface *feature_interface, gpointer interface_data);
+ 
+diff --git a/libsoup/soup-session.c b/libsoup/soup-session.c
+index 18b9c0a0..c6f8b1b2 100644
+--- a/libsoup/soup-session.c
++++ b/libsoup/soup-session.c
+@@ -664,7 +664,7 @@ soup_session_get_proxy_resolver (SoupSession *session)
+  * @session: a #SoupSession
+  * @tls_database: (nullable): a #GTlsDatabase
+  *
+- * Set a [class@GIo.TlsDatabase] to be used by @session on new connections.
++ * Set a [class@Gio.TlsDatabase] to be used by @session on new connections.
+  *
+  * If @tls_database is %NULL then certificate validation will always fail. See
+  * [property@Session:tls-database] for more information.
+@@ -2013,7 +2013,7 @@ feature_already_added (SoupSession *session, GType feature_type)
+  * @feature: an object that implements #SoupSessionFeature
+  *
+  * Adds @feature's functionality to @session. You cannot add multiple
+- * features of the same [alias@GLib.Type] to a session.
++ * features of the same [alias@GObject.Type] to a session.
+  *
+  * See the main #SoupSession documentation for information on what
+  * features are present in sessions by default.

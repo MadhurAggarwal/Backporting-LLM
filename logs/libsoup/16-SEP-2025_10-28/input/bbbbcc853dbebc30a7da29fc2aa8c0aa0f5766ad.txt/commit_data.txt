@@ -1,0 +1,20 @@
+commit bbbbcc853dbebc30a7da29fc2aa8c0aa0f5766ad
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun Dec 22 16:40:08 2024 -0600
+
+    http2: Log sent WINDOW_UPDATEs
+
+diff --git a/libsoup/http2/soup-client-message-io-http2.c b/libsoup/http2/soup-client-message-io-http2.c
+index a5e1490c..dbccd1d2 100644
+--- a/libsoup/http2/soup-client-message-io-http2.c
++++ b/libsoup/http2/soup-client-message-io-http2.c
+@@ -1001,6 +1001,9 @@ on_frame_send_callback (nghttp2_session     *session,
+                         g_source_unref (source);
+                 }
+                 break;
++        case NGHTTP2_WINDOW_UPDATE:
++                h2_debug (io, data, "[SEND] [WINDOW_UPDATE] stream_id=%u increment=%d", frame->hd.stream_id, frame->window_update.window_size_increment);
++                break;
+         default:
+                 h2_debug (io, data, "[SEND] [%s] stream_id=%u", soup_http2_frame_type_to_string (frame->hd.type), frame->hd.stream_id);
+                 break;

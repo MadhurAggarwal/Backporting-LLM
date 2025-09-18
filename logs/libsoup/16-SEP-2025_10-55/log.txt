@@ -1,0 +1,3 @@
+Logger initialized.
+Finetuning Attempt for PACKAGE: libsoup
+[INFO] This is a test log message.

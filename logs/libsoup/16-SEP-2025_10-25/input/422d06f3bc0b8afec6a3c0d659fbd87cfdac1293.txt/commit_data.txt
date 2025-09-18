@@ -1,0 +1,17 @@
+commit 422d06f3bc0b8afec6a3c0d659fbd87cfdac1293
+Author: Val Och <v19930312@gmail.com>
+Date:   Sat Dec 30 18:09:37 2023 +0000
+
+    vapi: specify sentinel for uri_copy
+
+diff --git a/libsoup/Soup-3.0.metadata b/libsoup/Soup-3.0.metadata
+index c27839be..524adc60 100644
+--- a/libsoup/Soup-3.0.metadata
++++ b/libsoup/Soup-3.0.metadata
+@@ -28,4 +28,5 @@ Auth.new symbol_type="function"
+ // Simplify memory management
+ MessageBody.append deprecated_since="2.32" replacement="MessageBody.append_take"
+ 
+-uri_copy skip=false
++// Vala supports vararg functions
++uri_copy skip=false sentinel="SOUP_URI_NONE"

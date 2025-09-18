@@ -1,0 +1,22 @@
+commit 8780f92d46a0f2a00307014f5b8f7350ca1bc500
+Author: Andre Klapper <a9016009@gmx.de>
+Date:   Sun Nov 26 14:40:56 2023 +0100
+
+    README: Replace defunct mailing list with Discourse support forum
+
+diff --git a/README b/README
+index 80f0f917..aa95da9a 100644
+--- a/README
++++ b/README
+@@ -14,9 +14,8 @@ tests/ for simple examples of how to use the code. The
+ evolution-data-server and evolution-exchange modules in GNOME git have
+ some more complicated examples.
+ 
+-There is a mailing list for libsoup-related questions/discussions at
+-gnome.org. Visit http://mail.gnome.org/mailman/listinfo/libsoup-list
+-to subscribe or read the archives.
++There is a support forum for libsoup-related questions/discussions at
++https://discourse.gnome.org/tag/libsoup
+ 
+ Bugs against libsoup can be filed at:
+ https://gitlab.gnome.org/GNOME/libsoup/issues/

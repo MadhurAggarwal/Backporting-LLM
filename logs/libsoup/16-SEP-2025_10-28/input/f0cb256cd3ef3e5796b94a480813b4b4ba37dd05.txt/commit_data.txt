@@ -1,0 +1,52 @@
+commit f0cb256cd3ef3e5796b94a480813b4b4ba37dd05
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Fri Apr 19 10:46:28 2024 -0500
+
+    cookies: Fix incorrect logic in determining same-site
+    
+    - The top-level navigation exception only existed for Lax cookies
+    - Host matching is a direct comparison
+
+diff --git a/libsoup/cookies/soup-cookie-jar.c b/libsoup/cookies/soup-cookie-jar.c
+index 1609a567..bdb6697a 100644
+--- a/libsoup/cookies/soup-cookie-jar.c
++++ b/libsoup/cookies/soup-cookie-jar.c
+@@ -304,10 +304,10 @@ cookie_is_valid_for_same_site_policy (SoupCookie *cookie,
+ 	    (is_safe_method || for_http == FALSE))
+ 		return TRUE;
+ 
+-	if (is_top_level_navigation && cookie_uri == NULL)
++	if (cookie_uri == NULL)
+ 		return FALSE;
+ 
+-	return soup_host_matches_host (g_uri_get_host (cookie_uri ? cookie_uri : top_level), g_uri_get_host (uri));
++	return !g_ascii_strcasecmp (g_uri_get_host (cookie_uri), g_uri_get_host (uri));
+ }
+ 
+ static GSList *
+diff --git a/tests/samesite-test.c b/tests/samesite-test.c
+index b7593467..2b9458e6 100644
+--- a/tests/samesite-test.c
++++ b/tests/samesite-test.c
+@@ -106,12 +106,8 @@ main (int argc, char **argv)
+ 		/* This does not necessarily cover all combinations since some make no sense in real use */
+ 
+ 		/* Situations where Strict are passed: */
+-		{ .name="/same-site/basic", .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+-		{ .name="/same-site/basic-js", .javascript=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+ 		{ .name="/same-site/top-level-to-same-site", .top_level_nav=TRUE,  .cookie_uri_is_origin=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+ 		{ .name="/same-site/top-level-to-same-site-js", .top_level_nav=TRUE, .cookie_uri_is_origin=TRUE,  .javascript=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+-		{ .name="/same-site/unsafe-method", .unsafe_method=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+-		{ .name="/same-site/unsafe-method-js", .unsafe_method=TRUE, .javascript=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+ 		{ .name="/same-site/cross-top-level-to-same-site", .cross_origin=TRUE, .top_level_nav=TRUE, .cookie_uri_is_origin=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+ 		{ .name="/same-site/cross-top-level-to-same-site-js", .cross_origin=TRUE, .javascript=TRUE, .top_level_nav=TRUE, .cookie_uri_is_origin=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_STRICT },
+ 
+@@ -128,6 +124,8 @@ main (int argc, char **argv)
+ 		{ .name="/same-site/cross-unsafe-method", .cross_origin=TRUE, .unsafe_method=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_NONE },
+ 		{ .name="/same-site/cross-unsafe-method-js", .cross_origin=TRUE, .javascript=TRUE, .unsafe_method=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_NONE },
+ 		{ .name="/same-site/cross-unsafe-method-top-level", .cross_origin=TRUE, .unsafe_method=TRUE, .top_level_nav=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_NONE },
++		{ .name="/same-site/unsafe-method", .unsafe_method=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_NONE },
++		{ .name="/same-site/unsafe-method-js", .unsafe_method=TRUE, .javascript=TRUE, .visible_policy=SOUP_SAME_SITE_POLICY_NONE },
+ 	};
+ 
+ 	test_init (argc, argv, NULL);

@@ -1,0 +1,61 @@
+commit e725dcffc25e18ebdbda1bd1592d935310a6e96f
+Author: Filipe Norte <filipe.norte@sky.uk>
+Date:   Wed Nov 15 16:12:44 2023 +0000
+
+    Increase HTTP header size limit
+    
+    The current limit is insufficient for some application services
+    that require support of at least 20 4K cookie sizes
+
+diff --git a/libsoup/http1/soup-client-message-io-http1.c b/libsoup/http1/soup-client-message-io-http1.c
+index ee5738e0..65a6fecb 100644
+--- a/libsoup/http1/soup-client-message-io-http1.c
++++ b/libsoup/http1/soup-client-message-io-http1.c
+@@ -60,7 +60,7 @@ typedef struct {
+ } SoupClientMessageIOHTTP1;
+ 
+ #define RESPONSE_BLOCK_SIZE 8192
+-#define HEADER_SIZE_LIMIT (64 * 1024)
++#define HEADER_SIZE_LIMIT (100 * 1024)
+ 
+ static void
+ soup_message_io_http1_free (SoupMessageIOHTTP1 *msg_io)
+diff --git a/libsoup/http1/soup-message-io-data.c b/libsoup/http1/soup-message-io-data.c
+index 16d5cbd0..e1bc3f8f 100644
+--- a/libsoup/http1/soup-message-io-data.c
++++ b/libsoup/http1/soup-message-io-data.c
+@@ -17,7 +17,7 @@
+ #include "soup.h"
+ 
+ #define RESPONSE_BLOCK_SIZE 8192
+-#define HEADER_SIZE_LIMIT (64 * 1024)
++#define HEADER_SIZE_LIMIT (100 * 1024)
+ 
+ void
+ soup_message_io_data_cleanup (SoupMessageIOData *io)
+diff --git a/libsoup/server/http1/soup-server-message-io-http1.c b/libsoup/server/http1/soup-server-message-io-http1.c
+index 3803cabc..d134e406 100644
+--- a/libsoup/server/http1/soup-server-message-io-http1.c
++++ b/libsoup/server/http1/soup-server-message-io-http1.c
+@@ -50,7 +50,7 @@ typedef struct {
+ } SoupServerMessageIOHTTP1;
+ 
+ #define RESPONSE_BLOCK_SIZE 8192
+-#define HEADER_SIZE_LIMIT (64 * 1024)
++#define HEADER_SIZE_LIMIT (100 * 1024)
+ 
+ static gboolean io_run_ready (SoupServerMessage *msg,
+                               gpointer           user_data);
+diff --git a/tests/misc-test.c b/tests/misc-test.c
+index 045161d8..130d9e51 100644
+--- a/tests/misc-test.c
++++ b/tests/misc-test.c
+@@ -145,7 +145,7 @@ do_host_big_header (void)
+ 	session = soup_test_session_new (NULL);
+ 
+ 	msg = soup_message_new_from_uri ("GET", base_uri);
+-	for (i = 0; i < 2048; i++) {
++	for (i = 0; i < 3072; i++) {
+ 		char *key = g_strdup_printf ("test-long-header-key%d", i);
+ 		char *value = g_strdup_printf ("test-long-header-key%d", i);
+ 		soup_message_headers_append (soup_message_get_request_headers (msg), key, value);

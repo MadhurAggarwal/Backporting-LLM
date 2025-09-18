@@ -1,0 +1,29 @@
+commit 3f03218b39306870af8b7331bd2e4c18ad4ce4d0
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun Aug 25 17:13:01 2024 -0500
+
+    3.6.0
+
+diff --git a/NEWS b/NEWS
+index c2a20c16..7023acd5 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,3 +1,7 @@
++Changes in libsoup from 3.5.2 to 3.6.0:
++
++* Allow HTTP/2 to be used with non-HTTP proxies [Patrick Griffis]
++
+ Changes in libsoup from 3.5.1 to 3.5.2:
+ 
+ * Strictly forbid NUL bytes in headers [Patrick Griffis]
+diff --git a/meson.build b/meson.build
+index e2d1d113..f7c63389 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('libsoup', 'c',
+-        version: '3.5.2',
++        version: '3.6.0',
+         meson_version : '>= 0.54',
+         license : 'LGPL-2.0-or-later',
+         default_options : [

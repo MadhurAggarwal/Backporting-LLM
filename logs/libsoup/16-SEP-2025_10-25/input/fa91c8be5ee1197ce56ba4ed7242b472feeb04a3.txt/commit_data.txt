@@ -1,0 +1,17 @@
+commit fa91c8be5ee1197ce56ba4ed7242b472feeb04a3
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Mon Feb 10 12:41:34 2025 -0600
+
+    cookies-test: Fix minor leak
+
+diff --git a/tests/cookies-test.c b/tests/cookies-test.c
+index bae81c2d..1d2d4563 100644
+--- a/tests/cookies-test.c
++++ b/tests/cookies-test.c
+@@ -691,6 +691,7 @@ do_cookies_threads_test (void)
+         while (g_main_context_pending (NULL))
+                 g_main_context_iteration (NULL, FALSE);
+ 
++        soup_cookies_free (cookies);
+         soup_test_session_abort_unref (session);
+ }

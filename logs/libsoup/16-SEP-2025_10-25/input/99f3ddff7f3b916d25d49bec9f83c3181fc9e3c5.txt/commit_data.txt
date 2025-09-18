@@ -1,0 +1,66 @@
+commit 99f3ddff7f3b916d25d49bec9f83c3181fc9e3c5
+Author: Brian Yurko <155515-byurko@users.noreply.gitlab.gnome.org>
+Date:   Tue May 13 22:42:59 2025 -0400
+
+    headers: Ensure Request-Line comprises entire first line
+    
+    This commit reuses one pointer 'p' to check whether the first full line
+    of the Request-Line equals the point at which we determined the HTTP
+    Version to have concluded. Therefore the Method, Path and Version are good.
+    
+    Newly added Unit Tests for header parsing include both issues because
+    each test depends upon this code change to respond appropriately.
+    
+    The appropriate HTTP Response for an unexpected end of line within the
+    Method or Request Target should be 400 Bad Request.
+    
+    Closes: #380
+    Closes: #441
+
+diff --git a/libsoup/soup-headers.c b/libsoup/soup-headers.c
+index 52ef2ece..b951188e 100644
+--- a/libsoup/soup-headers.c
++++ b/libsoup/soup-headers.c
+@@ -240,7 +240,12 @@ soup_headers_parse_request (const char          *str,
+ 	if (headers >= str + len || *headers != '\n')
+ 		return SOUP_STATUS_BAD_REQUEST;
+ 
+-	if (!soup_headers_parse (str, len, req_headers)) 
++	// Ensure pointer location for Request-Line end matches location of 'headers'
++	p = strchr(str, '\n');
++	if (p != headers)
++		return SOUP_STATUS_BAD_REQUEST;
++
++	if (!soup_headers_parse (str, len, req_headers))
+ 		return SOUP_STATUS_BAD_REQUEST;
+ 
+ 	if (soup_message_headers_get_expectations (req_headers) &
+diff --git a/tests/header-parsing-test.c b/tests/header-parsing-test.c
+index 3117caf0..b27588a8 100644
+--- a/tests/header-parsing-test.c
++++ b/tests/header-parsing-test.c
+@@ -463,6 +463,24 @@ static struct RequestTest {
+ 	  { { NULL } }
+ 	},
+ 
++	{ "CR and LF were incorrectly permitted within request URIs",
++	  "https://gitlab.gnome.org/GNOME/libsoup/-/issues/380",
++	  "GET /\r\n HTTP/1.1\r\nHost: example.com\r\n",
++	  -1,
++	  SOUP_STATUS_BAD_REQUEST,
++	  NULL, NULL, -1,
++	  { { NULL } }
++	},
++
++	{ "CR and LF incorrectly allowed in request method",
++	  "https://gitlab.gnome.org/GNOME/libsoup/-/issues/441",
++	  "G\r\nET / HTTP/1.1\r\nHost: example.com\r\n",
++	  -1,
++	  SOUP_STATUS_BAD_REQUEST,
++	  NULL, NULL, -1,
++	  { { NULL } }
++	},
++
+ 	{ "Only newlines", NULL,
+ 	  only_newlines, sizeof (only_newlines),
+ 	  SOUP_STATUS_BAD_REQUEST,

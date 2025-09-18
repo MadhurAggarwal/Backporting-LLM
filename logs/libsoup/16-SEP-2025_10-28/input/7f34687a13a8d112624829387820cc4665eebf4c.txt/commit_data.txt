@@ -1,0 +1,33 @@
+commit 7f34687a13a8d112624829387820cc4665eebf4c
+Author: Andy Holmes <andyholmes@gnome.org>
+Date:   Thu Nov 2 13:20:33 2023 -0700
+
+    soup-message: plug leak in new_from_encoded_form()
+    
+    soup_message_new_from_encoded_form() claims ownership of the
+    encoded string, so free it if passed to soup_uri_copy().
+
+diff --git a/libsoup/soup-message.c b/libsoup/soup-message.c
+index ebe9e9f2..555fe015 100644
+--- a/libsoup/soup-message.c
++++ b/libsoup/soup-message.c
+@@ -1068,6 +1068,7 @@ soup_message_new_from_encoded_form (const char *method,
+         if (strcmp (method, "GET") == 0) {
+                 GUri *new_uri = soup_uri_copy (uri, SOUP_URI_QUERY, encoded_form, SOUP_URI_NONE);
+                 msg = soup_message_new_from_uri (method, new_uri);
++                g_free (encoded_form);
+                 g_uri_unref (new_uri);
+         } else if (strcmp (method, "POST") == 0 || strcmp (method, "PUT") == 0) {
+                 GBytes *body;
+diff --git a/tests/forms-test.c b/tests/forms-test.c
+index a1af7b30..1002374c 100644
+--- a/tests/forms-test.c
++++ b/tests/forms-test.c
+@@ -129,7 +129,6 @@ do_hello_test_libsoup (int n, gboolean extra, const char *uri)
+ 	msg = soup_message_new_from_encoded_form ("GET",
+ 						  uri,
+ 						  encoded);
+-        g_free (encoded);
+ 	g_datalist_clear (&data);
+ 
+ 	body = soup_session_send_and_read (session, msg, NULL, NULL);

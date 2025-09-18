@@ -1,0 +1,75 @@
+commit 2cef05d5ffc49aaf619e65cb63fb44c808518120
+Author: Milan Crha <mcrha@redhat.com>
+Date:   Tue May 13 14:01:16 2025 +0200
+
+    tests: Run range-test even when Apache dependency is not satisfied
+    
+    The test tests ranges with a libsoup server and with an Apache server.
+    Run at least the libsoup part when the Apache server (or its dependencies)
+    are not available.
+
+diff --git a/tests/meson.build b/tests/meson.build
+index b4dc8064..02924c03 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -97,6 +97,7 @@ tests = [
+   {'name': 'multithread'},
+   {'name': 'no-ssl'},
+   {'name': 'ntlm'},
++  {'name': 'range', 'parallel': false},
+   {'name': 'redirect'},
+   {'name': 'request-body'},
+   {'name': 'samesite'},
+@@ -147,7 +148,6 @@ if have_apache
+   tests += [
+     {'name': 'auth', 'parallel': false},
+     {'name': 'connection', 'parallel': false},
+-    {'name': 'range', 'parallel': false},
+     {'name': 'proxy', 'parallel': false},
+   ]
+ 
+diff --git a/tests/range-test.c b/tests/range-test.c
+index 83cf7173..9232d182 100644
+--- a/tests/range-test.c
++++ b/tests/range-test.c
+@@ -1,5 +1,7 @@
+ /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*- */
+ 
++#include "config.h"
++
+ #include "test-utils.h"
+ 
+ GBytes *full_response;
+@@ -333,6 +335,7 @@ do_range_test (SoupSession *session, const char *uri,
+ 				    20, 30); 
+ }
+ 
++#ifdef HAVE_APACHE
+ static void
+ do_apache_range_test (void)
+ {
+@@ -346,6 +349,7 @@ do_apache_range_test (void)
+ 
+ 	soup_test_session_abort_unref (session);
+ }
++#endif
+ 
+ static void
+ server_handler (SoupServer        *server,
+@@ -387,12 +391,16 @@ main (int argc, char **argv)
+ 	int ret;
+ 
+ 	test_init (argc, argv, NULL);
++#ifdef HAVE_APACHE
+ 	apache_init ();
++#endif
+ 
+ 	full_response = soup_test_get_index ();
+ 	test_response = g_malloc0 (g_bytes_get_size (full_response));
+ 
++#ifdef HAVE_APACHE
+ 	g_test_add_func ("/ranges/apache", do_apache_range_test);
++#endif
+ 	g_test_add_func ("/ranges/libsoup", do_libsoup_range_test);
+ 
+ 	ret = g_test_run ();

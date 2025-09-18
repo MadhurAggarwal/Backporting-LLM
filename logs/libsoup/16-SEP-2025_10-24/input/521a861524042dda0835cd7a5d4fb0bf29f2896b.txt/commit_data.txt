@@ -1,0 +1,25 @@
+commit 521a861524042dda0835cd7a5d4fb0bf29f2896b
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Thu Jul 25 10:15:34 2024 -0500
+
+    Fix leak of cookie expiration time
+    
+    This is a regression from !401, which itself fixed a regression from
+    !400. Whoops.
+    
+    Fixes #387
+
+diff --git a/libsoup/cookies/soup-cookie.c b/libsoup/cookies/soup-cookie.c
+index d8723e74..dba11b0c 100644
+--- a/libsoup/cookies/soup-cookie.c
++++ b/libsoup/cookies/soup-cookie.c
+@@ -216,7 +216,8 @@ parse_one_cookie (const char *header, GUri *origin)
+ 				cookie->domain = NULL;
+ 			}
+ 		} else if (MATCH_NAME ("expires") && has_value) {
+-		        soup_cookie_set_expires (cookie, parse_date (&p));
++			g_clear_pointer (&cookie->expires, g_date_time_unref);
++			cookie->expires = parse_date (&p);
+ 		} else if (MATCH_NAME ("httponly")) {
+ 			cookie->http_only = TRUE;
+ 			if (has_value)

@@ -1,0 +1,37 @@
+commit 81d0d0302139f3548aed34c6d2a95c85a24162d9
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Fri May 16 12:30:27 2025 -0500
+
+    tests: fix assertions not working
+    
+    Today I was very confused why g_assert_true(FALSE) would not fail.
+    
+    libsoup uses test_set_nonfatal_assertions() to convert all test
+    assertions from crashes into error messages printed in the test logs.
+    The test assertions instead call g_test_fail() and continue. (A test
+    assertion is every assertion that is not g_assert(), which is not
+    supposed to be used in tests, #451.)
+    
+    g_test_fail() is supposed to fail the testsuite somehow, but
+    unfortunately this is broken, so almost all assertions are not doing
+    anything currently.
+    
+    Due to some incredible miracle, it is apparently possible to reenable
+    assertions without breaking any tests on my desktop. So let's try.
+    
+    Fixes #452
+    
+    Part-of: <https://gitlab.gnome.org/GNOME/libsoup/-/merge_requests/465>
+
+diff --git a/tests/test-utils.c b/tests/test-utils.c
+index 5c1e316c..3e2d9e85 100644
+--- a/tests/test-utils.c
++++ b/tests/test-utils.c
+@@ -83,7 +83,6 @@ test_init (int argc, char **argv, GOptionEntry *entries)
+ 	g_set_prgname (name);
+ 
+ 	g_test_init (&argc, &argv, NULL);
+-	g_test_set_nonfatal_assertions ();
+ 	g_test_bug_base ("https://bugzilla.gnome.org/");
+ 
+ 	opts = g_option_context_new (NULL);

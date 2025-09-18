@@ -1,0 +1,20 @@
+commit 450d43c4fac6b968a29e69afda13df05c3ff8b62
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Wed Jun 26 15:53:06 2024 -0500
+
+    Fix memory leak in error path
+    
+    Found by Coverity
+
+diff --git a/libsoup/server/http1/soup-server-message-io-http1.c b/libsoup/server/http1/soup-server-message-io-http1.c
+index d134e406..8a3bce29 100644
+--- a/libsoup/server/http1/soup-server-message-io-http1.c
++++ b/libsoup/server/http1/soup-server-message-io-http1.c
+@@ -647,6 +647,7 @@ parse_headers (SoupServerMessage *msg,
+         /* Handle request body encoding */
+         *encoding = soup_message_headers_get_encoding (request_headers);
+         if (*encoding == SOUP_ENCODING_UNRECOGNIZED) {
++                g_free (req_path);
+                 if (soup_message_headers_get_list_common (request_headers, SOUP_HEADER_TRANSFER_ENCODING))
+                         return SOUP_STATUS_NOT_IMPLEMENTED;
+                 else

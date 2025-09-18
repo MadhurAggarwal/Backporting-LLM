@@ -1,0 +1,50 @@
+commit 3c54033634ae537b52582900a7ba432c52ae8174
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Mon Sep 16 13:56:09 2024 -0500
+
+    Define GLIB_VERSION_MAX_ALLOWED and GLIB_VERSION_MIN_REQUIRED
+
+diff --git a/meson.build b/meson.build
+index f7c63389..08b0d764 100644
+--- a/meson.build
++++ b/meson.build
+@@ -112,6 +112,9 @@ glib_deps = [glib_dep, gmodule_dep, gobject_dep, gio_dep]
+ 
+ cdata = configuration_data()
+ 
++cdata.set('GLIB_VERSION_MAX_ALLOWED', 'GLIB_VERSION_2_70')
++cdata.set('GLIB_VERSION_MIN_REQUIRED', 'GLIB_VERSION_2_70')
++
+ libnghttp2_dep = dependency('libnghttp2')
+ if (libnghttp2_dep.version() == 'unknown' and (libnghttp2_dep.type_name() == 'internal' or cc.has_function('nghttp2_option_set_no_rfc9113_leading_and_trailing_ws_validation', prefix : '#include <nghttp2/nghttp2.h>', dependencies : libnghttp2_dep))) or libnghttp2_dep.version().version_compare('>=1.50')
+     cdata.set('HAVE_NGHTTP2_OPTION_SET_NO_RFC9113_LEADING_AND_TRAILING_WS_VALIDATION', '1')
+diff --git a/tests/hsts-db-test.c b/tests/hsts-db-test.c
+index 1149a044..04d7c4f1 100644
+--- a/tests/hsts-db-test.c
++++ b/tests/hsts-db-test.c
+@@ -1,8 +1,9 @@
++#include "test-utils.h"
++
+ #include <glib.h>
+ #include <glib/gstdio.h>
+ 
+ #include <stdio.h>
+-#include "test-utils.h"
+ #include "soup-uri-utils-private.h"
+ 
+ #define DB_FILE "hsts-db.sqlite"
+diff --git a/tests/proxy-test.c b/tests/proxy-test.c
+index ec039367..d730c8a7 100644
+--- a/tests/proxy-test.c
++++ b/tests/proxy-test.c
+@@ -1,8 +1,9 @@
+ /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*- */
+ 
+-#include <gio/gio.h>
+ #include "test-utils.h"
+ 
++#include <gio/gio.h>
++
+ typedef struct {
+ 	const char *explanation;
+ 	const char *url;

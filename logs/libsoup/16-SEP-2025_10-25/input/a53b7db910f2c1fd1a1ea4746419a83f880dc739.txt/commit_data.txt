@@ -1,0 +1,58 @@
+commit a53b7db910f2c1fd1a1ea4746419a83f880dc739
+Author: Simon McVittie <smcv@collabora.com>
+Date:   Wed Mar 19 13:53:23 2025 +0000
+
+    Replace remaining references to libsoup.org with libsoup.gnome.org
+    
+    Resolves: #419
+    Signed-off-by: Simon McVittie <smcv@collabora.com>
+
+diff --git a/.gitlab-ci/index.html b/.gitlab-ci/index.html
+index 14412f50..26b847b7 100644
+--- a/.gitlab-ci/index.html
++++ b/.gitlab-ci/index.html
+@@ -5,7 +5,7 @@
+     <link rel="stylesheet" href="./libsoup-3.0/style.css" />
+   </head>
+   <body>
+-    <ul><p><a href="https://libsoup.org/libsoup-3.0">libsoup 3 documentation</a></p></ul>
+-    <ul><p><a href="https://libsoup.org/libsoup-2.4">libsoup 2 documentation</a></p></ul>
++    <ul><p><a href="https://libsoup.gnome.org/libsoup-3.0">libsoup 3 documentation</a></p></ul>
++    <ul><p><a href="https://libsoup.gnome.org/libsoup-2.4">libsoup 2 documentation</a></p></ul>
+   </body>
+ </html>
+diff --git a/NEWS b/NEWS
+index b495fcbd..770f5ad6 100644
+--- a/NEWS
++++ b/NEWS
+@@ -132,7 +132,7 @@ Changes in libsoup from 3.1.1 to 3.1.2:
+ 
+ Changes in libsoup from 3.0.7 to 3.1.1:
+ 
+-* Reintroduce some thread-safety to SoupSession (see https://libsoup.org/libsoup-3.0/client-thread-safety.html) [Carlos Garcia Campos]
++* Reintroduce some thread-safety to SoupSession (see https://libsoup.gnome.org/libsoup-3.0/client-thread-safety.html) [Carlos Garcia Campos]
+ * Add SoupServerMessage:tls-peer-certificate and SoupServerMessage:tls-peer-certificate-errors [Ignacio Casal Quinteiro]
+ * Port docs to gi-docgen [Maximiliano Sandoval R]
+ * Update documentation [Patrick Griffis]
+@@ -323,7 +323,7 @@ Changes in libsoup from 2.99.1 to 2.99.2:
+ Changes in libsoup from 2.72.0 to 2.99.1:
+ 
+     * This is a major ABI breaking release that can be installed in parallel with 2.7x.
+-      Numerous API have been changed which is documented on https://libsoup.org
++      Numerous API have been changed which is documented on https://libsoup.gnome.org
+ 
+ Changes in libsoup from 2.71.1 to 2.72.0:
+ 
+diff --git a/docs/reference/libsoup.toml.in b/docs/reference/libsoup.toml.in
+index 838f885f..f0abab63 100644
+--- a/docs/reference/libsoup.toml.in
++++ b/docs/reference/libsoup.toml.in
+@@ -3,7 +3,7 @@ namespace = "Soup"
+ version = "@VERSION@"
+ browse_url = "https://gitlab.gnome.org/GNOME/libsoup"
+ repository_url = "https://gitlab.gnome.org/GNOME/libsoup.git"
+-docs_url = "https://libsoup.org/libsoup-3.0/"
++docs_url = "https://libsoup.gnome.org/libsoup-3.0/"
+ website_url = "https://libsoup.gnome.org/"
+ logo_url = "https://gitlab.gnome.org/uploads/-/system/project/avatar/1630/logo.png"
+ authors = "Dan Winship, Claudio Saavedra, Patrick Griffis, and Carlos Garcia Campos"

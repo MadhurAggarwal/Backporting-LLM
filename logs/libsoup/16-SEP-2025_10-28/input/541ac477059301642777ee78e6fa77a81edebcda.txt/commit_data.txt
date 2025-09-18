@@ -1,0 +1,117 @@
+commit 541ac477059301642777ee78e6fa77a81edebcda
+Author: Brian Yurko <155515-byurko@users.noreply.gitlab.gnome.org>
+Date:   Tue May 20 14:30:56 2025 -0400
+
+    docs: Resolved minor old gtk-docs links in MessageHeadersIter
+    
+    A few links were detected using %ObjectIdentifier instead of gi-docgen
+    preferred link or item identification methods. Replaced with the recognized
+    gtk-doc code fragment #TypeName to be consistent with other areas of this
+    project.
+    
+    Also mentioned on the ticket were SoupPathMap, but this is not subject to
+    GObject Introspection at this time so those pages are not generated. Old
+    links were upgraded in that area as well.
+    
+    Closes #455
+
+diff --git a/docs/reference/libsoup.toml.in b/docs/reference/libsoup.toml.in
+index f0abab63..afb93ff8 100644
+--- a/docs/reference/libsoup.toml.in
++++ b/docs/reference/libsoup.toml.in
+@@ -9,7 +9,7 @@ logo_url = "https://gitlab.gnome.org/uploads/-/system/project/avatar/1630/logo.p
+ authors = "Dan Winship, Claudio Saavedra, Patrick Griffis, and Carlos Garcia Campos"
+ license = "LGPL-2.0-or-later"
+ description = "HTTP client/server library for GNOME"
+-dependencies = [ "GObject-2.0", "GLib-1.0", "Gio-2.0" ]
++dependencies = [ "GObject-2.0", "GLib-2.0", "Gio-2.0" ]
+ devhelp = true
+ search_index = true
+ 
+diff --git a/libsoup/server/soup-path-map.c b/libsoup/server/soup-path-map.c
+index 25b67b72..4a88cdb7 100644
+--- a/libsoup/server/soup-path-map.c
++++ b/libsoup/server/soup-path-map.c
+@@ -36,9 +36,9 @@ struct SoupPathMap {
+  * @data_free_func: function to use to free data added with
+  *   soup_path_map_add().
+  *
+- * Creates a new %SoupPathMap.
++ * Creates a new #SoupPathMap.
+  *
+- * Returns: the new %SoupPathMap
++ * Returns: the new #SoupPathMap
+  **/
+ SoupPathMap *
+ soup_path_map_new (GDestroyNotify data_free_func)
+@@ -54,7 +54,7 @@ soup_path_map_new (GDestroyNotify data_free_func)
+ 
+ /**
+  * soup_path_map_free:
+- * @map: a %SoupPathMap
++ * @map: a #SoupPathMap
+  *
+  * Frees @map and all data stored in it.
+  **/
+@@ -116,7 +116,7 @@ mapping_lookup (SoupPathMap *map, const char *path, int *match, int *insert)
+ 
+ /**
+  * soup_path_map_add:
+- * @map: a %SoupPathMap
++ * @map: a #SoupPathMap
+  * @path: the path
+  * @data: the data
+  *
+@@ -145,7 +145,7 @@ soup_path_map_add (SoupPathMap *map, const char *path, gpointer data)
+ 
+ /**
+  * soup_path_map_remove:
+- * @map: a %SoupPathMap
++ * @map: a #SoupPathMap
+  * @path: the path
+  *
+  * Removes @data from @map at @path. (This must be called with the same
+@@ -168,7 +168,7 @@ soup_path_map_remove (SoupPathMap *map, const char *path)
+ 
+ /**
+  * soup_path_map_lookup:
+- * @map: a %SoupPathMap
++ * @map: a #SoupPathMap
+  * @path: the path
+  *
+  * Finds the data associated with @path in @map. If there is no data
+diff --git a/libsoup/soup-message-headers.c b/libsoup/soup-message-headers.c
+index ee7a3cb1..8eec4200 100644
+--- a/libsoup/soup-message-headers.c
++++ b/libsoup/soup-message-headers.c
+@@ -780,7 +780,7 @@ soup_message_headers_get_list (SoupMessageHeaders *hdrs, const char *name)
+ /**
+  * SoupMessageHeadersIter:
+  *
+- * An opaque type used to iterate over a %SoupMessageHeaders
++ * An opaque type used to iterate over a #SoupMessageHeaders
+  * structure.
+  *
+  * After intializing the iterator with [func@MessageHeadersIter.init], call
+@@ -797,9 +797,9 @@ typedef struct {
+ 
+ /**
+  * soup_message_headers_iter_init:
+- * @iter: (out) (transfer none): a pointer to a %SoupMessageHeadersIter
+- *   structure
+- * @hdrs: a %SoupMessageHeaders
++ * @iter: (out) (transfer none): a pointer to a #SoupMessageHeadersIter
++ *   structures
++ * @hdrs: a #SoupMessageHeaders
+  *
+  * Initializes @iter for iterating @hdrs.
+  **/
+@@ -816,7 +816,7 @@ soup_message_headers_iter_init (SoupMessageHeadersIter *iter,
+ 
+ /**
+  * soup_message_headers_iter_next:
+- * @iter: (inout) (transfer none): a %SoupMessageHeadersIter
++ * @iter: (inout) (transfer none): a #SoupMessageHeadersIter
+  * @name: (out) (transfer none): pointer to a variable to return
+  *   the header name in
+  * @value: (out) (transfer none): pointer to a variable to return

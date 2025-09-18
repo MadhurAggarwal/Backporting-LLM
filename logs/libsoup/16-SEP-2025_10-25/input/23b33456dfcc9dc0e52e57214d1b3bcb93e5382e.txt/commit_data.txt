@@ -1,0 +1,23 @@
+commit 23b33456dfcc9dc0e52e57214d1b3bcb93e5382e
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Mon Jul 1 10:04:51 2024 -0500
+
+    cookie: fix invalid free added in previous commit
+    
+    I messed up when deciding how to free the GDateTime here, which is not a
+    GObject. This fixes a regression introduced in !400.
+
+diff --git a/libsoup/cookies/soup-cookie.c b/libsoup/cookies/soup-cookie.c
+index 1515d4a5..d8723e74 100644
+--- a/libsoup/cookies/soup-cookie.c
++++ b/libsoup/cookies/soup-cookie.c
+@@ -216,8 +216,7 @@ parse_one_cookie (const char *header, GUri *origin)
+ 				cookie->domain = NULL;
+ 			}
+ 		} else if (MATCH_NAME ("expires") && has_value) {
+-			g_clear_object (&cookie->expires);
+-			cookie->expires = parse_date (&p);
++		        soup_cookie_set_expires (cookie, parse_date (&p));
+ 		} else if (MATCH_NAME ("httponly")) {
+ 			cookie->http_only = TRUE;
+ 			if (has_value)

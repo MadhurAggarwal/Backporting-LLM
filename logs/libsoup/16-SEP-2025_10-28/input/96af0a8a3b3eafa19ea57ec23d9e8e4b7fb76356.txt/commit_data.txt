@@ -1,0 +1,16 @@
+commit 96af0a8a3b3eafa19ea57ec23d9e8e4b7fb76356
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Mon Feb 17 10:09:57 2025 -0600
+
+    Add basic clang-tidy config
+
+diff --git a/.clang-tidy b/.clang-tidy
+new file mode 100644
+index 00000000..7ac3605f
+--- /dev/null
++++ b/.clang-tidy
+@@ -0,0 +1,4 @@
++Checks: '-*,clang-analyzer-security.*,clang-analyzer-unix.*,bugprone-*,-bugprone-casting-through-void,-bugprone-reserved-identifier,-bugprone-easily-swappable-parameters,-clang-analyzer-optin.core.EnumCastOutOfRange,-bugprone-multi-level-implicit-pointer-conversion,-bugprone-assignment-in-if-condition,-bugprone-signal-handler,-bugprone-branch-clone'
++HeaderFilterRegex: '.*/libsoup/.*'
++ExcludeHeaderFilterRegex: '(soup-enum-types|soup-private-enum-types|soup-header-names)\..*'
++ExtraArgs: ['-Wno-format-nonliteral']

@@ -1,0 +1,22 @@
+commit d48550247156fcae30626ba365dd3730c66eb8aa
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun Mar 9 16:25:57 2025 -0500
+
+    docs: Mention possible error domains for Session.send methods
+    
+    Closes #414
+
+diff --git a/libsoup/soup-session.c b/libsoup/soup-session.c
+index cbe4c46f..931708d1 100644
+--- a/libsoup/soup-session.c
++++ b/libsoup/soup-session.c
+@@ -3228,6 +3228,9 @@ soup_session_send_finish (SoupSession   *session,
+  * [method@Session.send] will only return once a final response has been
+  * received.
+  *
++ * Possible error domains include [error@SessionError], [error@Gio.IOErrorEnum],
++ * and [error@Gio.TlsError] which you may want to specifically handle.
++ *
+  * Returns: (transfer full): a #GInputStream for reading the
+  *   response body, or %NULL on error.
+  */

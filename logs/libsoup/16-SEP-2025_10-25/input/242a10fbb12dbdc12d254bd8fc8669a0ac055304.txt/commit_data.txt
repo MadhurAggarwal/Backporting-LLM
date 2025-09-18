@@ -1,0 +1,65 @@
+commit 242a10fbb12dbdc12d254bd8fc8669a0ac055304
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Wed Feb 5 14:39:42 2025 -0600
+
+    sniffer: Fix potential overflow
+
+diff --git a/libsoup/content-sniffer/soup-content-sniffer.c b/libsoup/content-sniffer/soup-content-sniffer.c
+index aeee2e25..da94e60c 100644
+--- a/libsoup/content-sniffer/soup-content-sniffer.c
++++ b/libsoup/content-sniffer/soup-content-sniffer.c
+@@ -669,7 +669,7 @@ sniff_feed_or_html (SoupContentSniffer *sniffer, GBytes *buffer)
+ 		pos = 3;
+ 
+  look_for_tag:
+-	if (pos > resource_length)
++	if (pos >= resource_length)
+ 		goto text_html;
+ 
+ 	if (skip_insignificant_space (resource, &pos, resource_length))
+diff --git a/tests/meson.build b/tests/meson.build
+index 5aee70bc..ee118a01 100644
+--- a/tests/meson.build
++++ b/tests/meson.build
+@@ -103,7 +103,9 @@ tests = [
+   {'name': 'session'},
+   {'name': 'server-auth'},
+   {'name': 'server'},
+-  {'name': 'sniffing'},
++  {'name': 'sniffing',
++    'depends': [test_resources],
++  },
+   {'name': 'ssl',
+    'dependencies': [gnutls_dep],
+    'depends': mock_pkcs11_module,
+diff --git a/tests/resources/whitespace.html b/tests/resources/whitespace.html
+new file mode 100644
+index 00000000..7f07a0e6
+Binary files /dev/null and b/tests/resources/whitespace.html differ
+diff --git a/tests/sniffing-test.c b/tests/sniffing-test.c
+index 6116719a..b5428177 100644
+--- a/tests/sniffing-test.c
++++ b/tests/sniffing-test.c
+@@ -512,6 +512,11 @@ main (int argc, char **argv)
+ 			      "type/text_html; charset=UTF-8/test.html => text/html; charset=UTF-8",
+ 			      do_sniffing_test);
+ 
++        /* Test hitting skip_insignificant_space() with number of bytes equaling resource_length. */
++	g_test_add_data_func ("/sniffing/whitespace",
++			      "type/text_html/whitespace.html => text/html",
++			      do_sniffing_test);
++
+ 	/* Test that disabling the sniffer works correctly */
+ 	g_test_add_data_func ("/sniffing/disabled",
+ 			      "/text_or_binary/home.gif",
+diff --git a/tests/soup-tests.gresource.xml b/tests/soup-tests.gresource.xml
+index 9c08d170..cbef1d40 100644
+--- a/tests/soup-tests.gresource.xml
++++ b/tests/soup-tests.gresource.xml
+@@ -25,5 +25,6 @@
+     <file>resources/text.txt</file>
+     <file>resources/text_binary.txt</file>
+     <file>resources/tux.webp</file>
++    <file>resources/whitespace.html</file>
+   </gresource>
+ </gresources>

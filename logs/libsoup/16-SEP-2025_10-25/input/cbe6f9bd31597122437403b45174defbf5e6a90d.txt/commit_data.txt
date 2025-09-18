@@ -1,0 +1,61 @@
+commit cbe6f9bd31597122437403b45174defbf5e6a90d
+Author: Jan-Michael Brummer <jan-michael.brummer1@volkswagen.de>
+Date:   Wed Apr 24 15:55:21 2024 +0200
+
+    Add Soup-Host header output
+    
+    In order to improve debugging add Soup-Host field to ensure that Host
+    header is always logged.
+
+diff --git a/libsoup/soup-logger.c b/libsoup/soup-logger.c
+index 1538c69b..4a27513e 100644
+--- a/libsoup/soup-logger.c
++++ b/libsoup/soup-logger.c
+@@ -683,6 +683,8 @@ print_request (SoupLogger *logger, SoupMessage *msg,
+ 	if (log_level == SOUP_LOGGER_LOG_MINIMAL)
+ 		return;
+ 
++	soup_logger_print (logger, SOUP_LOGGER_LOG_HEADERS, '>', "Soup-Host: %s", g_uri_get_host (uri));
++
+ 	soup_message_headers_iter_init (&iter, soup_message_get_request_headers (msg));
+ 	while (soup_message_headers_iter_next (&iter, &name, &value)) {
+ 		if (!g_ascii_strcasecmp (name, "Authorization") &&
+diff --git a/tests/logger-test.c b/tests/logger-test.c
+index b5d2f27b..657dfce1 100644
+--- a/tests/logger-test.c
++++ b/tests/logger-test.c
+@@ -132,10 +132,11 @@ do_logger_headers_test (void)
+         g_object_unref (msg);
+ 
+         g_assert_nonnull (log.request);
+-        g_assert_cmpuint (g_hash_table_size (log.request), ==, 6);
++        g_assert_cmpuint (g_hash_table_size (log.request), ==, 7);
+         g_assert_true (g_hash_table_contains (log.request, "status-line"));
+         g_assert_true (g_hash_table_contains (log.request, "Soup-Debug-Timestamp"));
+         g_assert_true (g_hash_table_contains (log.request, "Soup-Debug"));
++        g_assert_true (g_hash_table_contains (log.request, "Soup-Host"));
+         g_assert_true (g_hash_table_contains (log.request, "Host"));
+         g_assert_true (g_hash_table_contains (log.request, "Accept-Encoding"));
+         g_assert_true (g_hash_table_contains (log.request, "Connection"));
+@@ -202,10 +203,11 @@ do_logger_body_test (void)
+         g_object_unref (msg);
+ 
+         g_assert_nonnull (log.request);
+-        g_assert_cmpuint (g_hash_table_size (log.request), ==, 7);
++        g_assert_cmpuint (g_hash_table_size (log.request), ==, 8);
+         g_assert_true (g_hash_table_contains (log.request, "status-line"));
+         g_assert_true (g_hash_table_contains (log.request, "Soup-Debug-Timestamp"));
+         g_assert_true (g_hash_table_contains (log.request, "Soup-Debug"));
++        g_assert_true (g_hash_table_contains (log.request, "Soup-Host"));
+         g_assert_true (g_hash_table_contains (log.request, "Host"));
+         g_assert_true (g_hash_table_contains (log.request, "Accept-Encoding"));
+         g_assert_true (g_hash_table_contains (log.request, "Connection"));
+@@ -321,7 +323,7 @@ do_logger_filters_test (void)
+         g_object_unref (msg);
+ 
+         g_assert_nonnull (log.request);
+-        g_assert_cmpuint (g_hash_table_size (log.request), ==, 6);
++        g_assert_cmpuint (g_hash_table_size (log.request), ==, 7);
+         g_assert_nonnull (log.response);
+         g_assert_cmpuint (g_hash_table_size (log.response), ==, 3);
+         g_assert_null (log.request_body);

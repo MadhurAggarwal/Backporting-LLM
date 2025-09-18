@@ -1,0 +1,20 @@
+commit 0f8463d6b97a7820333b18be760da21a30e96c42
+Author: Jan-Michael Brummer <jan-michael.brummer1@volkswagen.de>
+Date:   Mon Apr 22 16:17:38 2024 +0200
+
+    Fix crash in SoupLogger
+    
+    Fix wrong user data pointer during request_filter call.
+
+diff --git a/libsoup/soup-logger.c b/libsoup/soup-logger.c
+index 2fd6d5a2..88c07798 100644
+--- a/libsoup/soup-logger.c
++++ b/libsoup/soup-logger.c
+@@ -200,7 +200,7 @@ soup_logger_content_processor_wrap_input (SoupContentProcessor *processor,
+ 
+         if (priv->request_filter)
+                 log_level = priv->request_filter (logger, msg,
+-                                                  priv->response_filter_data);
++                                                  priv->request_filter_data);
+         else
+                 log_level = priv->level;

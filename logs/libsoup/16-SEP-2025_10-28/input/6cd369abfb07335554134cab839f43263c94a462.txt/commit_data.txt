@@ -1,0 +1,26 @@
+commit 6cd369abfb07335554134cab839f43263c94a462
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Wed Jan 24 08:57:50 2024 -0600
+
+    build: Ensure gssapi_dep is always defined
+
+diff --git a/meson.build b/meson.build
+index 73a9fa03..d773200b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -328,13 +328,13 @@ else
+         link_args: libs_output.stdout().split(),
+         compile_args: cflags_output.stdout().split())
+     endif
+-  else
+-    gssapi_dep = dependency('', required: false)
+   endif
+ endif
+ 
+ if enable_gssapi
+   add_project_arguments('-DLIBSOUP_HAVE_GSSAPI=1', language : 'c')
++else
++  gssapi_dep = dependency('', required: false)
+ endif
+ 
+ ################

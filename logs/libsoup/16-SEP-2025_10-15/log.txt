@@ -1,0 +1,12 @@
+Logger initialized.
+Finetuning Attempt for PACKAGE: libsoup
+[INFO] Starting Q&A Dataset Generation Process
+[INFO] Fetching CVE List and Corresponding Patches
+[INFO] Total CVEs fetched: 15
+[INFO] 
+Processing commit file: 521a861524042dda0835cd7a5d4fb0bf29f2896b.txt
+[INFO] Commit data read from 521a861524042dda0835cd7a5d4fb0bf29f2896b.txt
+[INFO] Generating prompts for COMMIT_DETAILS
+[INFO] Prompts generated for COMMIT_DETAILS
+[INFO] Generating Q&A pairs for COMMIT_DETAILS, commit 521a861524042dda0835cd7a5d4fb0bf29f2896b.txt...
+[INFO] Q&A pairs for COMMIT_DETAILS generated from LLM

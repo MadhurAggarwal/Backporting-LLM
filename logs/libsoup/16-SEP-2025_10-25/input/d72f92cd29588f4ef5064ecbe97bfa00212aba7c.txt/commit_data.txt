@@ -1,0 +1,30 @@
+commit d72f92cd29588f4ef5064ecbe97bfa00212aba7c
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sat Jul 13 19:30:45 2024 -0500
+
+    3.5.2
+
+diff --git a/NEWS b/NEWS
+index ae254d49..c2a20c16 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,3 +1,8 @@
++Changes in libsoup from 3.5.1 to 3.5.2:
++
++* Strictly forbid NUL bytes in headers [Patrick Griffis]
++* Fix minor leaks [Michael Catanzaro]
++
+ Changes in libsoup from 3.4.4 to 3.5.1:
+ 
+ * Add `SOUP_METHOD_PATCH` [Jan-Michael Brummer]
+diff --git a/meson.build b/meson.build
+index 2494c3db..e2d1d113 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,5 +1,5 @@
+ project('libsoup', 'c',
+-        version: '3.5.1',
++        version: '3.5.2',
+         meson_version : '>= 0.54',
+         license : 'LGPL-2.0-or-later',
+         default_options : [

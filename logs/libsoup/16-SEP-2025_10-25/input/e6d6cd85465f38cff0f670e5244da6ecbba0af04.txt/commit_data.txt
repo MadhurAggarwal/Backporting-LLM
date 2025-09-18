@@ -1,0 +1,23 @@
+commit e6d6cd85465f38cff0f670e5244da6ecbba0af04
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Thu Mar 13 01:42:20 2025 +0000
+
+    readme: Update website link
+    
+    Closes #415
+
+diff --git a/README b/README
+index e9c71715..788149ae 100644
+--- a/README
++++ b/README
+@@ -20,8 +20,8 @@ https://discourse.gnome.org/tag/libsoup
+ Bugs against libsoup can be filed at:
+ https://gitlab.gnome.org/GNOME/libsoup/issues/
+ 
+-More information is available at
+-https://wiki.gnome.org/Projects/libsoup
++More information and API documentation is available at
++https://libsoup.gnome.org
+ 
+ Licensing:
+ libsoup is licensed under the LGPL, see COPYING for more details.

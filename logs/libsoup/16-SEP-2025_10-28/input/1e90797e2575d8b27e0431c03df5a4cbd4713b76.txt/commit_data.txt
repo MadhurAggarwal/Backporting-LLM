@@ -1,0 +1,21 @@
+commit 1e90797e2575d8b27e0431c03df5a4cbd4713b76
+Author: Milan Crha <mcrha@redhat.com>
+Date:   Thu May 22 11:05:35 2025 +0200
+
+    range-test: Fix a memory leak
+    
+    The 'succeed' is an argument, set by the caller, which does not mean
+    the 'body' cannot be set to some data.
+
+diff --git a/tests/range-test.c b/tests/range-test.c
+index 9232d182..99119e54 100644
+--- a/tests/range-test.c
++++ b/tests/range-test.c
+@@ -84,6 +84,7 @@ do_single_range (SoupSession *session, SoupMessage *msg,
+ 				debug_printf (1, "    Content-Range: %s\n", content_range);
+ 		}
+ 
++		g_clear_pointer (&body, g_bytes_unref);
+ 		g_object_unref (msg);
+ 		return;
+ 	}

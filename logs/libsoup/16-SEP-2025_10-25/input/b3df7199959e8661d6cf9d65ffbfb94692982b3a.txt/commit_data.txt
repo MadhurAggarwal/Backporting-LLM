@@ -1,0 +1,224 @@
+commit b3df7199959e8661d6cf9d65ffbfb94692982b3a
+Author: Diego Pino Garcia <dpino@igalia.com>
+Date:   Wed Aug 20 19:01:57 2025 +0200
+
+    websockets: Sec-WebSocket-Protocol should be case sensitive
+    
+    According to RFC6455 (Section 1.3), while opening a handshake:
+    
+    "The server selects one or none of the acceptable protocols and echoes
+    that value in its handshake to indicate that it has selected that
+    protocol."
+    
+    The client must verify the negotiated protocol matches exactly one of
+    the requested protocols. Until now, this comparison was done non-case
+    sensitive, which doesn't comply with the WebSocket spec.
+    
+    Closes #466
+
+diff --git a/libsoup/soup-headers.c b/libsoup/soup-headers.c
+index b951188e..44ea45cb 100644
+--- a/libsoup/soup-headers.c
++++ b/libsoup/soup-headers.c
+@@ -649,6 +649,45 @@ soup_header_contains (const char *header, const char *token)
+ 	return FALSE;
+ }
+ 
++/**
++ * soup_header_contains_case_sensitive:
++ * @header: An HTTP header suitable for parsing with
++ *   [func@header_parse_list]
++ * @token: a token
++ *
++ * Parses @header to see if it contains the token @token (matched
++ * case-sensitively).
++ *
++ * Note that this can't be used with lists that have qvalues.
++ *
++ * Returns: whether or not @header contains @token
++ *
++ * Since: 3.8
++ **/
++gboolean
++soup_header_contains_case_sensitive (const char *header, const char *token)
++{
++	const char *end;
++	guint len;
++
++	g_return_val_if_fail (header != NULL, FALSE);
++	g_return_val_if_fail (token != NULL, FALSE);
++
++	len = strlen (token);
++
++	header = skip_delims (header, ',');
++	while (*header) {
++		end = skip_item (header, ',');
++		if (end - header == len &&
++		    !strncmp (header, token, len)) {
++			return TRUE;
++		}
++		header = skip_delims (end, ',');
++	}
++
++	return FALSE;
++}
++
+ static void
+ decode_quoted_string_inplace (GString *quoted_gstring)
+ {
+diff --git a/libsoup/soup-headers.h b/libsoup/soup-headers.h
+index 2b87446b..11514895 100644
+--- a/libsoup/soup-headers.h
++++ b/libsoup/soup-headers.h
+@@ -52,6 +52,9 @@ void        soup_header_free_list           (GSList           *list);
+ SOUP_AVAILABLE_IN_ALL
+ gboolean    soup_header_contains            (const char       *header,
+ 					     const char       *token);
++SOUP_AVAILABLE_IN_3_8
++gboolean    soup_header_contains_case_sensitive (const char       *header,
++                                                 const char       *token);
+ 
+ SOUP_AVAILABLE_IN_ALL
+ GHashTable *soup_header_parse_param_list      (const char       *header);
+diff --git a/libsoup/websocket/soup-websocket.c b/libsoup/websocket/soup-websocket.c
+index 7c00a5b1..80f06c09 100644
+--- a/libsoup/websocket/soup-websocket.c
++++ b/libsoup/websocket/soup-websocket.c
+@@ -843,7 +843,7 @@ soup_websocket_client_verify_handshake (SoupMessage *msg,
+ 	if (protocol) {
+ 		request_protocols = soup_message_headers_get_one_common (soup_message_get_request_headers (msg), SOUP_HEADER_SEC_WEBSOCKET_PROTOCOL);
+ 		if (!request_protocols ||
+-		    !soup_header_contains (request_protocols, protocol)) {
++		    !soup_header_contains_case_sensitive (request_protocols, protocol)) {
+ 			g_set_error_literal (error,
+ 					     SOUP_WEBSOCKET_ERROR,
+ 					     SOUP_WEBSOCKET_ERROR_BAD_HANDSHAKE,
+diff --git a/tests/header-parsing-test.c b/tests/header-parsing-test.c
+index b27588a8..e6a17bff 100644
+--- a/tests/header-parsing-test.c
++++ b/tests/header-parsing-test.c
+@@ -1332,6 +1332,31 @@ do_bad_header_tests (void)
+ 	soup_message_headers_unref (hdrs);
+ }
+ 
++static const struct {
++	const char *description, *name, *value;
++} case_sensitive_headers[] = {
++	{ "Sec-WebSocket-Protocol is case sensitive", "Sec-WebSocket-Protocol", "foo,bar,qux" },
++};
++
++static void
++do_case_sensitive_header_tests (void)
++{
++	int i;
++
++	const char* token = "foo";
++	for (i = 0; i < G_N_ELEMENTS (case_sensitive_headers); i++) {
++		const char* value = case_sensitive_headers[i].value;
++		char* token_uppercase = g_ascii_strup (token, -1);
++
++		g_assert_true (soup_header_contains (value, token));
++		g_assert_true (soup_header_contains (value, token_uppercase));
++		g_assert_true (soup_header_contains_case_sensitive (value, token));
++		g_assert_false (soup_header_contains_case_sensitive (value, token_uppercase));
++
++		g_free (token_uppercase);
++	}
++}
++
+ int
+ main (int argc, char **argv)
+ {
+@@ -1347,6 +1372,7 @@ main (int argc, char **argv)
+ 	g_test_add_func ("/header-parsing/content-type", do_content_type_tests);
+ 	g_test_add_func ("/header-parsing/append-param", do_append_param_tests);
+ 	g_test_add_func ("/header-parsing/bad", do_bad_header_tests);
++	g_test_add_func ("/header-parsing/case-sensitive", do_case_sensitive_header_tests);
+ 
+ 	ret = g_test_run ();
+ 
+diff --git a/tests/websocket-test.c b/tests/websocket-test.c
+index 758f73f9..194b966a 100644
+--- a/tests/websocket-test.c
++++ b/tests/websocket-test.c
+@@ -759,6 +759,69 @@ test_protocol_negotiate_soup (Test *test,
+ 	g_assert_cmpstr (soup_websocket_connection_get_protocol (test->server), ==, negotiated_protocol);
+ }
+ 
++static void
++test_protocol_negotiate_case_sensitive_direct (Test *test,
++				gconstpointer data)
++{
++	SoupMessage *msg;
++	SoupServerMessage *server_msg;
++	SoupMessageHeaders *request_headers;
++	SoupMessageHeaders *response_headers;
++	SoupMessageHeadersIter iter;
++	const char *name, *value;
++	gboolean ok;
++	const char *protocol;
++	GError *error = NULL;
++
++	msg = soup_message_new ("GET", "http://127.0.0.1");
++	soup_websocket_client_prepare_handshake (msg, NULL,
++						 (char **) negotiate_client_protocols,
++						 NULL);
++
++	server_msg = g_object_new (SOUP_TYPE_SERVER_MESSAGE, NULL);
++	soup_server_message_set_method (server_msg, soup_message_get_method (msg));
++	soup_server_message_set_uri (server_msg, soup_message_get_uri (msg));
++	request_headers = soup_server_message_get_request_headers (server_msg);
++	soup_message_headers_iter_init (&iter, soup_message_get_request_headers (msg));
++	while (soup_message_headers_iter_next (&iter, &name, &value))
++		soup_message_headers_append (request_headers, name, value);
++	ok = soup_websocket_server_check_handshake (server_msg, NULL,
++						    (char **) negotiate_server_protocols,
++						    NULL,
++						    &error);
++	g_assert_no_error (error);
++	g_clear_error (&error);
++	g_assert_true (ok);
++
++	ok = soup_websocket_server_process_handshake (server_msg, NULL,
++						      (char **) negotiate_server_protocols,
++						      NULL, NULL);
++	g_assert_true (ok);
++
++        soup_message_set_status (msg, soup_server_message_get_status (server_msg), NULL);
++	response_headers = soup_server_message_get_response_headers (server_msg);
++	soup_message_headers_iter_init (&iter, response_headers);
++	while (soup_message_headers_iter_next (&iter, &name, &value))
++		soup_message_headers_append (soup_message_get_response_headers (msg), name, value);
++	protocol = soup_message_headers_get_one (soup_message_get_response_headers (msg), "Sec-WebSocket-Protocol");
++	g_assert_cmpstr (protocol, ==, negotiated_protocol);
++
++	// Uppercase negotiated protocol in response headers.
++	gchar* protocol_uppercase = g_ascii_strup (protocol, -1);
++	soup_message_headers_replace (soup_message_get_response_headers (msg), "Sec-WebSocket-Protocol", protocol_uppercase);
++	// Client verification must fail since server must echo the requested protocol, according to WebSocket spec.
++	ok = soup_websocket_client_verify_handshake (msg, NULL, NULL, &error);
++	g_assert_false (ok);
++	g_assert_error (error, SOUP_WEBSOCKET_ERROR, SOUP_WEBSOCKET_ERROR_BAD_HANDSHAKE);
++	g_clear_error (&error);
++
++	g_free (protocol_uppercase);
++	g_object_unref (msg);
++	g_object_unref (server_msg);
++
++	teardown_direct_connection (test, data);
++}
++
+ static const char *mismatch_client_protocols[] = { "ddd", NULL };
+ static const char *mismatch_server_protocols[] = { "aaa", "bbb", "ccc", NULL };
+ 
+@@ -2260,6 +2323,10 @@ main (int argc,
+ 		    test_protocol_negotiate_soup,
+ 		    teardown_soup_connection);
+ 
++	g_test_add ("/websocket/direct/protocol-negotiate-case-sensitive", Test, NULL, NULL,
++		    test_protocol_negotiate_case_sensitive_direct,
++		    NULL);
++
+ 	g_test_add ("/websocket/direct/protocol-mismatch", Test, NULL, NULL,
+ 		    test_protocol_mismatch_direct,
+ 		    NULL);

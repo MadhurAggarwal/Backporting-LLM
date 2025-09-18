@@ -1,0 +1,41 @@
+commit d1fefb44832d8acefc2be3beea141d2cb39c0fc6
+Author: Michael Catanzaro <mcatanzaro@redhat.com>
+Date:   Tue Aug 27 13:50:28 2024 -0500
+
+    Fix a few broken documentation links
+
+diff --git a/docs/reference/server-howto.md b/docs/reference/server-howto.md
+index cb1beb8d..5c5892f7 100644
+--- a/docs/reference/server-howto.md
++++ b/docs/reference/server-howto.md
+@@ -63,7 +63,7 @@ of the thread in which the `listen` calls were made.
+ 
+ By default, [class@Server] returns "404 Not Found" in response to all requests
+ (except ones that it can't parse, which get "400 Bad Request"). To override this
+-behavior, call [class@Server.add_handler] to set a callback to handle certain
++behavior, call [method@Server.add_handler] to set a callback to handle certain
+ URI paths.
+ 
+ ```c
+@@ -163,7 +163,7 @@ SOUP_ENCODING_CHUNKED)` to tell libsoup that you'll be using `chunked` encoding.
+ Then call [method@MessageBody.append] (or [method@MessageBody.append_bytes]) on
+ `msg->response_body` with each chunk of the response body as it becomes
+ available, and call [method@MessageBody.complete] when the response is complete.
+-After each of these calls, you must also call [class@Server.unpause_message] to
++After each of these calls, you must also call [method@Server.unpause_message] to
+ cause the chunk to be sent. (You do not normally need to call
+ [method@Server.pause_message], because I/O is automatically paused when doing a
+ `chunked` transfer if no chunks are available.)
+diff --git a/libsoup/server/soup-server-message.c b/libsoup/server/soup-server-message.c
+index 1450b047..7d902d51 100644
+--- a/libsoup/server/soup-server-message.c
++++ b/libsoup/server/soup-server-message.c
+@@ -1018,7 +1018,7 @@ soup_server_message_get_socket (SoupServerMessage *msg)
+  *
+  * Returns: (nullable) (transfer none): the #GSocketAddress
+  *   associated with the remote end of a connection, it may be
+- *   %NULL if you used [class@Server.accept_iostream].
++ *   %NULL if you used [method@Server.accept_iostream].
+  */
+ GSocketAddress *
+ soup_server_message_get_remote_address (SoupServerMessage *msg)

@@ -1,0 +1,85 @@
+commit 123eb029bf3fa08f3c45678c0a43ae4b930e6631
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sun Feb 9 16:12:04 2025 -0600
+
+    build: Switch from krb5-config to pkg-config for gssapi
+    
+    This is more simple and we already depend on pkg-config heavily.
+    
+    This fixed linker errors on my system though the reason is unclear
+    as both output `-lgssapi_krb5` (krb5-config includes other libs that
+    are not actually needed). So this may be a meson issue in how
+    declare_dependency() works. No matter the cause it seems unnecessary.
+
+diff --git a/meson.build b/meson.build
+index df32d4de..8772a0ea 100644
+--- a/meson.build
++++ b/meson.build
+@@ -303,7 +303,6 @@ endif
+ # GSSAPI support #
+ ##################
+ gssapi_opt = get_option('gssapi')
+-enable_gssapi = false
+ if cc.get_id() == 'msvc'
+   if host_machine.cpu_family() == 'x86'
+     gssapi_lib_type = '32'
+@@ -313,31 +312,12 @@ if cc.get_id() == 'msvc'
+   gssapi_dep = cc.find_library('gssapi' + gssapi_lib_type,
+     has_headers: 'gssapi/gssapi.h',
+     required: gssapi_opt)
+-  if gssapi_dep.found()
+-      enable_gssapi = true
+-  endif
+ else
+-  krb5_config_path = get_option('krb5_config')
+-  if not meson.is_cross_build() and krb5_config_path == ''
+-    krb5_config_path = 'krb5-config'
+-  endif
+-  krb5_config = find_program(krb5_config_path, required : gssapi_opt)
+-  if krb5_config.found()
+-    libs_output = run_command(krb5_config, '--libs', 'gssapi', check: gssapi_opt.enabled())
+-    cflags_output = run_command(krb5_config, '--cflags', 'gssapi', check: gssapi_opt.enabled())
+-    if libs_output.returncode() == 0 and cflags_output.returncode() == 0
+-      enable_gssapi = true
+-      gssapi_dep = declare_dependency(
+-        link_args: libs_output.stdout().split(),
+-        compile_args: cflags_output.stdout().split())
+-    endif
+-  endif
++  gssapi_dep = dependency('krb5-gssapi', required: gssapi_opt)
+ endif
+ 
+-if enable_gssapi
++if gssapi_dep.found()
+   add_project_arguments('-DLIBSOUP_HAVE_GSSAPI=1', language : 'c')
+-else
+-  gssapi_dep = dependency('', required: false)
+ endif
+ 
+ ################
+@@ -407,7 +387,7 @@ summary({
+ )
+ 
+ summary({
+-    'GSSAPI' : enable_gssapi,
++    'GSSAPI' : gssapi_dep.found(),
+     'NTLM' : ntlm_auth.found(),
+     'Brotli' : brotlidec_dep.found(),
+     'Translations' : xgettext.found(),
+diff --git a/meson_options.txt b/meson_options.txt
+index 0c5d7c7d..6e44db05 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -4,12 +4,6 @@ option('gssapi',
+   description : 'Build with GSSAPI support'
+ )
+ 
+-option('krb5_config',
+-  type : 'string',
+-  value : '',
+-  description : 'Where to look for krb5-config, path points to krb5-config installation (defaultly looking in PATH)'
+-)
+-
+ option('ntlm',
+   type : 'feature',
+   value : 'auto',

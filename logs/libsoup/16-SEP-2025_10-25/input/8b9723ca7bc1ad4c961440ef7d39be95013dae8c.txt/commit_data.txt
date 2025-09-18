@@ -1,0 +1,46 @@
+commit 8b9723ca7bc1ad4c961440ef7d39be95013dae8c
+Author: Andrzej Surdej <Andrzej_Surdej@comcast.com>
+Date:   Thu Jan 16 18:33:26 2025 +0100
+
+    Fix data type mismatch for window size management
+    
+    This fixes regression from https://gitlab.gnome.org/GNOME/libsoup/-/merge_requests/418
+    
+    On 32b platforms passing gsize as guint64 signal parameter
+    results with garbage in remaining 32bits
+
+diff --git a/libsoup/http2/soup-body-input-stream-http2.c b/libsoup/http2/soup-body-input-stream-http2.c
+index bdef6d2b..fc633934 100644
+--- a/libsoup/http2/soup-body-input-stream-http2.c
++++ b/libsoup/http2/soup-body-input-stream-http2.c
+@@ -199,7 +199,7 @@ soup_body_input_stream_http2_read_real (GInputStream  *stream,
+         priv->pos += bytes_read;
+ 
+         if (bytes_read > 0)
+-                g_signal_emit (memory_stream, signals[READ_DATA], 0, bytes_read);
++                g_signal_emit (memory_stream, signals[READ_DATA], 0, (guint64)bytes_read);
+ 
+         /* When doing blocking reads we must always request more data.
+          * Even when doing non-blocking, a read consuming data may trigger a new WINDOW_UPDATE. */
+@@ -281,7 +281,7 @@ soup_body_input_stream_http2_skip (GInputStream  *stream,
+         count = MIN (count, priv->len - priv->pos);
+         priv->pos += count;
+         if (count)
+-                g_signal_emit (memory_stream, signals[READ_DATA], 0, count);
++                g_signal_emit (memory_stream, signals[READ_DATA], 0, (guint64)count);
+ 
+         /* Remove all skipped chunks */
+         gsize offset = priv->start_offset;
+diff --git a/libsoup/http2/soup-client-message-io-http2.c b/libsoup/http2/soup-client-message-io-http2.c
+index 796a2850..a2b9760a 100644
+--- a/libsoup/http2/soup-client-message-io-http2.c
++++ b/libsoup/http2/soup-client-message-io-http2.c
+@@ -665,7 +665,7 @@ memory_stream_read_data (SoupBodyInputStreamHttp2 *stream,
+ 
+         h2_debug (data->io, data, "[BODY_STREAM] Consumed %" G_GUINT64_FORMAT " bytes", bytes_read);
+ 
+-        NGCHECK (nghttp2_session_consume(data->io->session, data->stream_id, bytes_read));
++        NGCHECK (nghttp2_session_consume(data->io->session, data->stream_id, (size_t)bytes_read));
+ }
+ 
+ static int

@@ -1,0 +1,21 @@
+commit c3ac46971ea3af22978fa0ee5fa460a1a680ae22
+Author: ArtSin <artsin666@gmail.com>
+Date:   Wed Oct 23 15:37:55 2024 +0400
+
+    Read port as `gint` instead of `glong` in `soup_uri_copy`
+    
+    It is passed to the function as `int` in all uses in the codebase (as a literal or as a `gint` result of `g_uri_get_port`).
+
+diff --git a/libsoup/soup-uri-utils.c b/libsoup/soup-uri-utils.c
+index be2b79b0..4e76b74d 100644
+--- a/libsoup/soup-uri-utils.c
++++ b/libsoup/soup-uri-utils.c
+@@ -417,7 +417,7 @@ soup_uri_copy (GUri            *uri,
+         va_start (args, first_component);
+         while (component != SOUP_URI_NONE) {
+                 if (component == SOUP_URI_PORT)
+-                        values[component] = GINT_TO_POINTER (va_arg (args, glong));
++                        values[component] = GINT_TO_POINTER (va_arg (args, gint));
+                 else
+                         values[component] = va_arg (args, gpointer);
+                 values_to_set[component] = TRUE;

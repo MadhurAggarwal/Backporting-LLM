@@ -1,0 +1,19 @@
+commit 451b07073160e7763d4e4c857d1b8c53b9a8b1a9
+Author: Andre Klapper <a9016009@gmx.de>
+Date:   Sun Sep 29 13:56:15 2024 +0200
+
+    README: No more To Do list on wiki
+
+diff --git a/README b/README
+index aa95da9a..e9c71715 100644
+--- a/README
++++ b/README
+@@ -20,7 +20,7 @@ https://discourse.gnome.org/tag/libsoup
+ Bugs against libsoup can be filed at:
+ https://gitlab.gnome.org/GNOME/libsoup/issues/
+ 
+-More information (including the libsoup To Do list) is available at
++More information is available at
+ https://wiki.gnome.org/Projects/libsoup
+ 
+ Licensing:

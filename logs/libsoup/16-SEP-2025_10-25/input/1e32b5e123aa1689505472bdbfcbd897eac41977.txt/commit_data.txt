@@ -1,0 +1,79 @@
+commit 1e32b5e123aa1689505472bdbfcbd897eac41977
+Author: Andrzej Surdej <Andrzej_Surdej@comcast.com>
+Date:   Thu Feb 6 12:40:25 2025 +0100
+
+    [http1][chunked] Report an error in case of unexpected stream end
+    
+    Report an error when chunked encoding transfer is incomplete
+    instead of silently inoring it so app is aware of broken connection.
+    With previous implementation there was no way for app to tell
+    if chunked transfer was completed or silently broken after reading
+    full data chunk
+    
+    Fixes #153
+    Fixes #381
+
+diff --git a/libsoup/http1/soup-body-input-stream.c b/libsoup/http1/soup-body-input-stream.c
+index 69a93c09..3f51568c 100644
+--- a/libsoup/http1/soup-body-input-stream.c
++++ b/libsoup/http1/soup-body-input-stream.c
+@@ -179,12 +179,14 @@ again:
+ 		nread = soup_filter_input_stream_read_line (
+ 			fstream, metabuf, sizeof (metabuf), blocking,
+ 			&got_line, cancellable, error);
+-		if (nread <= 0)
++		if (nread < 0)
+ 			return nread;
+-		if (!got_line) {
+-			g_set_error_literal (error, G_IO_ERROR,
+-					     G_IO_ERROR_PARTIAL_INPUT,
+-					     _("Connection terminated unexpectedly"));
++		if (nread == 0 || !got_line) {
++			if (error && *error == NULL) {
++				g_set_error_literal (error, G_IO_ERROR,
++						     G_IO_ERROR_PARTIAL_INPUT,
++						     _("Connection terminated unexpectedly"));
++			}
+ 			return -1;
+ 		}
+ 
+@@ -212,12 +214,14 @@ again:
+ 			SOUP_FILTER_INPUT_STREAM (priv->base_stream),
+ 			metabuf, sizeof (metabuf), blocking,
+ 			&got_line, cancellable, error);
+-		if (nread <= 0)
++		if (nread < 0)
+ 			return nread;
+-		if (!got_line) {
+-			g_set_error_literal (error, G_IO_ERROR,
+-					     G_IO_ERROR_PARTIAL_INPUT,
+-					     _("Connection terminated unexpectedly"));
++		if (nread == 0 || !got_line) {
++			if (error && *error == NULL) {
++				g_set_error_literal (error, G_IO_ERROR,
++						     G_IO_ERROR_PARTIAL_INPUT,
++						     _("Connection terminated unexpectedly"));
++			}
+ 			return -1;
+ 		}
+ 
+@@ -228,9 +232,18 @@ again:
+ 		nread = soup_filter_input_stream_read_line (
+ 			fstream, metabuf, sizeof (metabuf), blocking,
+ 			&got_line, cancellable, error);
+-		if (nread <= 0)
++		if (nread < 0)
+ 			return nread;
+ 
++		if (nread == 0) {
++			if (error && *error == NULL) {
++				g_set_error_literal (error, G_IO_ERROR,
++						     G_IO_ERROR_PARTIAL_INPUT,
++						     _("Connection terminated unexpectedly"));
++			}
++			return -1;
++		}
++
+ 		if (strncmp (metabuf, "\r\n", nread) || strncmp (metabuf, "\n", nread)) {
+ 			priv->chunked_state = SOUP_BODY_INPUT_STREAM_STATE_DONE;
+ 			priv->eof = TRUE;

@@ -1,0 +1,21 @@
+commit 910ebdcd3dd82386717a201c13c834f3a63eed7f
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Sat Feb 8 12:30:13 2025 -0600
+
+    digest-auth: Handle NULL nonce
+    
+    `contains` only handles a missing nonce, `lookup` handles both missing and empty.
+
+diff --git a/libsoup/auth/soup-auth-digest.c b/libsoup/auth/soup-auth-digest.c
+index d69a4013..dc4dbfc5 100644
+--- a/libsoup/auth/soup-auth-digest.c
++++ b/libsoup/auth/soup-auth-digest.c
+@@ -162,7 +162,7 @@ soup_auth_digest_update (SoupAuth *auth, SoupMessage *msg,
+ 	guint qop_options;
+ 	gboolean ok = TRUE;
+ 
+-        if (!soup_auth_get_realm (auth) || !g_hash_table_contains (auth_params, "nonce"))
++        if (!soup_auth_get_realm (auth) || !g_hash_table_lookup (auth_params, "nonce"))
+                 return FALSE;
+ 
+ 	g_free (priv->domain);

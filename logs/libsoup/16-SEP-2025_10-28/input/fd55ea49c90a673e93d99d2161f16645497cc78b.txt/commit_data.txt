@@ -1,0 +1,19 @@
+commit fd55ea49c90a673e93d99d2161f16645497cc78b
+Author: Patrick Griffis <pgriffis@igalia.com>
+Date:   Fri Dec 20 14:28:29 2024 -0600
+
+    server-http2: Add missing NGCHECK
+
+diff --git a/libsoup/server/http2/soup-server-message-io-http2.c b/libsoup/server/http2/soup-server-message-io-http2.c
+index 52790f92..943ecfd3 100644
+--- a/libsoup/server/http2/soup-server-message-io-http2.c
++++ b/libsoup/server/http2/soup-server-message-io-http2.c
+@@ -745,7 +745,7 @@ soup_server_message_io_http2_send_response (SoupServerMessageIOHTTP2 *io,
+         nghttp2_data_provider data_provider;
+         data_provider.source.ptr = soup_server_message_get_response_body (msg);
+         data_provider.read_callback = on_data_source_read_callback;
+-        nghttp2_submit_response (io->session, msg_io->stream_id, (const nghttp2_nv *)headers->data, headers->len, &data_provider);
++        NGCHECK (nghttp2_submit_response (io->session, msg_io->stream_id, (const nghttp2_nv *)headers->data, headers->len, &data_provider));
+         io_try_write (io);
+         g_array_free (headers, TRUE);
+         g_free (status);
