@@ -96,12 +96,18 @@ Similarly, multiple other issues with LLMs, like not handling tabs & whitespaces
 ## Complex Backports
 [To be Added]
 
+### Finetuning Dataset:
+Find the generated dataset here:
+  - [Training-dataset.jsonl](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/finetuning/data/training_data/gpt-4o_training_data.jsonl)
+  - [Validation-dataset.jsonl](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/finetuning/data/training_data/gpt-4o_validation_data.jsonl)  
+(Scope of Improvement: the validation dataset is too short)
+
 ## Finetuning Details:
 Chosen Hyper-Parametres: 
   - Batch Size = 2
   - Epochs = 7
-  - learning rate = 0.9
-The small batch size help the model learn each individual example well. This enables the model to learn the commit history like paths and changes to specific hunks
+  - learning rate = 0.9  
+The small batch size help the model learn each individual example well. This enables the model to learn the commit history like paths and changes to specific hunks  
 Time taken to finetune gpt-4o: 12 hours GPU waiting queue, 6.5 hours for finetuning.  
 ### Training Loss:
 <img width="1766" height="1285" alt="image" src="https://github.com/user-attachments/assets/32b80189-21ad-4f35-82a7-aec043f360fb" />
