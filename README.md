@@ -94,7 +94,13 @@ which fixes the line number as required.
 Similarly, multiple other issues with LLMs, like not handling tabs & whitespaces, missing lines, incorrect hunk headers, etc can be fixed with specialized prompts as used in this repository.
 
 ## Complex Backports
-[To be Added]
+When the old version of a package contains large differences - changes to file paths or function signatures, or even refactoring / modularization of functions, it becomes very difficult for models to generate patches directly.  
+
+So, we feed the entire COMMIT HISTORY of the desired Package to an LLM in a question-answer format  
+This allows the model to be able to map old versions, paths and function signatures to the new versions.  
+
+To do this, we build the following pipeline:  
+[to be added]
 
 ### Finetuning Dataset:
 Find the generated dataset here:
