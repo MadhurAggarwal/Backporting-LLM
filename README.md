@@ -96,28 +96,44 @@ Similarly, multiple other issues with LLMs, like not handling tabs & whitespaces
 ## Complex Backports
 [To be Added]
 
+## Finetuning Details:
+Chosen Hyper-Parametres: 
+  - Batch Size = 2
+  - Epochs = 7
+  - learning rate = 0.9
+The small batch size help the model learn each individual example well. This enables the model to learn the commit history like paths and changes to specific hunks
+Time taken to finetune gpt-4o: 12 hours GPU waiting queue, 6.5 hours for finetuning.  
+### Training Loss:
+<img width="1766" height="1285" alt="image" src="https://github.com/user-attachments/assets/32b80189-21ad-4f35-82a7-aec043f360fb" />
+
+### Validation Loss:
+<img width="1764" height="1263" alt="image" src="https://github.com/user-attachments/assets/bf110b7f-f7de-48b0-8fe5-544e047eca29" />
+
+### Training Token Accuracy:
+<img width="1902" height="1277" alt="image" src="https://github.com/user-attachments/assets/a862e33f-e51c-4c9f-8fcd-477c1f253388" />
+
+### Validation Token Accuracy:
+<img width="1903" height="1290" alt="image" src="https://github.com/user-attachments/assets/f05d7759-f7af-4d21-ae32-068779a85e55" />
+
 ## How To Run
+### To Run Simple Backports:  
 Download the Following Outside this Repo, and update their Path in the Constants.py File:
 ```
 1. Download [Azure Linux Repository](https://github.com/microsoft/azurelinux)
 2. Download Libsoup 3.4.4 Version (Package Used for testing)
 ```
-
-Install the Python Files in the requirements.py file  
-[To be Added]
-
-Download Any Model and update its path in Constants.py  
-User Model: [Qwen-2.5-Coder-32B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct)
+Download Any LLM Model (Used Model: [Qwen-2.5-Coder-32B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct))
 ```
 git lfs install
 git clone https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct
 hf download Qwen/Qwen2.5-Coder-32B-Instruct
 ```
+install python dependencies from requirements.txt (or view the VM Setup below)  
+Update the Paths in the [Constants.py](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/constants.py) file  
+Now, just Run [Main-refactored.py](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/main_refactored.py) file!
 
-Now, just Run Main.py file!
-
-## How To Try With Some Other Package
-[To Be Added]
+### To Create Finetuning Dataset
+[To be added]
 
 ## Additional
 View [VM Setup](https://www.notion.so/VM-setup-2493774dee53802d8378ffbd953f1a0e?source=copy_link) used for running this framework
