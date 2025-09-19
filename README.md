@@ -129,9 +129,9 @@ Time taken to finetune gpt-4o: 12 hours GPU waiting queue, 6.5 hours for finetun
 
 ## How To Run
 ### To Run Simple Backports:  
-Download the Following Outside this Repo, and update their Path in the Constants.py File:
+Download the Following Outside this Repo:
 ```
-1. Download [Azure Linux Repository](https://github.com/microsoft/azurelinux)
+1. Download Azure Linux Repository: https://github.com/microsoft/azurelinux
 2. Download Libsoup 3.4.4 Version (Package Used for testing)
 ```
 Download Any LLM Model (Used Model: [Qwen-2.5-Coder-32B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct))
@@ -141,7 +141,7 @@ git clone https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct
 hf download Qwen/Qwen2.5-Coder-32B-Instruct
 ```
 install python dependencies from requirements.txt (or view the VM Setup below)  
-Update the Paths in the [Constants.py](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/constants.py) file  
+Update the Paths for the repositories, dataset (if changed), LLM Model in the [Constants.py](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/constants.py) file  
 Now, just Run [Main-refactored.py](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/main_refactored.py) file!
 
 ### To Create Finetuning Dataset
