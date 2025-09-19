@@ -2,7 +2,7 @@
 
 ## Test-1: Filepath & Linenumber changes
 
-Apply Custom Commits:
+In the 'Libsoup' Package, Apply Custom Commits using the following commands:
 ```
 git checkout master
 git reset --hard b3df7199959e8661d6cf9d65ffbfb94692982b3a
