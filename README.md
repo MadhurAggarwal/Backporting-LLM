@@ -147,5 +147,8 @@ Now, just Run [Main-refactored.py](https://github.com/MadhurAggarwal/Backporting
 ### To Create Finetuning Dataset
 [To be added]
 
+### To Test the Finetuned Model
+[![View Test README](https://img.shields.io/badge/docs-Test--README-blue)](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/libsoup_custom_changes_for_swe_test/test_patches/test-readme.md)
+
 ## Additional
 View [VM Setup](https://www.notion.so/VM-setup-2493774dee53802d8378ffbd953f1a0e?source=copy_link) used for running this framework
