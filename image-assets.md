@@ -1,0 +1,1 @@
+This file is for storing images, logs, screenshots and assets related to the package
