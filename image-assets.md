@@ -1,4 +1,4 @@
 This file is for storing images, logs, screenshots and assets related to the package
 
 Prompt-Chaining Architecture
-<img width="988" height="521" alt="image" src="https://github.com/user-attachments/assets/bb9eb47b-cf3a-4440-9829-36e870c12123" />
+![Input Data](https://github.com/user-attachments/assets/df66e86f-2c9a-49f9-8669-d19fba2d28eb)
