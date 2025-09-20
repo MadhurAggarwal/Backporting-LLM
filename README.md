@@ -100,7 +100,9 @@ So, we feed the entire COMMIT HISTORY of the desired Package to an LLM in a ques
 This allows the model to be able to map old versions, paths and function signatures to the new versions.  
 
 To do this, we build the following pipeline:  
-[to be added]
+
+![Input Data (2)](https://github.com/user-attachments/assets/97d36457-000e-4698-8d09-db84e63ba68e)
+
 
 ### Finetuning Dataset:
 Find the generated dataset here:
