@@ -154,7 +154,11 @@ Update the Paths for the repositories, dataset (if changed), LLM Model in the [C
 Now, just Run [Main-refactored.py](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/main_refactored.py) file!
 
 ### To Create Finetuning Dataset
-[To be added]
+1. Create `.env` in `Backporting-LLM/finetuning` with the fields (`AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_DEPLOYMENT`). Use [this file](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/finetuning/azureLLM_handler.py) as reference for env.
+2. Update the desired Paths in BOTH the Constants files: finetuning/constants.py, constants.py
+3. Run `finetuning/fetch_commit_history.py` file to fetch commits from mentioned Package Version / Commit till latest Origin/master HEAD
+4. Run main() function in file `generate_q_a_dataset.py` to generate question-answer pairs, and prepare_dataset_in_proper_format() to convert it into training data format.
+5. The dataset will be ready & added to `finetuning/data/training_data/` directory.
 
 ### To Test the Finetuned Model
 [![View Test README](https://img.shields.io/badge/docs-Test--README-blue)](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/libsoup_custom_changes_for_swe_test/test_patches/test-readme.md)
