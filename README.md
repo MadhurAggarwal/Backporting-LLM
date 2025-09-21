@@ -4,6 +4,12 @@ Designed for Team AzureLinux, Cloud+AI Microsoft
 <br>This manual work is what we try to reduce.  
 <br>This LLM Framework has been designed for Backporting - taking Patches written for latest versions, view the context of an older version and update the Patch to apply cleanly to the older package version.
 
+## Existing Approaches & Our Goals
+Patch Backporting is not new, existing LLM models when prompted directly for simple backports, do attempt to backport patches. But most of their results have some common issues (line number, tab characters etc) due to which patches generated never cleanly apply to the repository.  
+<br>Also, there have been attempts to fix complex backports using the [SWE-Agent](https://github.com/SWE-agent/SWE-agent) ([AllSpark](https://dev.azure.com/mariner-org/mariner/_git/AllSpark?path=/Patch-Backporter/Backporter-Single-Agent-Local-Repo)) and even Github-Copilot that work by searching in files based on the given patch and try to map older version files/functions to the ones in the given Patch.  
+<br>However, the models used for these purposes do not have enough context about the repository itself, requiring them Large Token Counts to Find & Map simple changes, and failing entirely for some tricky changes.  
+<br>We attempt to improve quality of base LLM outputs for both these approaches, first via `Chain-of-Prompts` and second using `LLM Finetuning`
+
 ## Simple Backports
 <img width="1328" height="759" alt="image" src="https://github.com/user-attachments/assets/433190fb-7311-4da1-a908-28d3d6b05a87" />
 
