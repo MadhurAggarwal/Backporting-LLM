@@ -169,5 +169,32 @@ Now, just Run [Main-refactored.py](https://github.com/MadhurAggarwal/Backporting
 ### To Test the Finetuned Model (in [SWE-Agent](https://dev.azure.com/mariner-org/mariner/_git/AllSpark?path=/Patch-Backporter/Backporter-Single-Agent-Local-Repo))
 [![View Test README](https://img.shields.io/badge/docs-Test--README-blue)](https://github.com/MadhurAggarwal/Backporting-LLM/blob/main/libsoup_custom_changes_for_swe_test/test_patches/test-readme.md)
 
+## Results:  
+
+The finetuned model is plugged into SWE-AGENT and used for Patch Backporting.  
+Due to more context on the commit history, the Finetuned LLM is able to better predict changed locations of functions and map the new function signatures to older function signatures.  
+1. The finetuned model uses less tokens to find the locations of desired files and functions.
+2. The finetuned model is able to backport function-refactor changes that a base model just cannot handle.
+
+#### For the BASE GPT-4o Model:
+```
+DEBUG - swea-lm - 
+    total_tokens_sent=259,795, 
+    total_tokens_received=706, 
+    total_cost=0.57, 
+    total_api_calls=23
+```
+
+#### For the FINETUNED GPT-4o Model:
+```
+DEBUG - swea-lm - 
+    total_tokens_sent=126,526, 
+    total_tokens_received=812, 
+    total_cost=0.19, 
+    total_api_calls=12
+```
+
+The Results indicate that the Finetuned LLM is much more efficient in backporting packages, significantly reducing the API calls, input-tokens and hence cost for backporting each patch.
+
 ## Additional
 View [VM Setup](https://www.notion.so/VM-setup-2493774dee53802d8378ffbd953f1a0e?source=copy_link) used for running this framework
