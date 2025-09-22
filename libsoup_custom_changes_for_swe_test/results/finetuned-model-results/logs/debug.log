@@ -1,0 +1,25 @@
+2025-09-21 10:53:25,374 - INFO - logging.py:47 - setup_logging - Logging initialized. Info log: /home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/logs/info.log, Debug log: /home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/logs/debug.log
+2025-09-21 10:53:25,377 - DEBUG - git_helpers.py:157 - git_generate_patch_file - Generating patch file for commit 788fae8c0111e2a504a0390cec41bf13e9954041 at /tmp/788fae8c0111e2a504a0390cec41bf13e9954041.patch
+2025-09-21 10:53:26,303 - DEBUG - git_helpers.py:91 - git_fetch_commit - Successfully fetched commit 788fae8c0111e2a504a0390cec41bf13e9954041.
+2025-09-21 10:53:26,303 - DEBUG - git_helpers.py:123 - git_store_commit_as_patch - Patch file /tmp/788fae8c0111e2a504a0390cec41bf13e9954041.patch already exists. Deleting it.
+2025-09-21 10:53:26,307 - DEBUG - git_helpers.py:138 - git_store_commit_as_patch - Patch for commit 788fae8c0111e2a504a0390cec41bf13e9954041 stored at /tmp/788fae8c0111e2a504a0390cec41bf13e9954041.patch
+2025-09-21 10:53:26,307 - DEBUG - git_helpers.py:159 - git_generate_patch_file - Generated patch file at /tmp/788fae8c0111e2a504a0390cec41bf13e9954041.patch
+2025-09-21 10:53:26,307 - INFO - main.py:145 - store_upstream_patch - Stored upstream patch at /home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/upstream.patch
+2025-09-21 10:53:26,401 - DEBUG - git_helpers.py:60 - git_clean_repo - Cleaning repository at /mnt/swe_work_dir/swe_repo/code_base
+2025-09-21 10:53:26,460 - DEBUG - git_helpers.py:75 - git_clean_repo - Repository cleaned successfully.
+2025-09-21 10:53:26,460 - DEBUG - git_helpers.py:17 - git_init_repo - Initializing git repository at /mnt/swe_work_dir/swe_repo
+2025-09-21 10:53:26,464 - DEBUG - git_helpers.py:24 - git_init_repo - Git repository initialized at /mnt/swe_work_dir/swe_repo
+2025-09-21 10:53:26,466 - DEBUG - git_helpers.py:31 - git_init_repo - Added files to git repository /mnt/swe_work_dir/swe_repo
+2025-09-21 10:53:26,477 - DEBUG - git_helpers.py:42 - git_init_repo - Initial commit made successfully. /mnt/swe_work_dir/swe_repo
+2025-09-21 10:53:26,477 - DEBUG - git_helpers.py:60 - git_clean_repo - Cleaning repository at /home/sumsharma/madhur/AllSpark/SWE-agent
+2025-09-21 10:53:26,491 - DEBUG - git_helpers.py:75 - git_clean_repo - Repository cleaned successfully.
+2025-09-21 10:53:26,495 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0001_add_file_submission_capability.patch.
+2025-09-21 10:53:26,497 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0002_use_approved_mcr_images.patch.
+2025-09-21 10:53:26,500 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0003_add_range_for_edit_anthropic.patch.
+2025-09-21 10:53:26,502 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0004_remove_tab_expansion.patch.
+2025-09-21 10:53:26,505 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0005-git-reset-code_base-directory.patch.
+2025-09-21 10:53:26,535 - DEBUG - wild_card.py:13 - kill_stale_docker_containers - Killing stale Docker containers: ['c678d07433a5']
+2025-09-21 10:53:26,823 - INFO - main.py:208 - run_swe_agent - Running SWE agent with command: . /home/sumsharma/madhur/AllSpark/.venv/bin/activate && sweagent run --config /home/sumsharma/madhur/AllSpark/Patch-Backporter/Backporter-Single-Agent-Local-Repo/config/simple_patch_backport.yaml --output_dir /home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/logs --env.repo.path /mnt/swe_work_dir/swe_repo --env.repo.type local --agent.model.name azure/gpt-5 --problem_statement.id sweagent_default_id --problem_statement.type text --problem_statement.text 'Backport the original.patch' --agent.model.top_p null --agent.model.temperature 1
+2025-09-21 10:54:16,996 - DEBUG - main.py:236 - copy_ai_patch - Searching for patch files in /home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/logs/sweagent_default_id
+2025-09-21 10:54:16,996 - DEBUG - main.py:239 - copy_ai_patch - Found patch files: [PosixPath('/home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/logs/sweagent_default_id/0001-Backport-patch-Add-EOF-check-in-soup_body_output_str.patch')]
+2025-09-21 10:54:16,996 - INFO - main.py:251 - copy_ai_patch - Copied AI backported patch to /home/sumsharma/madhur/AllSpark-logs/finetuned/21-SEP-2025_10-53/ai_backport.patch

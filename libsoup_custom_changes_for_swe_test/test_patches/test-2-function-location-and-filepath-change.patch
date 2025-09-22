@@ -1,0 +1,18 @@
+diff --git a/libsoup/http-1/soup-message-io-data.c b/libsoup/http-1/soup-message-io-data.c
+index e7909040..e0e1e232 100644
+--- a/libsoup/http-1/soup-message-io-data.c
++++ b/libsoup/http-1/soup-message-io-data.c
+@@ -103,9 +103,13 @@ read_internal (GInputStream  *stream,
+ 		
+ 		if (priv->encoding == SOUP_ENCODING_CONTENT_LENGTH)
+ 			priv->pos += nread;
++
++		if (nread > 0 && priv->read_length == 0 && priv->encoding != SOUP_ENCODING_EOF)
++			return nread - priv->old_len;
+ 		return nread;
+ 
+ 	default:
++		g_byte_array_free(io->read_header_buf, TRUE);
+ 		g_return_val_if_reached (-1);
+ 	}
+ }

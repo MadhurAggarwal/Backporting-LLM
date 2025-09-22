@@ -1,0 +1,160 @@
+'{"env":{"deployment":{"image":"mcr.microsoft.com/devcontainers/python:3.11","port":null,"docker_args":[],"startup_timeout":180.0,"pull":"missing","remove_images":false,"python_standalone_dir":null,"platform":null,"remove_container":true,"container_runtime":"docker","type":"docker"},"repo":{"path":"/mnt/swe_work_dir/swe_repo","base_commit":"HEAD","type":"local"},"post_startup_commands":[],"post_startup_command_timeout":500,"name":"main"},"agent":{"name":"main","templates":{"system_template":"SETTING:
+  You are an autonomous programmer, and you''re working directly in the command line
+  with a special interface.\n\nYour primary job is to backport a patch to the code
+  base. You will be given patch file to be backported and the target code repo to
+  apply the patch to.\n\nYou should only apply the patch manually. Don''t try to cherrypick.
+  Because, we''ve already tried it and it didn''t work.\n\nRead the full patch, understand
+  the changes, and then make the necessary changes in the code base. Try to preserve
+  the original patch as much as possible, including comments and formatting.\n\nThe
+  special interface consists of a file editor that shows you {{WINDOW}} lines of a
+  file at a time.\n\nIn addition to typical bash commands, you can also use specific
+  commands to help you navigate and edit files.\n\nTo call a command, you need to
+  invoke it with a function call/tool call.\n\nWhen editing bigger files, you can
+  use the `goto` command to jump to a specific line number. This is much faster than
+  scrolling through the file. One good strategy is searching for the specific string
+  you''re looking for, and then using the `goto` command to jump to that line.\n\nGive
+  special importance to the indentation and whitespaces in the code which are related
+  to syntax.\nFor example, if you are looking at this file:\n\ndef fct():\n    print(\"Hello
+  world\")\n\nand you want to edit the file to read:\n\ndef fct():\n    print(\"Hello\")\n    print(\"world\")\n\nyour
+  search string should be `Hello world` and your replace string should be `\"Hello\"\\n    print(\"world\")`\n(note
+  the extra spaces before the print statement!).\nYou could also get the same result
+  by search for `    print(\"Hello world\")` and replace with `    print(\"Hello\")\\n    print(\"world\")`.\n\nRESPONSE
+  FORMAT:\nYour shell prompt is formatted as follows:\n(Open file: <path>)\n(Current
+  directory: <cwd>)\nbash-$\n\nFirst, you should ALWAYS include a general thought
+  about what you''re going to do next.\nThen, for every response, you must include
+  exactly ONE tool call/function call.\n\nNote that the environment DOES NOT support
+  interactive session commands (e.g. python, vim), so please do not invoke them. Any
+  command that require interactive session like \"git show\", \"git log\", etc., will
+  not work. So, DON''T USE ANY INTERACTIVE SESSION COMMANDS OR THEIR DERIVATIVES LIKE
+  `git log --grep=`, `git show HEAD`, `git diff --cached`, etc.,. When you want to
+  run these commands, redirect them to a temporary file and open it for reading. For
+  example, `git log --oneline > /backport/tmp/git_log.txt`.","instance_template":"PROBLEM_STATEMENT:\n\nBackport
+  the `original.patch` file to the `code_base` directory. Both the `original.patch`
+  file and the `code_base` directory are available in the current working directory.\nFirst
+  move the `original.patch` file to `/root/original.patch` and then change your working
+  directory to the `code_base` directory by running `cd code_base`. Read the patch
+  file carefully and understand the changes it is making. Then, make the necessary
+  changes in the code base, commit the changes, generate a new patch with `git format-patch
+  -1 HEAD`, and then submit the changes using the `submit <patch_file>` command.\n\nYour
+  git username is `AllSpark` and your email is `allspark@microsoft.com`.\n\nINSTRUCTIONS:\nNow,
+  you''re going to solve this issue on your own. Your terminal session has started.
+  You can use any bash commands or the special interface to help you. Edit all the
+  files you need.\n\nNOTE ABOUT THE EDIT COMMAND: Indentation really matters! When
+  editing a file, make sure to insert appropriate indentation before each line!\n\nGENERAL
+  IMPORTANT TIPS:\n\n1. If you run a command and it doesn''t work, try running a different
+  command. A command that did not work once will not work the second time unless you
+  modify it!\n\n2. If you open a file and need to get to an area around a specific
+  line that is not in the first 100 lines, say line 583, don''t just use the scroll_down
+  command multiple times. Instead, use the goto 583 command. It''s much quicker. It
+  is okay to scroll only if you cannot determine the location by other means. Similarly
+  when searching for a function, instead of scrolling down, use the search command
+  to find the function name.\n\n3. When editing files, it is easy to accidentally
+  to write code with incorrect indentation or make other mistakes. Always check the
+  code after you issue an edit to make sure that it reflects what you wanted to accomplish.
+  If it didn''t, issue another command to fix it. ALWAYS USE PROPER INDENTATION WHEN
+  EDITING FILES EVEN IF THE SYNTAX IS CORRECT WITHOUT INDENTATION. Code readability
+  is important.\n\n4. Do not try to install any packages with `pip`, `conda`, or any
+  other way. This will usually not work. If the environment is not set up correctly,
+  try to fix the issue without executing python code or running any tests that require
+  the package installed.\n\n5. Preserve the comments from the original patch whenever
+  possible. They are important for understanding the code.\n\n6. You''re working on
+  a really big repo. So, don''t use `ls -R` command to list all the files in the repo.
+  Instead, use `find` command to find the files you want to edit. For example, if
+  you want to find a file named `foo.py`, use `find . -name foo.py`. This will be
+  much faster than using `ls -R`.\n\nSTRATEGY:\n\n1. You don''t need to worry about
+  testing the fix. Try minimal self testing if available. But if it is not available
+  or not running properly, don''t worry about it.\n\n2. Read the changes to be applied
+  from the original patch caefully. The `open` command only shows {{WINDOW}} lines,
+  if the patch is longer make sure you scroll down to see the complete file. Make
+  sure you understand all the chunks of the patch that need to be manually applied.
+  Print all the description of changes it does in your thoughts as it will be served
+  to you in the history in future prompts. And start making changes one by one.\n\n3.
+  Locate relevant code using the find and search commands. `open` the file you want
+  to edit. Use these tools most of the time to make yourself familier with the code
+  base. Better understanding is preferred.\n\n5. Use the `edit` command to perform
+  edits.\n\n(Open file: {{open_file}})\n(Current directory: {{working_dir}})\nbash-$","next_step_template":"{{observation}}\n(Open
+  file: {{open_file}})\n(Current directory: {{working_dir}})\nbash-$","next_step_truncated_observation_template":"Observation:
+  {{observation}}<response clipped><NOTE>Observations should not exceeded {{max_observation_length}}
+  characters. {{elided_chars}} characters were elided. Please try a different command
+  that produces less output or use head/tail/grep/redirect the output to a file. Do
+  not use interactive pagers.</NOTE>","max_observation_length":100000,"next_step_no_output_template":"Your
+  command ran successfully and did not produce any output.\n(Open file: {{open_file}})\n(Current
+  directory: {{working_dir}})\nbash-$","strategy_template":null,"demonstration_template":"Here
+  is a demonstration of how to correctly accomplish this task.\nIt is included to
+  show you how to correctly use the interface.\nYou do not need to follow exactly
+  what is done in the demonstration.\n--- DEMONSTRATION ---\n{{demonstration}}\n---
+  END OF DEMONSTRATION ---\n","demonstrations":["/workspace/hackthon/AllSpark/SWE-agent/trajectories/demonstrations/replay__marshmallow-code__marshmallow-1867__function_calling_replace__install-1/marshmallow-code__marshmallow-1867.traj"],"put_demos_in_history":true,"shell_check_error_template":"Your
+  bash command contained syntax errors and was NOT executed. Please fix the syntax
+  errors and try again. This can be the result of not adhering to the syntax for multi-line
+  commands. Here is the output of `bash -n`:\n{{bash_stdout}}\n{{bash_stderr}}","command_cancelled_timeout_template":"The
+  command ''{{command}}'' was cancelled because it took more than {{timeout}} seconds.
+  Please try a different command that completes more quickly."},"tools":{"filter":{"blocklist_error_template":"Operation
+  ''{{action}}'' is not supported by this environment.","blocklist":["vim","vi","emacs","nano","nohup","gdb","less","tail
+  -f","python -m venv","make"],"blocklist_standalone":["python","python3","ipython","bash","sh","/usr/bin/bash","/usr/bin/dash","nohup","vi","vim","emacs","nano","su"],"block_unless_regex":{"radare2":"\\b(?:radare2)\\b.*\\s+-c\\s+.*","r2":"\\b(?:radare2)\\b.*\\s+-c\\s+.*"}},"bundles":[{"path":"/workspace/hackthon/AllSpark/SWE-agent/tools/registry","hidden_tools":[]},{"path":"/workspace/hackthon/AllSpark/SWE-agent/tools/edit_anthropic","hidden_tools":[]},{"path":"/workspace/hackthon/AllSpark/SWE-agent/tools/submit","hidden_tools":[]},{"path":"/workspace/hackthon/AllSpark/SWE-agent/tools/forfeit","hidden_tools":[]}],"env_variables":{"WINDOW":100,"OVERLAP":2},"registry_variables":{},"submit_command":"submit","parse_function":{"error_message":"{%-
+  if error_code == \"missing\" -%}\nYour last output did not use any tool calls!\nPlease
+  make sure your output includes exactly _ONE_ function call!\nYou must invoke the
+  function directly using the function call format.\nYou cannot invoke commands with
+  ```, you have to use the function call format.\nIf you think you have already resolved
+  the issue, please submit your changes by running the `submit` command.\nIf you think
+  you cannot solve the problem, please run `exit_forfeit` (if available) or `submit`.\nElse,
+  please continue with a new tool call!\n{%- elif error_code == \"multiple\" -%}\nYour
+  last output included multiple tool calls!\nPlease make sure your output includes
+  a thought and exactly _ONE_ function call.\n{%- elif error_code == \"unexpected_arg\"
+  -%}\nYour action could not be parsed properly: {{exception_message}}.\nMake sure
+  your function call doesn''t include any extra arguments that are not in the allowed
+  arguments, and only use the allowed commands.\n{%- else -%}\nYour action could not
+  be parsed properly: {{exception_message}}.\n{% endif %}\n","type":"function_calling"},"enable_bash_tool":true,"format_error_template":"{%-
+  if error_code == \"missing\" -%}\nYour last output did not use any tool calls!\nPlease
+  make sure your output includes exactly _ONE_ function call!\nYou must invoke the
+  function directly using the function call format.\nYou cannot invoke commands with
+  ```, you have to use the function call format.\nIf you think you have already resolved
+  the issue, please submit your changes by running the `submit` command.\nIf you think
+  you cannot solve the problem, please run `exit_forfeit` (if available) or `submit`.\nElse,
+  please continue with a new tool call!\n{%- elif error_code == \"multiple\" -%}\nYour
+  last output included multiple tool calls!\nPlease make sure your output includes
+  a thought and exactly _ONE_ function call.\n{%- elif error_code == \"unexpected_arg\"
+  -%}\nYour action could not be parsed properly: {{exception_message}}.\nMake sure
+  your function call doesn''t include any extra arguments that are not in the allowed
+  arguments, and only use the allowed commands.\n{%- else -%}\nYour action could not
+  be parsed properly: {{exception_message}}.\n{% endif %}\n","command_docs":"bash:\n  docstring:
+  runs the given command directly in bash\n  signature: <command>\n  arguments:\n    -
+  command (string) [required]: The bash command to execute.\n\nstr_replace_editor:\n  docstring:
+  Custom editing tool for viewing, creating and editing files * State is persistent
+  across command calls and discussions with the user * If `path` is a file, `view`
+  displays the result of applying `cat -n`. If `path` is a directory, `view` lists
+  non-hidden files and directories up to 2 levels deep * The `create` command cannot
+  be used if the specified `path` already exists as a file * If a `command` generates
+  a long output, it will be truncated and marked with `<response clipped>` * The `undo_edit`
+  command will revert the last edit made to the file at `path`\nNotes for using the
+  `str_replace` command: * The `old_str` parameter should match EXACTLY one or more
+  consecutive lines from the original file or in the lines specified by `range`. Be
+  mindful of whitespaces! * The `range` parameter should be used to limit the search
+  for the `old_str` to a specific range of lines in the file. If not provided, the
+  entire file will be searched. * If the `old_str` parameter is not unique, the replacement
+  will not be performed. Make sure to include enough context in `old_str` to make
+  it unique or use the `range` parameter to limit the search to a specific range of
+  lines. * The `new_str` parameter should contain the edited lines that should replace
+  the `old_str`\n\n  signature: str_replace_editor <command> <path> [<file_text>]
+  [<range>] [<old_str>] [<new_str>] [<insert_line>]\n\n  arguments:\n    - command
+  (string) [required]: The commands to run. Allowed options are: `view`, `create`,
+  `str_replace`, `insert`, `undo_edit`.\n    - path (string) [required]: Absolute
+  path to file or directory, e.g. `/testbed/file.py` or `/testbed`.\n    - file_text
+  (string) [optional]: Required parameter of `create` command, with the content of
+  the file to be created.\n    - old_str (string) [optional]: Required parameter of
+  `str_replace` command containing the string in `path` to replace.\n    - new_str
+  (string) [optional]: Optional parameter of `str_replace` command containing the
+  new string (if not given, no string will be added). Required parameter of `insert`
+  command containing the string to insert.\n    - insert_line (integer) [optional]:
+  Required parameter of `insert` command. The `new_str` will be inserted AFTER the
+  line `insert_line` of `path`.\n    - range (array) [optional]: Optional parameter
+  of `view` and `str_replace` commands when `path` points to a file. If none is given,
+  the full file is used for consideration. If provided, the file will be shown or
+  searched in the indicated line number range, e.g. [11, 12] will show lines 11 and
+  12 for `view` command whereas it will search for `old_str` among lines 11 and 12
+  for `str_replace` command. Indexing at 1 to start. Setting `[start_line, -1]` is
+  wildcard to consider `start_line` to the end of the file.\n\nsubmit:\n  docstring:
+  submits the current file\n  signature: submit [<target_file>]\n  arguments:\n    -
+  target_file (string) [optional]: the file to submit (if not provided, submits the
+  diff)\n\nexit_forfeit:\n  docstring: Give up on the current challenge and terminate
+  the session.\n  signature: exit_forfeit\n\n","multi_line_command_endings":{},"submit_command_end_name":null,"reset_commands":[],"execution_timeout":30,"install_timeout":300,"total_execution_timeout":1800,"max_consecutive_execution_timeouts":3},"history_processors":[{"n":50,"polling":1,"always_remove_output_for_tags":["remove_output"],"always_keep_output_for_tags":["keep_output"],"type":"last_n_observations"}],"model":{"name":"azure/gpt-5","per_instance_cost_limit":3.0,"total_cost_limit":0.0,"per_instance_call_limit":0,"temperature":1.0,"top_p":null,"api_base":null,"api_version":null,"api_key":null,"stop":[],"completion_kwargs":{},"convert_system_to_user":false,"retry":{"retries":20,"min_wait":10.0,"max_wait":120.0},"delay":0.0,"fallbacks":[],"choose_api_key_by_thread":true,"max_input_tokens":null,"max_output_tokens":null},"max_requeries":3,"action_sampler":null,"type":"default"},"problem_statement":{"text":"Backport
+  the original.patch","extra_fields":{},"type":"text","id":"sweagent_default_id"},"output_dir":"/tmp/output_dir/logs","actions":{"open_pr":false,"pr_config":{"skip_if_commits_reference_issue":true},"apply_patch_locally":false},"env_var_path":null}'

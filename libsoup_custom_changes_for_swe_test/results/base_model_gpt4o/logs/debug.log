@@ -1,0 +1,25 @@
+2025-09-19 05:55:33,072 - INFO - logging.py:47 - setup_logging - Logging initialized. Info log: /tmp/output_dir/logs/info.log, Debug log: /tmp/output_dir/logs/debug.log
+2025-09-19 05:55:33,074 - DEBUG - git_helpers.py:157 - git_generate_patch_file - Generating patch file for commit d801da0a7734e7cce53f7b005ab9d76941546d17 at /tmp/d801da0a7734e7cce53f7b005ab9d76941546d17.patch
+2025-09-19 05:55:33,707 - DEBUG - git_helpers.py:91 - git_fetch_commit - Successfully fetched commit d801da0a7734e7cce53f7b005ab9d76941546d17.
+2025-09-19 05:55:33,707 - DEBUG - git_helpers.py:123 - git_store_commit_as_patch - Patch file /tmp/d801da0a7734e7cce53f7b005ab9d76941546d17.patch already exists. Deleting it.
+2025-09-19 05:55:33,710 - DEBUG - git_helpers.py:138 - git_store_commit_as_patch - Patch for commit d801da0a7734e7cce53f7b005ab9d76941546d17 stored at /tmp/d801da0a7734e7cce53f7b005ab9d76941546d17.patch
+2025-09-19 05:55:33,710 - DEBUG - git_helpers.py:159 - git_generate_patch_file - Generated patch file at /tmp/d801da0a7734e7cce53f7b005ab9d76941546d17.patch
+2025-09-19 05:55:33,711 - INFO - main.py:145 - store_upstream_patch - Stored upstream patch at /tmp/output_dir/upstream.patch
+2025-09-19 05:55:33,777 - DEBUG - git_helpers.py:60 - git_clean_repo - Cleaning repository at /mnt/swe_work_dir/swe_repo/code_base
+2025-09-19 05:55:33,832 - DEBUG - git_helpers.py:75 - git_clean_repo - Repository cleaned successfully.
+2025-09-19 05:55:33,832 - DEBUG - git_helpers.py:17 - git_init_repo - Initializing git repository at /mnt/swe_work_dir/swe_repo
+2025-09-19 05:55:33,836 - DEBUG - git_helpers.py:24 - git_init_repo - Git repository initialized at /mnt/swe_work_dir/swe_repo
+2025-09-19 05:55:33,838 - DEBUG - git_helpers.py:31 - git_init_repo - Added files to git repository /mnt/swe_work_dir/swe_repo
+2025-09-19 05:55:33,844 - DEBUG - git_helpers.py:42 - git_init_repo - Initial commit made successfully. /mnt/swe_work_dir/swe_repo
+2025-09-19 05:55:33,844 - DEBUG - git_helpers.py:60 - git_clean_repo - Cleaning repository at /workspace/hackthon/AllSpark/SWE-agent
+2025-09-19 05:55:34,022 - DEBUG - git_helpers.py:75 - git_clean_repo - Repository cleaned successfully.
+2025-09-19 05:55:34,026 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0001_add_file_submission_capability.patch.
+2025-09-19 05:55:34,028 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0002_use_approved_mcr_images.patch.
+2025-09-19 05:55:34,030 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0003_add_range_for_edit_anthropic.patch.
+2025-09-19 05:55:34,033 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0004_remove_tab_expansion.patch.
+2025-09-19 05:55:34,035 - DEBUG - main.py:184 - apply_swe_agent_patches - Successfully applied SWE agent patch 0005-git-reset-code_base-directory.patch.
+2025-09-19 05:55:34,059 - DEBUG - wild_card.py:16 - kill_stale_docker_containers - No stale Docker containers found.
+2025-09-19 05:55:34,059 - INFO - main.py:208 - run_swe_agent - Running SWE agent with command: . /workspace/hackthon/AllSpark/.venv/bin/activate && sweagent run --config /workspace/hackthon/AllSpark/Patch-Backporter/Backporter-Single-Agent-Local-Repo/config/simple_patch_backport.yaml --output_dir /tmp/output_dir/logs --env.repo.path /mnt/swe_work_dir/swe_repo --env.repo.type local --agent.model.name azure/gpt-5 --problem_statement.id sweagent_default_id --problem_statement.type text --problem_statement.text 'Backport the original.patch' --agent.model.top_p null --agent.model.temperature 1
+2025-09-19 05:56:56,314 - DEBUG - main.py:236 - copy_ai_patch - Searching for patch files in /tmp/output_dir/logs/sweagent_default_id
+2025-09-19 05:56:56,314 - DEBUG - main.py:239 - copy_ai_patch - Found patch files: [PosixPath('/tmp/output_dir/logs/sweagent_default_id/0001-Backport-patch-to-improve-pollable-source-handling.patch')]
+2025-09-19 05:56:56,314 - INFO - main.py:251 - copy_ai_patch - Copied AI backported patch to /tmp/output_dir/ai_backport.patch

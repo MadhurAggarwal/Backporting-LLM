@@ -1,0 +1,28 @@
+From 5da11bdb70c622111f82d8738c298b7d44b865ff Mon Sep 17 00:00:00 2001
+From: AllSpark <allspark@microsoft.com>
+Date: Fri, 19 Sep 2025 05:56:34 +0000
+Subject: [PATCH] Backport patch to improve pollable source handling
+
+---
+ libsoup/http1/soup-body-output-stream.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/libsoup/http1/soup-body-output-stream.c b/libsoup/http1/soup-body-output-stream.c
+index 3cbd770b..eb3e21bb 100644
+--- a/libsoup/http1/soup-body-output-stream.c
++++ b/libsoup/http1/soup-body-output-stream.c
+@@ -331,7 +331,10 @@ soup_body_output_stream_create_source (GPollableOutputStream *stream,
+ 
+ 	pollable_source = g_pollable_source_new (G_OBJECT (stream));
+ 	g_source_add_child_source (pollable_source, base_source);
+-	g_source_unref (base_source);
++		g_signal_emit(bostream, signals[WROTE_DATA], 0, NULL, 0, TRUE);
++	if(priv->eof) {
++		g_source_set_ready_time(pollable_source, G_SOURCE_TIME_NOW);
++	}
+ 
+ 	return pollable_source;
+ }
+-- 
+2.51.0
+

@@ -1,0 +1,20 @@
+diff --git a/libsoup/http-1/sb-output-stream.c b/libsoup/http-1/sb-output-stream.c
+index 7e1cbaa7..d9025f4e 100644
+--- a/libsoup/http-1/sb-output-stream.c
++++ b/libsoup/http-1/sb-output-stream.c
+@@ -320,6 +320,7 @@ sb_output_stream_source_create_function (GPollableOutputStream *stream,
+ 				       GCancellable *cancellable)
+ {
+ 	SoupBodyOutputStream *bostream = SOUP_BODY_OUTPUT_STREAM (stream);
++	SoupBodyOutputStreamState *state;
+         SoupBodyOutputStreamPrivate *priv = soup_body_output_stream_get_instance_private (bostream);
+ 	GSource *base_source, *pollable_source;
+ 
+@@ -406,6 +407,7 @@ sb_output_stream_source_creation_with_params (GPollableOutputStream *stream,
+ 
+ 	pollable_source = g_pollable_source_new (G_OBJECT (stream));
+ 	g_source_add_child_source (pollable_source, base_source);
++	g_source_set_callback (pollable_source, (GSourceFunc) callback, user_data, NULL);
+ 	g_source_unref (base_source);
+ 
+ 	return pollable_source;

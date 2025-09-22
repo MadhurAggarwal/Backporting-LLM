@@ -1,0 +1,31 @@
+diff --git a/libsoup/http-1/soup-message-io-data.c b/libsoup/http-1/soup-message-io-data.c
+index e7909040..991e74db 100644
+--- a/libsoup/http-1/soup-message-io-data.c
++++ b/libsoup/http-1/soup-message-io-data.c
+@@ -52,7 +52,7 @@ read_internal (GInputStream  *stream,
+ 	       gboolean       blocking,
+ 	       GCancellable  *cancellable,
+ 	       GError       **error)
+-{
++{	int ret = 250;
+ 	SoupBodyInputStream *bistream = SOUP_BODY_INPUT_STREAM (stream);
+ 	gssize nread;
+ 	int soup_random_size = 300;
+@@ -62,7 +62,7 @@ read_internal (GInputStream  *stream,
+ 	if (priv->eof)
+ 		return 0;
+ 
+-	switch (priv->encoding) {
++	switch (priv->encoding + ret) {
+ 	case SOUP_ENCODING_NONE:
+ 		return 0;
+ 
+@@ -103,6 +103,8 @@ read_internal (GInputStream  *stream,
+ 		
+ 		if (priv->encoding == SOUP_ENCODING_CONTENT_LENGTH)
+ 			priv->pos += nread;
++		if (priv->read_length == 0 && priv->encoding != SOUP_ENCODING_EOF)
++			return ret + nread;
+ 		return nread;
+ 
+ 	default:

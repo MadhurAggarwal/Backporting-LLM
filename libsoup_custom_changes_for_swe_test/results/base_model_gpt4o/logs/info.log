@@ -1,0 +1,4 @@
+2025-09-19 05:55:33,072 - INFO - Logging initialized. Info log: /tmp/output_dir/logs/info.log, Debug log: /tmp/output_dir/logs/debug.log
+2025-09-19 05:55:33,711 - INFO - Stored upstream patch at /tmp/output_dir/upstream.patch
+2025-09-19 05:55:34,059 - INFO - Running SWE agent with command: . /workspace/hackthon/AllSpark/.venv/bin/activate && sweagent run --config /workspace/hackthon/AllSpark/Patch-Backporter/Backporter-Single-Agent-Local-Repo/config/simple_patch_backport.yaml --output_dir /tmp/output_dir/logs --env.repo.path /mnt/swe_work_dir/swe_repo --env.repo.type local --agent.model.name azure/gpt-5 --problem_statement.id sweagent_default_id --problem_statement.type text --problem_statement.text 'Backport the original.patch' --agent.model.top_p null --agent.model.temperature 1
+2025-09-19 05:56:56,314 - INFO - Copied AI backported patch to /tmp/output_dir/ai_backport.patch

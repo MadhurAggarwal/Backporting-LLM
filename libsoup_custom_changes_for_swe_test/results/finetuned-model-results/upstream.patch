@@ -1,0 +1,30 @@
+From 788fae8c0111e2a504a0390cec41bf13e9954041 Mon Sep 17 00:00:00 2001
+From: Ubuntu
+ <sumsharma@aiVm.vpdkcxbu153ufc3s2lcxuzxnlf.dx.internal.cloudapp.net>
+Date: Fri, 19 Sep 2025 10:16:33 +0000
+Subject: [PATCH] Test-patch-1
+
+---
+ libsoup/http-1/sb-output-stream.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/libsoup/http-1/sb-output-stream.c b/libsoup/http-1/sb-output-stream.c
+index 90863d13..8b2a6fc0 100644
+--- a/libsoup/http-1/sb-output-stream.c
++++ b/libsoup/http-1/sb-output-stream.c
+@@ -349,7 +349,11 @@ soup_body_output_stream_create_source (GPollableOutputStream *stream,
+ 
+ 	pollable_source = g_pollable_source_new (G_OBJECT (stream));
+ 	g_source_add_child_source (pollable_source, base_source);
+-	g_source_unref (base_source);
++
++	g_signal_emit(bostream, signals[WROTE_DATA], 0, NULL, 0, TRUE);
++	if(priv->eof) {
++		g_source_set_ready_time (pollable_source, G_SOURCE_TIME_NOW);
++	}
+ 
+ 	return pollable_source;
+ }
+-- 
+2.43.0
+
