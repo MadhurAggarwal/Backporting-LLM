@@ -142,7 +142,7 @@ Time taken to finetune gpt-4o: 12 hours GPU waiting queue, 6.5 hours for finetun
 ### Validation Token Accuracy:
 <img width="1903" height="1290" alt="image" src="https://github.com/user-attachments/assets/f05d7759-f7af-4d21-ae32-068779a85e55" />
 
-## Model Knowledge Test:
+## Testing Model Knowledge:
 The Model performs very well when asked about changed to files, function names & locations:
 
 <img width="1718" height="945" alt="image" src="https://github.com/user-attachments/assets/801edbaf-95a1-4c64-9ecf-b3d44a8072a1" />
