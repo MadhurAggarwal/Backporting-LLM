@@ -177,6 +177,7 @@ Due to more context on the commit history, the Finetuned LLM is able to better p
 2. The finetuned model is able to backport function-refactor changes that a base model just cannot handle.
 
 #### For the BASE GPT-4o Model:
+[view the complete logs for base-gpt-4o-model](https://github.com/MadhurAggarwal/Backporting-LLM/tree/main/libsoup_custom_changes_for_swe_test/results/base_model_gpt4o)
 ```
 DEBUG - swea-lm - 
     total_tokens_sent=259,795, 
@@ -186,12 +187,13 @@ DEBUG - swea-lm -
 ```
 
 #### For the FINETUNED GPT-4o Model:
+[view the complete logs for finetuned-gpt-4o-model](https://github.com/MadhurAggarwal/Backporting-LLM/tree/main/libsoup_custom_changes_for_swe_test/results/finetuned-model-results)
 ```
-DEBUG - swea-lm - 
-    total_tokens_sent=126,526, 
-    total_tokens_received=812, 
-    total_cost=0.19, 
-    total_api_calls=12
+DEBUG - swea-lm -
+    total_tokens_sent=138,645,
+    total_tokens_received=843,
+    total_cost=0.21,
+    total_api_calls=13
 ```
 
 The Results indicate that the Finetuned LLM is much more efficient in backporting packages, significantly reducing the API calls, input-tokens and hence cost for backporting each patch.
