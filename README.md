@@ -11,10 +11,9 @@ Patch Backporting is not new, existing LLM models when prompted directly for sim
 <br>We attempt to improve quality of base LLM outputs for both these approaches, first via `Chain-of-Prompts` and second using `LLM Finetuning`
 
 ## Project Demo
+View the RetroPatch AI Hackathon Submission, Microsoft Global Hackathon 2025
 
 [![RetroPatch Hackathon Submission](https://img.youtube.com/vi/UHWn8uaiBUI/0.jpg)](https://www.youtube.com/watch?v=UHWn8uaiBUI)
-
-
 
 ## Simple Backports
 <img width="1328" height="759" alt="image" src="https://github.com/user-attachments/assets/433190fb-7311-4da1-a908-28d3d6b05a87" />
